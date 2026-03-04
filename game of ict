@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=none">
+    <title>ICT Master - Betsegaw Teka Edition</title>
+    <style>
+        :root {
+            --primary: #3498db; --success: #2ecc71; --bg: #f1f5f9;
+            --text: #0f172a; --accent: #e11d48;
+        }
+        body {
+            font-family: 'Inter', system-ui, sans-serif; background-color: var(--bg);
+            margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+        }
+        header {
+            width: 100%; background: white; padding: 20px 0; text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-bottom: 5px solid var(--primary);
+        }
+        .logo { width: 70px; height: 70px; object-fit: contain; border-radius: 12px; margin-bottom: 10px; }
+        .dev-tag { font-size: 0.75rem; color: var(--primary); font-weight: 900; letter-spacing: 3px; }
+        h1 { margin: 5px 0; font-size: 1.8rem; color: var(--text); }
+
+        .game-container { max-width: 900px; width: 95%; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .stats { display: flex; justify-content: space-around; width: 100%; max-width: 600px; background: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; font-weight: 700; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+
+        .btn-group { margin-bottom: 20px; display: flex; gap: 10px; }
+        .btn { padding: 10px 20px; border: 2px solid var(--primary); background: white; color: var(--primary); border-radius: 8px; cursor: pointer; font-weight: 800; transition: 0.2s; }
+        .btn.active { background: var(--primary); color: white; }
+
+        #grid {
+            display: grid; background: white; padding: 10px; border-radius: 15px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); border: 2px solid #e2e8f0;
+            user-select: none; touch-action: none;
+        }
+        .cell {
+            width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 1.1rem; color: #334155; cursor: pointer; border-radius: 5px;
+        }
+        .cell.highlighted { background: #dbeafe; color: var(--primary); }
+        .cell.found { background: var(--success) !important; color: white !important; }
+
+        .word-bank {
+            margin-top: 30px; background: white; padding: 20px; border-radius: 15px;
+            width: 100%; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .word-tag { padding: 6px 14px; background: #f8fafc; border-radius: 50px; font-size: 0.85rem; font-weight: 600; color: #64748b; border: 1px solid #e2e8f0; }
+        .word-tag.found { background: var(--success); color: white; text-decoration: line-through; border-color: var(--success); }
+
+        /* Certificate Modal */
+        #cert-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); align-items: center; justify-content: center; z-index: 1000;
+        }
+        .cert-card {
+            background: white; padding: 40px; border-radius: 0; border: 15px double var(--primary);
+            text-align: center; max-width: 500px; width: 90%; position: relative;
+        }
+        .cert-card h2 { color: var(--primary); font-size: 2rem; margin: 0; }
+        .cert-card p { font-size: 1.2rem; color: #444; }
+
+        footer { margin-top: auto; padding: 30px; color: #94a3b8; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="https://tse1.mm.bing.net/th/id/OIP.fG7NxAje_24iai2j6IQR_gAAAA?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Logo" class="logo">
+    <div class="dev-tag">ENGINEERED BY BETSEGAW TEKA</div>
+    <h1>ICT MASTER WORD SEARCH</h1>
+</header>
+
+<div class="game-container">
+    <div class="btn-group">
+        <button class="btn active" id="btn-easy" onclick="changeDiff('easy')">Easy</button>
+        <button class="btn" id="btn-medium" onclick="changeDiff('medium')">Medium</button>
+        <button class="btn" id="btn-hard" onclick="changeDiff('hard')">Hard</button>
+    </div>
+
+    <div class="stats">
+        <span>⏱ <span id="timer">00:00</span></span>
+        <span>✅ <span id="count">0</span> / <span id="total">0</span></span>
+    </div>
+
+    <div id="grid"></div>
+    <div class="word-bank" id="bank"></div>
+</div>
+
+<div id="cert-modal">
+    <div class="cert-card">
+        <h2>CERTIFICATE</h2>
+        <p>OF COMPLETION</p>
+        <hr>
+        <p>This recognizes that the user successfully identified all ICT terms in</p>
+        <h3 id="final-time" style="font-size: 1.5rem; color: var(--accent);">00:00</h3>
+        <p>Verified by Betsegaw Teka Systems</p>
+        <button class="btn" onclick="location.reload()">PLAY AGAIN</button>
+    </div>
+</div>
+
+<footer>BETSEGAW TEKA © 2024 | THE FUTURE OF ICT LEARNING</footer>
+
+<script>
+    const WORDS = {
+        easy: ["WIFI", "DATA", "RAM", "CPU", "USB", "WEB", "DISK", "LINK", "APP", "FILE", "NODE", "CHIP", "HOST", "SYNC", "BYTE", "HTML", "CODE", "IPAD", "GRID", "SITE", "MAIL", "USER", "PORT", "BIOS", "JAVA", "CSS", "DOCK", "BINS", "DELL", "SATA", "CORE", "LOAD", "LOG", "TEXT", "ICON", "ROOT", "BOOT", "PATH", "HACK", "BASE", "OSI", "PING", "TCP", "URL", "VOIP", "XML", "CLI", "LAN", "WAN", "VPN"],
+        medium: ["BINARY", "SERVER", "ROUTER", "PYTHON", "PIXEL", "KERNEL", "PHISH", "BACKUP", "MODEM", "LINUX", "CACHE", "COOKIE", "DOMAIN", "UPLOAD", "BROWSER", "SCRIPT", "SOURCE", "SYSTEM", "WINDOW", "MEMORY", "DRIVER", "FORMAT", "CLIENT", "UPDATE", "ENGINE", "GIGABIT", "STREAM", "LAPTOP", "TABLET", "ANDROID", "IPHONE", "DIGITAL", "ANALOG", "STORAGE", "GRAPHIC", "VERSION", "STABLE", "MOBILE", "DESKTOP", "NETWORK", "OFFLINE", "ONLINE", "ACCOUNT", "ACCESS", "ROUTER", "BRIDGE", "SWITCH", "HUB", "GATEWAY", "FIREWALL"],
+        hard: ["ALGORITHM", "ENCRYPTION", "BANDWIDTH", "DATABASE", "PROTOCOL", "ETHERNET", "FIRMWARE", "INTERFACE", "MALWARE", "METADATA", "TOPOLOGY", "DEBUGGING", "PROCESSOR", "PACKETS", "REDUNDANCY", "VIRTUAL", "COMPILER", "MAINFRAME", "LATENCY", "BOOLEAN", "BLOCKCHAIN", "VULNERABILITY", "COMPRESSION", "DECRYPTION", "CLOUD", "SECURITY", "ASSEMBLY", "FIREBASE", "BACKEND", "FRONTEND", "FULLSTACK", "DEPLOYMENT", "MAINFRAME", "BANDWIDTH", "SUPERSET", "MIDDLEWARE", "FIREWALL", "HYPERLINK", "INTRANET", "EXTRANET", "HYPERVISOR", "SNAPSHOT", "BANDWIDTH", "CYBERCRIME", "CRYPTOGRAPHY", "SANDBOX", "DEBUGGER", "RECURSION", "INFRASTRUCTURE", "ANALYTICS"]
+    };
+
+    let diff = 'easy', targetWords = [], found = [], selected = [], isDown = false, startTime, timer;
+    const sfxFound = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3');
+
+    function changeDiff(lv) {
+        diff = lv;
+        document.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('btn-'+lv).classList.add('active');
+        init();
+    }
+
+    function init() {
+        clearInterval(timer);
+        const size = diff === 'easy' ? 10 : (diff === 'medium' ? 13 : 16);
+        targetWords = [...WORDS[diff]].sort(() => 0.5 - Math.random()).slice(0, 15);
+        found = [];
+        document.getElementById('count').innerText = 0;
+        document.getElementById('total').innerText = targetWords.length;
+        
+        let grid = Array(size).fill().map(() => Array(size).fill(''));
+        targetWords.forEach(w => {
+            let placed = false;
+            while (!placed) {
+                let dir = Math.floor(Math.random() * 2), r = Math.floor(Math.random() * size), c = Math.floor(Math.random() * size);
+                let dr = dir === 1 ? 1 : 0, dc = dir === 0 ? 1 : 0;
+                if (r + dr * w.length <= size && c + dc * w.length <= size) {
+                    let ok = true;
+                    for (let i=0; i<w.length; i++) if (grid[r+i*dr][c+i*dc] !== '' && grid[r+i*dr][c+i*dc] !== w[i]) ok = false;
+                    if (ok) { for (let i=0; i<w.length; i++) grid[r+i*dr][c+i*dc] = w[i]; placed = true; }
+                }
+            }
+        });
+
+        for (let r=0; r<size; r++) for (let c=0; c<size; c++) if (!grid[r][c]) grid[r][c] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[Math.floor(Math.random()*26)];
+
+        const gridEl = document.getElementById('grid');
+        gridEl.innerHTML = ''; gridEl.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+        grid.forEach((row, r) => row.forEach((char, c) => {
+            const el = document.createElement('div'); el.className = 'cell'; el.innerText = char;
+            el.dataset.r = r; el.dataset.c = c;
+            el.onmousedown = () => { isDown = true; selected = [{r, c}]; el.classList.add('highlighted'); };
+            el.onmouseenter = () => { if (isDown) { selected.push({r, c}); el.classList.add('highlighted'); } };
+            gridEl.appendChild(el);
+        }));
+
+        const bank = document.getElementById('bank'); bank.innerHTML = '';
+        targetWords.forEach(w => bank.innerHTML += `<span class="word-tag" id="w-${w}">${w}</span>`);
+        
+        startTime = Date.now();
+        timer = setInterval(() => {
+            let sec = Math.floor((Date.now() - startTime)/1000);
+            document.getElementById('timer').innerText = `${Math.floor(sec/60).toString().padStart(2,'0')}:${(sec%60).toString().padStart(2,'0')}`;
+        }, 1000);
+    }
+
+    window.onmouseup = () => {
+        isDown = false;
+        let str = selected.map(p => document.querySelector(`.cell[data-r="${p.r}"][data-c="${p.c}"]`).innerText).join('');
+        let rev = str.split('').reverse().join('');
+        let match = targetWords.find(w => w === str || w === rev);
+        
+        if (match && !found.includes(match)) {
+            found.push(match); sfxFound.play();
+            document.getElementById('w-'+match).classList.add('found');
+            document.getElementById('count').innerText = found.length;
+            selected.forEach(p => document.querySelector(`.cell[data-r="${p.r}"][data-c="${p.c}"]`).classList.add('found'));
+            if (found.length === targetWords.length) {
+                clearInterval(timer);
+                document.getElementById('final-time').innerText = document.getElementById('timer').innerText;
+                document.getElementById('cert-modal').style.display = 'flex';
+            }
+        }
+        document.querySelectorAll('.cell').forEach(c => c.classList.remove('highlighted'));
+        selected = [];
+    };
+
+    init();
+</script>
+</body>
+</html>
