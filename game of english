@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Learning Kingdom</title>
+    <!-- Importing a beautiful rounded font -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #00cec9;
+            --accent: #fdcb6e;
+            --danger: #ff7675;
+            --success: #00b894;
+            --text: #2d3436;
+            --glass: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        /* Dynamic Backgrounds */
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(135deg, #a29bfe 0%, #74b9ff 100%);
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            transition: background 1s ease;
+        }
+
+        body.theme-jungle { background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%); }
+        body.theme-sunset { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        body.theme-ocean { background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%); }
+
+        /* Floating Background Shapes for Beauty */
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            animation: float 20s infinite linear;
+            z-index: 0;
+        }
+        .shape1 { width: 100px; height: 100px; top: 10%; left: 10%; animation-duration: 15s; }
+        .shape2 { width: 150px; height: 150px; bottom: 20%; right: 10%; animation-duration: 25s; }
+        .shape3 { width: 60px; height: 60px; bottom: 10%; left: 20%; animation-duration: 12s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(20px, 40px) rotate(180deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+
+        /* --- Main App Container (Glassmorphism) --- */
+        #app {
+            width: 95%;
+            max-width: 500px;
+            height: 95vh;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 30px;
+            border: 2px solid var(--glass-border);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        /* --- HUD --- */
+        .hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(255,255,255,0.6);
+            border-bottom: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .stat-badge {
+            background: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+            color: var(--text);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            background: white;
+            border: none;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #ddd;
+            transition: transform 0.1s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .icon-btn:active { transform: translateY(4px); box-shadow: none; }
+
+        /* --- Screens --- */
+        .screen {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+            position: absolute;
+            top: 70px; bottom: 0; left: 0; right: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+        }
+
+        .hidden { transform: translateX(50px); opacity: 0; pointer-events: none; visibility: hidden; }
+        .active { transform: translateX(0); opacity: 1; pointer-events: all; visibility: visible; }
+
+        /* --- Buttons --- */
+        .big-btn {
+            width: 100%;
+            max-width: 320px;
+            padding: 20px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 25px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.1s, filter 0.2s;
+            box-shadow: 0 8px 0 rgba(0,0,0,0.15);
+            display: flex; align-items: center; justify-content: center; gap: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .big-btn:active { transform: translateY(4px); box-shadow: 0 4px 0 rgba(0,0,0,0.15); }
+        .big-btn::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(255,255,255,0.2), transparent);
+        }
+
+        .btn-abc { background: linear-gradient(to right, #6c5ce7, #a29bfe); }
+        .btn-math { background: linear-gradient(to right, #00b894, #55efc4); }
+        .btn-shop { background: linear-gradient(to right, #fdcb6e, #ffeaa7); color: #5d4037; }
+        .btn-back { background: #dfe6e9; color: #636e72; font-size: 1rem; width: auto; padding: 10px 30px; margin-top: auto; }
+
+        /* --- Game Area --- */
+        .card-question {
+            background: white;
+            width: 100%; max-width: 350px;
+            min-height: 200px;
+            border-radius: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .q-display { font-size: 4rem; margin: 10px 0; line-height: 1.1; color: var(--primary); }
+        .q-sub { font-size: 1.2rem; color: #888; font-weight: 600; }
+        
+        .grid-answers {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            width: 100%; max-width: 400px;
+        }
+
+        .ans-btn {
+            background: white;
+            border: 2px solid #f0f0f0;
+            border-radius: 20px;
+            height: 90px;
+            font-size: 2.2rem;
+            font-family: 'Fredoka', sans-serif;
+            color: var(--text);
+            cursor: pointer;
+            box-shadow: 0 6px 0 #eee;
+            transition: all 0.2s;
+        }
+        .ans-btn:active { transform: translateY(4px); box-shadow: none; }
+        .ans-btn.correct { background: #00b894; color: white; border-color: #00b894; }
+        .ans-btn.wrong { background: #ff7675; color: white; border-color: #ff7675; animation: shake 0.4s; }
+
+        /* --- Tutorial Grids --- */
+        .grid-learn {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            gap: 12px;
+            width: 100%;
+        }
+        
+        .tile {
+            background: white;
+            border-radius: 15px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        .tile:active { transform: scale(0.9); }
+        .tile-top { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
+        .tile-bot { font-size: 0.8rem; color: #999; }
+
+        /* --- Animations --- */
+        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
+        @keyframes pop { 0%{transform:scale(0.8)} 50%{transform:scale(1.1)} 100%{transform:scale(1)} }
+
+    </style>
+</head>
+<body>
+
+<!-- Floating Background Elements -->
+<div class="bg-shape shape1"></div>
+<div class="bg-shape shape2"></div>
+<div class="bg-shape shape3"></div>
+
+<div id="app">
+
+    <!-- HUD: Heads Up Display -->
+    <div class="hud">
+        <button class="icon-btn" id="btn-home" onclick="goHome()">🏠</button>
+        <div style="display:flex; gap:10px;">
+            <div class="stat-badge" id="badge-life">❤️ <span id="val-life">3</span></div>
+            <div class="stat-badge" style="color:#e67e22">🪙 <span id="val-coin">0</span></div>
+        </div>
+    </div>
+
+    <!-- 1. HOME / MODE SELECT -->
+    <div id="scr-home" class="screen active">
+        <h1 style="font-size:2.5rem; text-align:center; color:#2d3436; margin-bottom:10px;">Learning<br>Kingdom</h1>
+        <p style="color:#636e72; margin-bottom:30px;">Choose your adventure!</p>
+
+        <button class="big-btn btn-abc" onclick="selectMode('abc')">
+            <span style="font-size:2rem">ABC</span> Alphabet World
+        </button>
+
+        <button class="big-btn btn-math" onclick="selectMode('math')">
+            <span style="font-size:2rem">123</span> Math World
+        </button>
+
+        <button class="big-btn btn-shop" onclick="showScreen('scr-shop')">
+            <span>🛒</span> The Market
+        </button>
+    </div>
+
+    <!-- 2. GAME SCREEN -->
+    <div id="scr-game" class="screen hidden">
+        <div class="card-question">
+            <div class="q-display" id="q-content">?</div>
+            <div class="q-sub" id="q-text">Question Text</div>
+        </div>
+        <div class="grid-answers" id="grid-answers"></div>
+    </div>
+
+    <!-- 3. ABC LEARN -->
+    <div id="scr-learn-abc" class="screen hidden">
+        <h2>Alphabet Class</h2>
+        <div class="grid-learn" id="grid-learn-abc"></div>
+        <button class="big-btn btn-back" onclick="goHome()">Exit</button>
+    </div>
+
+    <!-- 4. MATH LEARN -->
+    <div id="scr-learn-math" class="screen hidden">
+        <h2>Numbers Class</h2>
+        <div class="grid-learn" id="grid-learn-math"></div>
+        <button class="big-btn btn-back" onclick="goHome()">Exit</button>
+    </div>
+
+    <!-- 5. SHOP -->
+    <div id="scr-shop" class="screen hidden">
+        <h2>Marketplace</h2>
+        <p>You have 🪙 <span id="shop-coin">0</span></p>
+        
+        <div style="display:grid; gap:15px; width:100%;">
+            <button class="big-btn" style="background:#ff7675; font-size:1.2rem;" onclick="buy('heart')">
+                ❤️ Buy Heart (50)
+            </button>
+            <button class="big-btn" style="background:#56ab2f; font-size:1.2rem;" onclick="buy('jungle')">
+                🌴 Jungle Theme (100)
+            </button>
+            <button class="big-btn" style="background:#f093fb; font-size:1.2rem;" onclick="buy('sunset')">
+                🌅 Sunset Theme (150)
+            </button>
+            <button class="big-btn" style="background:#89f7fe; color:#333; font-size:1.2rem;" onclick="buy('ocean')">
+                🌊 Ocean Theme (150)
+            </button>
+        </div>
+        <button class="big-btn btn-back" onclick="goHome()">Exit</button>
+    </div>
+
+    <!-- 6. MODE SUB-MENU (Play or Learn?) -->
+    <div id="scr-submenu" class="screen hidden">
+        <h2 id="submenu-title">World</h2>
+        <button class="big-btn btn-success" style="background:#00b894" onclick="startGame()">
+            ▶ Play Game
+        </button>
+        <button class="big-btn btn-primary" style="background:#0984e3" onclick="goToTutorial()">
+            🎓 Tutorial
+        </button>
+        <button class="big-btn btn-back" onclick="goHome()">Back</button>
+    </div>
+
+</div>
+
+<script>
+    /* --- DATASETS --- */
+    const abcData = [
+        {l:'A', w:'Apple', i:'🍎'}, {l:'B', w:'Ball', i:'⚽'}, {l:'C', w:'Cat', i:'🐱'},
+        {l:'D', w:'Dog', i:'🐶'}, {l:'E', w:'Elephant', i:'🐘'}, {l:'F', w:'Fish', i:'🐟'},
+        {l:'G', w:'Grapes', i:'🍇'}, {l:'H', w:'House', i:'🏠'}, {l:'I', w:'Ice Cream', i:'🍦'},
+        {l:'J', w:'Juice', i:'🧃'}, {l:'K', w:'Kite', i:'🪁'}, {l:'L', w:'Lion', i:'🦁'},
+        {l:'M', w:'Moon', i:'🌙'}, {l:'N', w:'Nest', i:'🪺'}, {l:'O', w:'Orange', i:'🍊'},
+        {l:'P', w:'Pizza', i:'🍕'}, {l:'Q', w:'Queen', i:'👸'}, {l:'R', w:'Rainbow', i:'🌈'},
+        {l:'S', w:'Star', i:'⭐'}, {l:'T', w:'Tree', i:'🌳'}, {l:'U', w:'Umbrella', i:'☂️'},
+        {l:'V', w:'Violin', i:'🎻'}, {l:'W', w:'Water', i:'💧'}, {l:'X', w:'Xylophone', i:'🎹'},
+        {l:'Y', w:'Yo-Yo', i:'🪀'}, {l:'Z', w:'Zebra', i:'🦓'}
+    ];
+
+    const mathData = [];
+    // Generate Numbers 0-20
+    for(let i=0; i<=20; i++){
+        mathData.push({ n: i, w: i.toString() });
+    }
+
+    /* --- GAME STATE --- */
+    let state = {
+        coins: 0,
+        lives: 3,
+        mode: 'abc', // 'abc' or 'math'
+        isBusy: false
+    };
+
+    /* --- SPEECH --- */
+    function speak(text) {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'en-US';
+        u.rate = 1;
+        u.pitch = 1.1;
+        window.speechSynthesis.speak(u);
+    }
+
+    /* --- NAVIGATION --- */
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => {
+            s.classList.remove('active');
+            s.classList.add('hidden');
+        });
+        document.getElementById(id).classList.remove('hidden');
+        document.getElementById(id).classList.add('active');
+        
+        // Update UI
+        document.getElementById('val-coin').innerText = state.coins;
+        document.getElementById('shop-coin').innerText = state.coins;
+        document.getElementById('val-life').innerText = state.lives;
+    }
+
+    function goHome() {
+        showScreen('scr-home');
+        speak("Home");
+    }
+
+    function selectMode(m) {
+        state.mode = m;
+        document.getElementById('submenu-title').innerText = (m === 'abc') ? "Alphabet World" : "Math World";
+        showScreen('scr-submenu');
+        speak(m === 'abc' ? "Alphabet World" : "Math World");
+    }
+
+    function goToTutorial() {
+        if(state.mode === 'abc') {
+            generateABCLearn();
+            showScreen('scr-learn-abc');
+        } else {
+            generateMathLearn();
+            showScreen('scr-learn-math');
+        }
+    }
+
+    /* --- GENERATORS --- */
+    function generateABCLearn() {
+        const grid = document.getElementById('grid-learn-abc');
+        grid.innerHTML = '';
+        abcData.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'tile';
+            div.innerHTML = <div class="tile-top">${item.l}</div><div class="tile-bot">${item.i}</div>;
+            div.onclick = () => {
+                div.style.transform = "scale(1.2)";
+                setTimeout(()=>div.style.transform="scale(1)", 200);
+                speak(${item.l} is for ${item.w});
+            };
+            grid.appendChild(div);
+        });
+    }
+
+    function generateMathLearn() {
+        const grid = document.getElementById('grid-learn-math');
+        grid.innerHTML = '';
+        mathData.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'tile';
+            // Create small dots for visual counting
+            let dots = "";
+            if(item.n > 0 && item.n <= 10) dots = "•".repeat(item.n);
+            
+            div.innerHTML = <div class="tile-top">${item.n}</div><div class="tile-bot" style="font-size:1.5rem; color:#00b894; line-height:0.5">${dots}</div>;
+            div.onclick = () => {
+                div.style.transform = "scale(1.2)";
+                setTimeout(()=>div.style.transform="scale(1)", 200);
+                speak(item.n.toString());
+            };
+            grid.appendChild(div);
+        });
+    }
+
+    /* --- GAME ENGINE --- */
+    function startGame() {
+        state.lives = 3;
+        showScreen('scr-game');
+        nextRound();
+    }
+
+    function nextRound() {
+        if(state.mode === 'abc') {
+            generateABCQuestion();
+        } else {
+            generateMathQuestion();
+        }
+    }
+
+    function generateABCQuestion() {
+        const qContent = document.getElementById('q-content');
+        const qText = document.getElementById('q-text');
+        const grid = document.getElementById('grid-answers');
+        grid.innerHTML = '';
+
+        // Randomly choose: 0=Match Case, 1=Picture->Letter, 2=Letter->Picture
+        const type = Math.floor(Math.random() * 3);
+        const correct = abcData[Math.floor(Math.random() * abcData.length)];
+        let options = [correct];
+        
+        // Fill options
+        while(options.length < 4) {
+            let r = abcData[Math.floor(Math.random() * abcData.length)];
+            if(!options.includes(r)) options.push(r);
+        }
+        options.sort(() => Math.random() - 0.5);
+
+        if(type === 0) { // Big A -> find a
+            qContent.innerText = correct.l;
+            qText.innerText = "Find the matching small letter";
+            speak("Find small " + correct.l);
+            options.forEach(opt => createBtn(opt.l.toLowerCase(), opt === correct));
+        } else if(type === 1) { // 🍎 -> find A
+            qContent.innerText = correct.i;
+            qText.innerText = "What letter starts this?";
+            speak("What starts with " + correct.w);
+            options.forEach(opt => createBtn(opt.l, opt === correct));
+        } else { // A -> find 🍎
+            qContent.innerText = correct.l;
+            qText.innerText = "Find the picture";
+            speak("Find the " + correct.w);
+            options.forEach(opt => createBtn(opt.i, opt === correct));
+        }
+    }
+
+    function generateMathQuestion() {
+        const qContent = document.getElementById('q-content');
+        const qText = document.getElementById('q-text');
+        const grid = document.getElementById('grid-answers');
+        grid.innerHTML = '';
+
+        // Randomly choose: 0=Count, 1=Addition, 2=Recognition
+        const type = Math.floor(Math.random() * 3);
+
+        if(type === 0) { // COUNTING
+            const num = Math.floor(Math.random() * 9) + 1; // 1-9
+            const icons = ["🍎","⭐","🐸","🎈","⚽"][Math.floor(Math.random()*5)];
+            
+            // Repeat icon string
+            let str = "";
+            for(let i=0; i<num; i++) str += icons + " ";
+            
+            qContent.innerHTML = <span style="font-size:2.5rem">${str}</span>;
+            qText.innerText = "How many?";
+            speak("How many are there?");
+            
+            let options = [num];
+            while(options.length < 4) {
+                let r = Math.floor(Math.random() * 9) + 1;
+                if(!options.includes(r)) options.push(r);
+            }
+            options.sort(() => Math.random() - 0.5);
+            options.forEach(opt => createBtn(opt, opt === num));
+
+        } else if (type === 1) { // ADDITION (Simple)
+            const a = Math.floor(Math.random() * 5);
+            const b = Math.floor(Math.random() * 5);
+            const ans = a + b;
+            
+            qContent.innerText = ${a} + ${b} = ?;
+            qText.innerText = "What is the answer?";
+            speak(What is ${a} plus ${b}?);
+            
+            let options = [ans];
+            while(options.length < 4) {
+                let r = Math.floor(Math.random() * 10);
+                if(!options.includes(r)) options.push(r);
+            }
+            options.sort(() => Math.random() - 0.5);
+            options.forEach(opt => createBtn(opt, opt === ans));
+
+        } else { // RECOGNITION (Audio -> Number)
+            const target = Math.floor(Math.random() * 20);
+            qContent.innerText = "🔊";
+            qText.innerText = "Listen and find the number";
+            speak(Find the number ${target});
+            
+            let options = [target];
+            while(options.length < 4) {
+                let r = Math.floor(Math.random() * 20);
+                if(!options.includes(r)) options.push(r);
+            }
+            options.sort(() => Math.random() - 0.5);
+            options.forEach(opt => createBtn(opt, opt === target));
+        }
+    }
+
+    function createBtn(text, isCorrect) {
+        const btn = document.createElement('button');
+        btn.className = 'ans-btn';
+        btn.innerHTML = text;
+        btn.onclick = () => {
+            if(state.isBusy) return;
+            state.isBusy = true;
+            if(isCorrect) {
+                btn.classList.add('correct');
+                state.coins += 10;
+                speak("Correct!");
+                setTimeout(() => {
+                    state.isBusy = false;
+                    nextRound();
+                }, 1000);
+            } else {
+                btn.classList.add('wrong');
+                state.lives--;
+                speak("Oops!");
+                if(state.lives <= 0) {
+                    setTimeout(() => {
+                        alert("Game Over! Back to menu.");
+                        goHome();
+                        state.isBusy = false;
+                    }, 500);
+                } else {
+                    setTimeout(() => {
+                        btn.classList.remove('wrong');
+                        state.isBusy = false;
+                    }, 500);
+                }
+            }
+            showScreen('scr-game'); // Update UI
+        };
+        document.getElementById('grid-answers').appendChild(btn);
+    }
+
+    /* --- MARKET --- */
+    function buy(item) {
+        let cost = 0;
+        let success = false;
+        if(item === 'heart') { cost=50; if(state.coins>=cost){state.lives++; success=true;} }
+        else if(item === 'jungle') { cost=100; if(state.coins>=cost){document.body.className='theme-jungle'; success=true;} }
+        else if(item === 'sunset') { cost=150; if(state.coins>=cost){document.body.className='theme-sunset'; success=true;} }
+        else if(item === 'ocean') { cost=150; if(state.coins>=cost){document.body.className='theme-ocean'; success=true;} }
+
+        if(success) {
+            state.coins -= cost;
+            speak("Bought!");
+            showScreen('scr-shop');
+        } else {
+            speak("Not enough coins");
+        }
+    }
+
+</script>
+</body>
+</html>
