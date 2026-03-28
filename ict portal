@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>National ICT Portal - Ethiopia | Betsegaw Teka</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --secondary: #1565c0;
+            --accent: #fbc02d;
+            --bg: #f4f7f6;
+            --text: #333;
+            --white: #ffffff;
+            --danger: #d32f2f;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); line-height: 1.6; }
+
+        /* Navigation & Branding */
+        header {
+            background: var(--white);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky; top: 0; z-index: 1000;
+        }
+        .logo-area { display: flex; align-items: center; gap: 15px; }
+        .logo-area img { height: 45px; }
+        nav ul { display: flex; list-style: none; gap: 20px; }
+        nav a { text-decoration: none; color: var(--text); font-weight: 500; cursor: pointer; transition: 0.3s; }
+        nav a:hover { color: var(--primary); }
+
+        .container { max-width: 1100px; margin: 2rem auto; padding: 0 20px; }
+
+        /* Sections */
+        .content-section { display: none; animation: fadeIn 0.5s; }
+        .active-section { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Cards & UI */
+        .card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+            display: inline-block;
+            text-decoration: none;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-secondary { background: var(--secondary); color: white; }
+        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        /* Games UI */
+        .game-box { border: 2px solid #eee; padding: 20px; border-radius: 12px; margin: 20px 0; }
+        .stats-bar { display: flex; justify-content: space-around; background: #e3f2fd; padding: 10px; border-radius: 8px; margin-bottom: 20px; font-weight: bold; }
+        
+        /* Leaderboard Table */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
+        th { background: #f8f9fa; color: var(--secondary); }
+
+        /* AI Floating Chat */
+        #ai-chat {
+            position: fixed; bottom: 80px; right: 20px; width: 300px;
+            background: white; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+            display: none; flex-direction: column; overflow: hidden; z-index: 2000;
+        }
+        .ai-header { background: var(--primary); color: white; padding: 10px; font-weight: bold; }
+        #chat-msgs { height: 200px; overflow-y: auto; padding: 10px; font-size: 0.85rem; }
+
+        /* Certificate */
+        #cert-wrap { border: 10px double #d4af37; padding: 30px; background: #fffdf5; display: none; }
+
+        footer { text-align: center; padding: 3rem; color: #777; border-top: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-area">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/d/d3/SOS_Children%27s_Villages_logo.svg" alt="SOS Logo">
+        <div>
+            <h2 style="font-size: 1.1rem; color: var(--primary);">ICT NATIONAL PORTAL</h2>
+            <p style="font-size: 0.7rem;">Ethiopia Grade 7 & 8</p>
+        </div>
+    </div>
+    <nav>
+        <ul>
+            <li><a onclick="showPage('home')">Home</a></li>
+            <li><a onclick="showPage('tutorials')">Tutorials</a></li>
+            <li><a onclick="showPage('games')">Play Games</a></li>
+            <li><a onclick="showPage('leaderboard')">Rankings</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="container">
+    
+    <section id="home" class="content-section active-section">
+        <div class="card" style="background: linear-gradient(135deg, #e8f5e9, #bbdefb);">
+            <span style="font-size: 3rem;">🎓</span>
+            <h1>Welcome to Your ICT Future</h1>
+            <p>Master your curriculum through interactive tools and games.</p>
+            <div style="margin-top: 20px;">
+                <button class="btn btn-primary" onclick="showPage('games')">Start Learning</button>
+            </div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+            <div class="card">
+                <h3>Live Session</h3>
+                <div class="stats-bar">
+                    <span>Timer: <span id="main-timer">00:00</span></span>
+                    <span style="color:red">❤❤❤</span>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Quick Sign-In</h3>
+                <input type="text" id="student-name" placeholder="Enter Your Name" style="padding:10px; border-radius:5px; border:1px solid #ccc; width:100%;">
+            </div>
+        </div>
+    </section>
+
+    <section id="tutorials" class="content-section">
+        <div class="card">
+            <h2>Grade 7 & 8 Curriculum</h2>
+            <div style="display: flex; gap: 20px; justify-content: center; margin-top: 20px;">
+                <div style="border:1px solid #ddd; padding:20px; border-radius:10px;">
+                    <h4>Grade 7 ICT</h4>
+                    <a href="https://camaraethiopia.org.et/OromiaPrimary/CEE_MoE_Plasma/content/ICT/Primary/ICTSBG7.pdf" target="_blank" class="btn btn-secondary" style="margin-top:10px;">Download Book</a>
+                </div>
+                <div style="border:1px solid #ddd; padding:20px; border-radius:10px;">
+                    <h4>Grade 8 ICT</h4>
+                    <a href="https://camaraethiopia.org.et/OromiaPrimary/CEE_MoE_Plasma/content/ICT/Primary/ICTSBG8.pdf" target="_blank" class="btn btn-secondary" style="margin-top:10px;">Download Book</a>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h3>Learning History</h3>
+            <ul id="hist-list" style="list-style: none; text-align: left;"></ul>
+            <button class="btn" style="background:#666; color:white; margin-top:10px;" onclick="clearHistory()">Clear History</button>
+        </div>
+    </section>
+
+    <section id="games" class="content-section">
+        <div class="card">
+            <h2>ICT Typing Master</h2>
+            <p>Type the ICT terms to earn your certificate!</p>
+            <div class="game-box">
+                <div id="word-display" style="font-size: 2rem; font-weight: bold; color: var(--secondary); margin: 20px;">READY?</div>
+                <input type="text" id="game-input" oninput="checkWord()" placeholder="Type here..." style="padding: 15px; width: 60%; font-size: 1.2rem; border-radius: 8px;">
+                <div style="margin-top: 10px;">Score: <span id="game-score">0</span></div>
+            </div>
+            <button class="btn btn-primary" onclick="startGame()">Start Typing Game</button>
+        </div>
+
+        <div id="cert-wrap">
+            <h1>CERTIFICATE</h1>
+            <p>This recognizes that</p>
+            <h2 id="cert-student-name">Student</h2>
+            <p>has mastered Grade 7 & 8 ICT Concepts.</p>
+            <div style="margin-top: 20px;">
+                <small>Verified by National Portal | <strong>Betsegaw Teka</strong></small>
+            </div>
+            <button class="btn btn-secondary" onclick="window.print()">Print PDF</button>
+        </div>
+    </section>
+
+    <section id="leaderboard" class="content-section">
+        <div class="card">
+            <h2>🏆 National Top Performers</h2>
+            <table id="lead-table">
+                <thead>
+                    <tr><th>Rank</th><th>Name</th><th>Score</th></tr>
+                </thead>
+                <tbody id="lead-body"></tbody>
+            </table>
+            <button class="btn btn-secondary" style="margin-top: 20px;" onclick="exportPDF()">Export Leaderboard to PDF</button>
+        </div>
+    </section>
+
+</div>
+
+<div id="ai-chat">
+    <div class="ai-header">🤖 AI ICT Teacher</div>
+    <div id="chat-msgs"></div>
+    <div style="display:flex;">
+        <input type="text" id="ai-input" style="flex:1; border:none; padding:10px;" placeholder="Ask a question...">
+        <button onclick="askAI()" style="background:var(--primary); color:white; border:none; padding:10px;">Go</button>
+    </div>
+</div>
+<button onclick="toggleAI()" style="position:fixed; bottom:20px; right:20px; width:50px; height:50px; border-radius:50%; background:var(--primary); color:white; border:none; cursor:pointer; font-size:1.5rem; box-shadow:0 4px 10px rgba(0,0,0,0.3);">💬</button>
+
+<footer>
+    <p>National ICT Portal Ethiopia</p>
+    <p><strong>Made by Betsegaw Teka</strong></p>
+    <p>© 2026 Educational Infrastructure</p>
+</footer>
+
+<script>
+    // State Management
+    let score = 0;
+    let timer = 0;
+    let history = JSON.parse(localStorage.getItem('ict_history')) || [];
+    const words = ["CPU", "Software", "Hardware", "Network", "Algorithm", "Internet", "Data", "Binary"];
+    let targetWord = "";
+
+    // Navigation
+    function showPage(id) {
+        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active-section'));
+        document.getElementById(id).classList.add('active-section');
+    }
+
+    // Timer
+    setInterval(() => {
+        timer++;
+        const m = Math.floor(timer/60).toString().padStart(2,'0');
+        const s = (timer%60).toString().padStart(2,'0');
+        document.getElementById('main-timer').innerText = `${m}:${s}`;
+    }, 1000);
+
+    // Typing Game
+    function startGame() {
+        score = 0;
+        document.getElementById('game-score').innerText = score;
+        document.getElementById('cert-wrap').style.display = 'none';
+        nextWord();
+    }
+
+    function nextWord() {
+        targetWord = words[Math.floor(Math.random()*words.length)];
+        document.getElementById('word-display').innerText = targetWord;
+        document.getElementById('game-input').value = "";
+    }
+
+    function checkWord() {
+        const input = document.getElementById('game-input').value;
+        if(input.toLowerCase() === targetWord.toLowerCase()) {
+            score += 10;
+            document.getElementById('game-score').innerText = score;
+            addToHistory("Won 10pts in Typing Game");
+            if(score >= 50) showCert();
+            else nextWord();
+        }
+    }
+
+    // Certificate
+    function showCert() {
+        const name = document.getElementById('student-name').value || "The Student";
+        document.getElementById('cert-student-name').innerText = name;
+        document.getElementById('cert-wrap').style.display = 'block';
+        updateLeaderboard(name, score);
+    }
+
+    // History
+    function addToHistory(msg) {
+        history.push(`${new Date().toLocaleTimeString()}: ${msg}`);
+        localStorage.setItem('ict_history', JSON.stringify(history));
+        renderHistory();
+    }
+
+    function renderHistory() {
+        const list = document.getElementById('hist-list');
+        list.innerHTML = history.slice(-5).map(h => `<li>✅ ${h}</li>`).join('');
+    }
+
+    function clearHistory() {
+        history = [];
+        localStorage.removeItem('ict_history');
+        renderHistory();
+    }
+
+    // AI Teacher
+    function toggleAI() {
+        const chat = document.getElementById('ai-chat');
+        chat.style.display = (chat.style.display === 'flex') ? 'none' : 'flex';
+    }
+
+    function askAI() {
+        const q = document.getElementById('ai-input').value;
+        const box = document.getElementById('chat-msgs');
+        box.innerHTML += `<p><strong>You:</strong> ${q}</p>`;
+        setTimeout(() => {
+            box.innerHTML += `<p><strong>Teacher:</strong> In Grade 8 ICT, we define that as part of Computer Generations. Keep studying!</p>`;
+            box.scrollTop = box.scrollHeight;
+        }, 800);
+        document.getElementById('ai-input').value = "";
+    }
+
+    // Leaderboard & PDF
+    function updateLeaderboard(name, s) {
+        const body = document.getElementById('lead-body');
+        body.innerHTML += `<tr><td>#</td><td>${name}</td><td>${s}</td></tr>`;
+    }
+
+    function exportPDF() {
+        window.print();
+    }
+
+    // Init
+    renderHistory();
+</script>
+
+</body>
+</html>
