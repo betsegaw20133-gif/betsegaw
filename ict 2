@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=none">
+    <title>ICT Master - Betsegaw Teka Edition</title>
+    <style>
+        :root {
+            --primary: #2c3e50; --success: #27ae60; --bg: #ecf0f1;
+            --text: #2c3e50; --accent: #e74c3c; --card: #ffffff;
+            --ethiopia-gold: #febd11; --ethiopia-green: #138808;
+        }
+        .dark-mode {
+            --bg: #1a1a1a; --text: #f1f1f1; --card: #2d2d2d;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg); color: var(--text);
+            margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; transition: 0.3s;
+        }
+        header {
+            width: 100%; background: var(--card); padding: 20px 0; text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-bottom: 5px solid var(--ethiopia-gold);
+        }
+        .logo { width: 70px; height: 70px; object-fit: contain; border-radius: 50%; margin-bottom: 10px; border: 3px solid var(--ethiopia-green); }
+        .dev-tag { font-size: 0.8rem; color: var(--ethiopia-green); font-weight: 900; letter-spacing: 2px; }
+        
+        .game-container { max-width: 600px; width: 95%; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        
+        .book-section { display: flex; gap: 10px; margin-bottom: 20px; width: 100%; justify-content: center; flex-wrap: wrap; }
+        .dl-btn { 
+            padding: 10px 15px; background: #0066cc; color: white; border-radius: 5px; 
+            text-decoration: none; font-size: 0.8rem; font-weight: bold; display: flex; align-items: center; gap: 5px;
+        }
+        .dl-btn:hover { opacity: 0.9; }
+
+        .stats { 
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; 
+            background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 15px; 
+            font-weight: 700; box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-align: center;
+        }
+
+        .btn-group { margin-bottom: 15px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+        .btn { padding: 10px 15px; border: 2px solid var(--primary); background: var(--card); color: var(--primary); border-radius: 8px; cursor: pointer; font-weight: 800; transition: 0.2s; font-size: 0.8rem; }
+        .btn.active { background: var(--primary); color: white; }
+
+        #grid {
+            display: grid; background: var(--card); padding: 10px; border-radius: 12px;
+            box-shadow: 0 15px 25px rgba(0,0,0,0.1); border: 3px solid var(--ethiopia-green);
+            user-select: none; touch-action: none; margin: 0 auto;
+        }
+        .cell {
+            width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: 1.1rem; cursor: pointer; border-radius: 4px; color: var(--text);
+        }
+        .cell.highlighted { background: var(--ethiopia-gold); color: black; }
+        .cell.found { background: var(--success) !important; color: white !important; }
+
+        .word-bank {
+            margin-top: 20px; background: var(--card); padding: 15px; border-radius: 12px;
+            width: 100%; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+        }
+        .word-tag { padding: 6px 15px; background: var(--bg); border-radius: 50px; font-size: 0.85rem; font-weight: 700; color: var(--text); border: 1px solid #ddd; }
+        .word-tag.found { background: var(--success); color: white; text-decoration: line-through; border-color: var(--success); }
+
+        #cert-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); align-items: center; justify-content: center; z-index: 1000;
+        }
+        .cert-card { background: white; padding: 40px; border: 15px double var(--ethiopia-green); text-align: center; max-width: 400px; width: 85%; color: #000; border-radius: 10px; }
+        footer { margin-top: auto; padding: 20px; color: #7f8c8d; font-size: 0.8rem; text-align: center; }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="https://tse1.mm.bing.net/th/id/OIP.fG7NxAje_24iai2j6IQR_gAAAA?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Logo" class="logo">
+    <div class="dev-tag">ENGINEERED BY BETSEGAW TEKA</div>
+    <h1 style="margin: 5px 0; font-size: 1.8rem; color: var(--ethiopia-green);">ICT MASTER: ETHIOPIA</h1>
+</header>
+
+<div class="game-container">
+    <div class="book-section">
+        <a href="https://camaraethiopia.org.et/OromiaPrimary/CEE_MoE_Plasma/content/ICT/Primary/ICTSBG7.pdf" class="dl-btn" target="_blank">📥 Grade 7 Textbook</a>
+        <a href="https://camaraethiopia.org.et/OromiaPrimary/CEE_MoE_Plasma/content/ICT/Primary/ICTSBG8.pdf" class="dl-btn" target="_blank">📥 Grade 8 Textbook</a>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn active" id="btn-easy" onclick="setDiff('easy')">Easy</button>
+        <button class="btn" id="btn-medium" onclick="setDiff('medium')">Medium</button>
+        <button class="btn" id="btn-hard" onclick="setDiff('hard')">Hard</button>
+        <button class="btn" onclick="giveHint()">💡 Hint</button>
+        <button class="btn" onclick="document.body.classList.toggle('dark-mode')">🌙 Night</button>
+    </div>
+
+    <div class="stats">
+        <span>🏆 Level: <span id="lvl">1</span>/10</span>
+        <span>❤️ Lives: <span id="lives">❤️❤️❤️</span></span>
+        <span>⏱ Time: <span id="timer">00:00</span></span>
+        <span>✅ Found: <span id="count">0</span>/5</span>
+    </div>
+
+    <div id="grid"></div>
+    <div class="word-bank" id="bank"></div>
+</div>
+
+<div id="cert-modal">
+    <div class="cert-card">
+        <h2 style="color: var(--ethiopia-green);">CERTIFICATE OF EXCELLENCE</h2>
+        <p>This certifies that the user has mastered the Grade 7 & 8 ICT curriculum terms.</p>
+        <hr>
+        <p>Total Time Taken:</p>
+        <h3 id="final-time" style="color: var(--accent); font-size: 2.5rem;">00:00</h3>
+        <p><i>Official Software by Betsegaw Teka</i></p>
+        <button class="btn" onclick="location.reload()">PLAY AGAIN</button>
+    </div>
+</div>
+
+<footer>BETSEGAW TEKA © 2026 | ICT EDUCATION ETHIOPIA</footer>
+
+<script>
+    const WORDS = {
+        easy: ["MOUSE", "WIFI", "CLICK", "DATA", "ICON", "FILE", "RAM", "WEB", "MODEM", "USER", "LOGO", "DISK", "KEY", "LINK", "CHIP"],
+        medium: ["MONITOR", "BATTERY", "TABLET", "ROUTER", "MEMORY", "WINDOWS", "BROWSER", "HARDWARE", "SOFTWARE", "PRINTER", "SERVER", "CAMERA", "FOLDER", "GOOGLE"],
+        hard: ["PROCESSOR", "DATABASE", "SECURITY", "NETWORK", "FIREWALL", "GRAPHICS", "INTERNET", "PROTOCOL", "COMPILER", "CHIPSET", "PROGRAM", "STORAGE", "SCANNER"]
+    };
+
+    let diff = 'easy', level = 1, lives = 3, targetWords = [], found = [], selected = [], isDown = false, startTime, timer, startPos = null;
+    const sfxFound = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3');
+
+    function setDiff(val) {
+        diff = val; level = 1; lives = 3;
+        document.querySelectorAll('.btn-group .btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('btn-'+val).classList.add('active');
+        init();
+    }
+
+    function init() {
+        if (level === 1) { startTime = Date.now(); clearInterval(timer); timer = setInterval(updateTimer, 1000); }
+        document.getElementById('lvl').innerText = level;
+        document.getElementById('lives').innerText = "❤️".repeat(lives);
+        document.getElementById('count').innerText = 0;
+        
+        const size = diff === 'easy' ? 10 : (diff === 'medium' ? 12 : 14);
+        targetWords = [...WORDS[diff]].sort(() => 0.5 - Math.random()).slice(0, 5);
+        found = [];
+        
+        let grid = Array(size).fill().map(() => Array(size).fill(''));
+        targetWords.forEach(word => {
+            let placed = false;
+            while (!placed) {
+                let dir = Math.floor(Math.random() * (diff === 'easy' ? 2 : (diff === 'medium' ? 3 : 4))); 
+                let r = Math.floor(Math.random() * size), c = Math.floor(Math.random() * size);
+                let dr = 0, dc = 0;
+                let w = word;
+
+                if (dir === 0) dc = 1; // Horizontal
+                if (dir === 1) dr = 1; // Vertical
+                if (dir === 2) { dr = 1; dc = 1; } // Diagonal
+                if (dir === 3) { w = w.split('').reverse().join(''); dc = 1; } // Backward (Hard Mode)
+
+                if (r + dr * w.length <= size && c + dc * w.length <= size) {
+                    let ok = true;
+                    for (let i=0; i<w.length; i++) if (grid[r+i*dr][c+i*dc] !== '' && grid[r+i*dr][c+i*dc] !== w[i]) ok = false;
+                    if (ok) { for (let i=0; i<w.length; i++) grid[r+i*dr][c+i*dc] = w[i]; placed = true; }
+                }
+            }
+        });
+
+        const gridEl = document.getElementById('grid');
+        gridEl.innerHTML = ''; gridEl.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+        for (let r=0; r<size; r++) {
+            for (let c=0; c<size; c++) {
+                const el = document.createElement('div');
+                el.className = 'cell'; el.innerText = grid[r][c] || "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[Math.floor(Math.random()*26)];
+                el.dataset.r = r; el.dataset.c = c;
+                el.onmousedown = () => startSelection(r, c);
+                el.onmouseenter = () => moveSelection(r, c);
+                el.ontouchstart = (e) => { e.preventDefault(); startSelection(r, c); };
+                el.ontouchmove = (e) => {
+                    let t = e.touches[0];
+                    let target = document.elementFromPoint(t.clientX, t.clientY);
+                    if (target && target.dataset.r) moveSelection(parseInt(target.dataset.r), parseInt(target.dataset.c));
+                };
+                gridEl.appendChild(el);
+            }
+        }
+        const bank = document.getElementById('bank'); bank.innerHTML = '';
+        targetWords.forEach(w => bank.innerHTML += `<span class="word-tag" id="w-${w}">${w}</span>`);
+    }
+
+    function startSelection(r, c) { isDown = true; startPos = {r, c}; selected = [{r, c}]; highlight(); }
+    function moveSelection(r, c) {
+        if (!isDown) return;
+        let dr = r - startPos.r, dc = c - startPos.c;
+        if (dr === 0 || dc === 0 || Math.abs(dr) === Math.abs(dc)) {
+            selected = [];
+            let steps = Math.max(Math.abs(dr), Math.abs(dc));
+            let rStep = dr === 0 ? 0 : dr/steps, cStep = dc === 0 ? 0 : dc/steps;
+            for(let i=0; i<=steps; i++) selected.push({r: startPos.r + i*rStep, c: startPos.c + i*cStep});
+            highlight();
+        }
+    }
+    function highlight() {
+        document.querySelectorAll('.cell').forEach(c => c.classList.remove('highlighted'));
+        selected.forEach(p => document.querySelector(`.cell[data-r="${p.r}"][data-c="${p.c}"]`)?.classList.add('highlighted'));
+    }
+
+    function endSelection() {
+        if (!isDown) return;
+        isDown = false;
+        let cells = selected.map(p => document.querySelector(`.cell[data-r="${p.r}"][data-c="${p.c}"]`));
+        let str = cells.filter(c => c).map(c => c.innerText).join('');
+        let rev = str.split('').reverse().join('');
+        let match = targetWords.find(w => w === str || w === rev);
+        
+        if (match && !found.includes(match)) {
+            found.push(match); sfxFound.play();
+            document.getElementById('w-'+match).classList.add('found');
+            document.getElementById('count').innerText = found.length;
+            cells.forEach(c => c && c.classList.add('found'));
+            if (found.length === 5) {
+                if(level < 10) { 
+                    level++; setTimeout(() => { alert("LEVEL " + level + " UNLOCKED!"); init(); }, 300); 
+                } else {
+                    clearInterval(timer);
+                    document.getElementById('final-time').innerText = document.getElementById('timer').innerText;
+                    document.getElementById('cert-modal').style.display = 'flex';
+                }
+            }
+        } else if (selected.length > 2) {
+            lives--;
+            document.getElementById('lives').innerText = "❤️".repeat(Math.max(0, lives));
+            if(lives <= 0) { alert("CURRICULUM CHALLENGE FAILED! Restarting Level 1."); level = 1; lives = 3; init(); }
+        }
+        document.querySelectorAll('.cell').forEach(c => c.classList.remove('highlighted'));
+    }
+
+    function giveHint() {
+        let w = targetWords.find(word => !found.includes(word));
+        if (w) alert("HINT: Look for '" + w + "' starts with '" + w[0] + "'");
+    }
+
+    function updateTimer() {
+        let sec = Math.floor((Date.now() - startTime)/1000);
+        document.getElementById('timer').innerText = `${Math.floor(sec/60).toString().padStart(2,'0')}:${(sec%60).toString().padStart(2,'0')}`;
+    }
+
+    window.onmouseup = endSelection; window.ontouchend = endSelection;
+    init();
+</script>
+</body>
+</html>
