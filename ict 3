@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICT Ethiopia Portal - Betsegaw Teka</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #138808; /* Ethiopia Green */
+            --secondary: #febd11; /* Ethiopia Gold */
+            --danger: #e74c3c;
+            --dark: #2c3e50;
+            --light: #f8f9fa;
+            --white: #ffffff;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        
+        body { background-color: var(--light); color: var(--dark); overflow-x: hidden; }
+
+        /* Navigation Bar */
+        nav {
+            background: var(--white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--primary); font-weight: 800; font-size: 1.2rem; }
+        .nav-logo img { width: 40px; }
+        .nav-links { display: flex; gap: 20px; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--dark); font-weight: 600; font-size: 0.9rem; transition: 0.3s; }
+        .nav-links a:hover { color: var(--primary); }
+
+        /* Hero Header */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            color: var(--white);
+            padding: 4rem 5%;
+            text-align: center;
+            border-bottom: 8px solid var(--secondary);
+        }
+        header h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        header p { opacity: 0.9; font-size: 1.1rem; }
+
+        /* Main Layout */
+        .main-wrapper {
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* Sidebar - Resources */
+        .sidebar { display: flex; flex-direction: column; gap: 20px; }
+        .card { background: var(--white); padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .card h3 { margin-bottom: 15px; border-left: 4px solid var(--primary); padding-left: 10px; }
+        
+        .dl-link { 
+            display: flex; align-items: center; gap: 10px; padding: 12px; background: #f0f7f0; 
+            border-radius: 8px; text-decoration: none; color: var(--dark); font-weight: 600; margin-bottom: 10px; transition: 0.2s;
+        }
+        .dl-link:hover { background: var(--primary); color: var(--white); }
+
+        /* Game Area */
+        .game-section { background: var(--white); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; }
+        
+        .game-controls { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        .btn { padding: 10px 20px; border: 2px solid var(--primary); background: transparent; color: var(--primary); border-radius: 30px; cursor: pointer; font-weight: 700; transition: 0.3s; }
+        .btn.active { background: var(--primary); color: white; }
+        .btn:hover { transform: translateY(-2px); }
+
+        .stats-bar { display: flex; justify-content: space-around; background: #f1f1f1; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-weight: bold; }
+
+        #grid { display: grid; margin: 0 auto; background: #eee; padding: 10px; border-radius: 10px; user-select: none; touch-action: none; }
+        .cell { width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; font-weight: 800; cursor: pointer; transition: 0.1s; border-radius: 4px; }
+        .cell.highlighted { background: var(--secondary); color: black; }
+        .cell.found { background: var(--primary) !important; color: white !important; }
+
+        .word-bank { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 20px; }
+        .word-tag { padding: 5px 15px; background: #e8f5e9; border-radius: 20px; font-size: 0.8rem; font-weight: 600; border: 1px solid #c8e6c9; }
+        .word-tag.found { text-decoration: line-through; background: #ccc; color: #777; }
+
+        /* Footer */
+        footer { background: var(--dark); color: var(--white); padding: 40px 5%; text-align: center; margin-top: 50px; }
+        .footer-logo { font-size: 1.5rem; font-weight: 800; margin-bottom: 10px; }
+        
+        /* Night Mode Support */
+        .dark-mode { background-color: #121212; color: #eee; }
+        .dark-mode .card, .dark-mode nav, .dark-mode .game-section { background: #1e1e1e; color: #eee; }
+        .dark-mode .nav-links a { color: #eee; }
+
+        @media (max-width: 900px) {
+            .main-wrapper { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="#" class="nav-logo">
+        <img src="https://tse1.mm.bing.net/th/id/OIP.fG7NxAje_24iai2j6IQR_gAAAA?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Logo">
+        <span>ICT PORTAL</span>
+    </a>
+    <ul class="nav-links">
+        <li><a href="#game">Word Search</a></li>
+        <li><a href="#">Tutorials</a></li>
+        <li><a href="#">Online Exams</a></li>
+        <li><button onclick="document.body.classList.toggle('dark-mode')" style="background:none; border:none; cursor:pointer; font-size:1.2rem;">🌙</button></li>
+    </ul>
+</nav>
+
+<header>
+    <div class="dev-tag">MADE BY BETSEGAW TEKA</div>
+    <h1>Ethiopian National ICT Portal</h1>
+    <p>Grade 7 & 8 Educational Excellence Hub</p>
+</header>
+
+<div class="main-wrapper">
+    <div class="game-section" id="game">
+        <h3>ICT Mastery Game</h3>
+        <p style="margin-bottom: 20px;">Find 5 curriculum words to level up!</p>
+        
+        <div class="game-controls">
+            <button class="btn active" id="btn-easy" onclick="setDiff('easy')">Easy</button>
+            <button class="btn" id="btn-medium" onclick="setDiff('medium')">Medium</button>
+            <button class="btn" id="btn-hard" onclick="setDiff('hard')">Hard</button>
+        </div>
+
+        <div class="stats-bar">
+            <span>🏆 Level: <span id="lvl">1</span></span>
+            <span>❤️ Lives: <span id="lives">❤️❤️❤️</span></span>
+            <span>⏱ <span id="timer">00:00</span></span>
+        </div>
+
+        <div id="grid"></div>
+        <div class="word-bank" id="bank"></div>
+    </div>
+
+    <div class="sidebar">
+        <div class="card">
+            <h3>Textbooks</h3>
+            <a href="https://camaraethiopia.org.et/OromiaPrimary/CEE_MoE_Plasma/content/ICT/Primary/ICTSBG7.pdf" target="_blank" class="dl-link">📄 Grade 7 Student Book</a>
+            <a href="https://camaraethiopia.org.et/OromiaPrimary/CEE_MoE_Plasma/content/ICT/Primary/ICTSBG8.pdf" target="_blank" class="dl-link">📄 Grade 8 Student Book</a>
+        </div>
+        
+        <div class="card">
+            <h3>Leaderboard</h3>
+            <p style="font-size: 0.9rem; color: #666;">Top players will appear here after the national exam launch.</p>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-logo">MADE BY BETSEGAW TEKA</div>
+    <p>© 2026 ICT National Educational Portal. All Rights Reserved.</p>
+    <p style="font-size: 0.8rem; margin-top: 10px; opacity: 0.6;">Designed for the Ministry of Education ICT Initiative</p>
+</footer>
+
+<script>
+    const WORDS = {
+        easy: ["MOUSE", "WIFI", "DATA", "ICON", "SCREEN", "RAM", "KEY", "FILE", "LINK", "WEB"],
+        medium: ["MONITOR", "BATTERY", "ROUTER", "MEMORY", "WINDOWS", "BROWSER", "HARDWARE", "SOFTWARE", "SERVER"],
+        hard: ["PROCESSOR", "DATABASE", "SECURITY", "NETWORK", "FIREWALL", "GRAPHICS", "PROTOCOL", "COMPILER"]
+    };
+
+    let diff = 'easy', level = 1, lives = 3, targetWords = [], found = [], selected = [], isDown = false, startTime, timer, startPos = null;
+    const sfxFound = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3');
+
+    function setDiff(val) {
+        diff = val; level = 1; lives = 3;
+        document.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('btn-'+val).classList.add('active');
+        init();
+    }
+
+    function init() {
+        if (level === 1) { startTime = Date.now(); clearInterval(timer); timer = setInterval(updateTimer, 1000); }
+        document.getElementById('lvl').innerText = level;
+        document.getElementById('lives').innerText = "❤️".repeat(lives);
+        
+        const size = diff === 'easy' ? 10 : (diff === 'medium' ? 12 : 14);
+        targetWords = [...WORDS[diff]].sort(() => 0.5 - Math.random()).slice(0, 5);
+        found = [];
+        
+        let grid = Array(size).fill().map(() => Array(size).fill(''));
+        targetWords.forEach(word => {
+            let placed = false;
+            while (!placed) {
+                let dir = Math.floor(Math.random() * (diff === 'easy' ? 2 : 4)); 
+                let r = Math.floor(Math.random() * size), c = Math.floor(Math.random() * size);
+                let dr = 0, dc = 0; let w = word;
+                if (dir === 0) dc = 1; else if (dir === 1) dr = 1; else if (dir === 2) { dr = 1; dc = 1; } else { w = w.split('').reverse().join(''); dc = 1; }
+                if (r + dr * w.length <= size && c + dc * w.length <= size) {
+                    let ok = true;
+                    for (let i=0; i<w.length; i++) if (grid[r+i*dr][c+i*dc] !== '' && grid[r+i*dr][c+i*dc] !== w[i]) ok = false;
+                    if (ok) { for (let i=0; i<w.length; i++) grid[r+i*dr][c+i*dc] = w[i]; placed = true; }
+                }
+            }
+        });
+
+        const gridEl = document.getElementById('grid');
+        gridEl.innerHTML = ''; gridEl.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+        for (let r=0; r<size; r++) {
+            for (let c=0; c<size; c++) {
+                const el = document.createElement('div');
+                el.className = 'cell'; el.innerText = grid[r][c] || "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[Math.floor(Math.random()*26)];
+                el.dataset.r = r; el.dataset.c = c;
+                el.onmousedown = () => startSelection(r, c);
+                el.onmouseenter = () => moveSelection(r, c);
+                el.ontouchstart = (e) => { e.preventDefault(); startSelection(r, c); };
+                el.ontouchmove = (e) => {
+                    let t = e.touches[0];
+                    let target = document.elementFromPoint(t.clientX, t.clientY);
+                    if (target && target.dataset.r) moveSelection(parseInt(target.dataset.r), parseInt(target.dataset.c));
+                };
+                gridEl.appendChild(el);
+            }
+        }
+        const bank = document.getElementById('bank'); bank.innerHTML = '';
+        targetWords.forEach(w => bank.innerHTML += `<span class="word-tag" id="w-${w}">${w}</span>`);
+    }
+
+    function startSelection(r, c) { isDown = true; startPos = {r, c}; selected = [{r, c}]; highlight(); }
+    function moveSelection(r, c) {
+        if (!isDown) return;
+        let dr = r - startPos.r, dc = c - startPos.c;
+        if (dr === 0 || dc === 0 || Math.abs(dr) === Math.abs(dc)) {
+            selected = [];
+            let steps = Math.max(Math.abs(dr), Math.abs(dc));
+            let rStep = dr === 0 ? 0 : dr/steps, cStep = dc === 0 ? 0 : dc/steps;
+            for(let i=0; i<=steps; i++) selected.push({r: startPos.r + i*rStep, c: startPos.c + i*cStep});
+            highlight();
+        }
+    }
+    function highlight() {
+        document.querySelectorAll('.cell').forEach(c => c.classList.remove('highlighted'));
+        selected.forEach(p => document.querySelector(`.cell[data-r="${p.r}"][data-c="${p.c}"]`)?.classList.add('highlighted'));
+    }
+
+    function endSelection() {
+        if (!isDown) return; isDown = false;
+        let cells = selected.map(p => document.querySelector(`.cell[data-r="${p.r}"][data-c="${p.c}"]`));
+        let str = cells.filter(c => c).map(c => c.innerText).join('');
+        let rev = str.split('').reverse().join('');
+        let match = targetWords.find(w => w === str || w === rev);
+        if (match && !found.includes(match)) {
+            found.push(match); sfxFound.play();
+            document.getElementById('w-'+match).classList.add('found');
+            cells.forEach(c => c && c.classList.add('found'));
+            if (found.length === 5) {
+                if(level < 10) { level++; setTimeout(() => { alert("LEVEL " + level + " UNLOCKED!"); init(); }, 300); } 
+                else { alert("🎉 YOU ARE A NATIONAL ICT MASTER!"); location.reload(); }
+            }
+        } else if (selected.length > 2) {
+            lives--; document.getElementById('lives').innerText = "❤️".repeat(Math.max(0, lives));
+            if(lives <= 0) { alert("Try again! Restarting Level 1."); level = 1; lives = 3; init(); }
+        }
+        document.querySelectorAll('.cell').forEach(c => c.classList.remove('highlighted'));
+    }
+
+    function updateTimer() {
+        let sec = Math.floor((Date.now() - startTime)/1000);
+        document.getElementById('timer').innerText = `${Math.floor(sec/60).toString().padStart(2,'0')}:${(sec%60).toString().padStart(2,'0')}`;
+    }
+
+    window.onmouseup = endSelection; window.ontouchend = endSelection;
+    init();
+</script>
+</body>
+</html>
