@@ -2,351 +2,627 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=none">
-    <title>ICT Master - Betsegaw Teka Ultimate Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethiopia National ICT Portal - SOS Pro Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #2c3e50; --success: #27ae60; --bg: #f0f2f5;
-            --text: #2c3e50; --accent: #e74c3c; --card: #ffffff;
-            --ethiopia-gold: #febd11; --ethiopia-green: #138808;
-            --ethiopia-red: #da291c;
+            --primary: #00b894;
+            --secondary: #0984e3;
+            --success: #00cec9;
+            --danger: #d63031;
+            --warning: #fdcb6e;
+            --dark: #2d3436;
+            --gold: #f1c40f;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
         }
-        .dark-mode {
-            --bg: #121212; --text: #e0e0e0; --card: #1e1e1e;
-        }
+
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg); color: var(--text);
-            margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; transition: 0.3s;
+            font-family: 'Poppins', sans-serif;
+            /* Deep, modern tech gradient */
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%, #00cec9 200%);
+            background-attachment: fixed;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
         }
 
-        /* UI Elements */
-        header {
-            width: 100%; background: var(--card); padding: 15px 0; text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-bottom: 5px solid var(--ethiopia-gold);
+        /* Glassmorphism Utilities */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
         }
-        .logo { width: 80px; height: 80px; object-fit: contain; border-radius: 50%; border: 3px solid var(--ethiopia-green); box-shadow: 0 0 15px rgba(0,0,0,0.1); }
-        
-        .nav-tabs { display: flex; background: var(--card); width: 100%; justify-content: center; gap: 10px; padding: 10px 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        
-        .container { max-width: 800px; width: 95%; padding: 20px; }
 
-        /* Auth Style */
-        #auth-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: flex; align-items: center; justify-content: center; }
-        .auth-card { background: var(--card); padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); text-align: center; width: 300px; }
-        input { width: 90%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ddd; }
-
-        /* Game Sections */
-        .game-section { display: none; flex-direction: column; align-items: center; animation: fadeIn 0.5s; }
-        .active-section { display: flex; }
-
-        /* Stats Bar */
-        .stats-bar {
-            display: flex; justify-content: space-around; width: 100%; 
-            background: var(--card); padding: 15px; border-radius: 15px; margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05); font-weight: bold;
+        /* Header UI */
+        #top-bar {
+            width: 100%;
+            background: rgba(45, 52, 54, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--glass-border);
         }
-        .stat-item { display: flex; align-items: center; gap: 5px; }
 
-        /* Market */
-        .market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; }
-        .item-card { background: var(--card); padding: 15px; border-radius: 10px; text-align: center; border: 2px solid var(--ethiopia-gold); }
+        .container-hud {
+            width: 90%;
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+        }
 
-        /* Writing Game */
-        #writing-word { font-size: 2rem; letter-spacing: 5px; margin: 20px; color: var(--ethiopia-green); }
+        .stat-item {
+            display: flex; align-items: center; gap: 8px; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* Main Game Box */
+        #app-container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 40px 0;
+            border-radius: 25px;
+            padding: 40px;
+            min-height: 550px;
+            position: relative;
+            overflow: hidden;
+            color: var(--dark);
+            background: rgba(255, 255, 255, 0.9); /* Slightly opaque white for readability */
+        }
+
+        .screen { display: none; }
+        .active { display: block; animation: fadeIn 0.5s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Beauty Elements */
+        h1, h2 { text-align: center; color: var(--dark); margin-bottom: 5px; }
+        .subtitle { text-align: center; color: #636e72; margin-bottom: 30px; font-weight: 600; }
         
-        /* Matching Game */
-        .match-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; }
-        .match-btn { padding: 15px; background: var(--card); border: 2px solid var(--primary); border-radius: 8px; cursor: pointer; }
-        .match-btn.selected { background: var(--ethiopia-gold); }
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .btn-main { background: linear-gradient(45deg, var(--secondary), #00cec9); color: white; }
+        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(9, 132, 227, 0.4); }
+        .btn-hint { background: linear-gradient(45deg, var(--warning), #e1b12c); color: var(--dark); }
 
-        /* Animations */
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes celebrate { 0% { transform: scale(1); } 50% { transform: scale(1.1); color: var(--ethiopia-gold); } 100% { transform: scale(1); } }
-        .congrats { animation: celebrate 0.5s ease infinite; text-align: center; }
+        /* Game Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: 0.3s;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        .card:hover { border-color: var(--secondary); transform: translateY(-10px); box-shadow: 0 15px 30px rgba(9, 132, 227, 0.2); }
 
-        /* Reuse Search Grid Styles from your original */
-        #grid { display: grid; background: var(--card); padding: 10px; border-radius: 12px; border: 3px solid var(--ethiopia-green); user-select: none; }
-        .cell { width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; font-weight: 900; cursor: pointer; }
-        .cell.found { background: var(--success) !important; color: white; }
-        .cell.highlighted { background: var(--ethiopia-gold); }
+        /* Level Indicator */
+        .level-badge {
+            background: var(--dark); color: var(--gold);
+            padding: 6px 18px; border-radius: 20px;
+            font-size: 0.9rem; font-weight: bold; display: inline-block;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
 
-        /* Modal */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 3000; align-items: center; justify-content: center; }
-        .cert-card { background: white; padding: 30px; border: 10px double var(--ethiopia-green); text-align: center; color: black; max-width: 400px; border-radius: 10px; }
-        
-        .btn { padding: 10px 20px; border: none; background: var(--ethiopia-green); color: white; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        .btn-tab { padding: 10px; border: none; background: none; font-weight: bold; color: var(--text); cursor: pointer; border-bottom: 3px solid transparent; }
-        .btn-tab.active { border-bottom: 3px solid var(--ethiopia-red); color: var(--ethiopia-red); }
+        /* Progress Bar */
+        .progress-container {
+            width: 100%; height: 12px; background: #dfe6e9;
+            border-radius: 10px; margin: 25px 0; overflow: hidden;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+        }
+        #progress-bar {
+            height: 100%; width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Modals */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
+            display: none; justify-content: center; align-items: center; z-index: 1000;
+        }
+        .modal-content {
+            background: white; padding: 40px; border-radius: 25px;
+            max-width: 500px; width: 90%; text-align: center; color: var(--dark);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        /* Professional Certificate Styles */
+        .cert-paper {
+            border: 20px solid #fff;
+            outline: 10px solid var(--gold);
+            padding: 50px 40px;
+            background: url('https://www.transparenttextures.com/patterns/cream-paper.png'), #fffaf0;
+            font-family: 'Georgia', serif;
+            position: relative;
+            max-width: 700px;
+        }
+        .cert-header { font-size: 1.2rem; color: var(--secondary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px;}
+        .cert-paper h2 { font-size: 3.5rem; margin: 0; color: #b8860b; font-weight: normal; letter-spacing: 5px; }
+        .cert-name { font-size: 2.8rem; border-bottom: 2px solid var(--dark); display: inline-block; padding: 0 40px; margin: 25px 0; color: var(--dark); font-style: italic;}
+        .signature-line { margin-top: 40px; display: flex; justify-content: space-between; font-size: 0.9rem; font-family: 'Poppins', sans-serif;}
+        .sig-box { border-top: 1px solid var(--dark); padding-top: 5px; width: 40%; text-align: center; }
+
+        /* Matching Game Specifics */
+        .match-area { display: flex; justify-content: space-between; gap: 20px; }
+        .match-box { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+        .match-item { 
+            padding: 18px; background: #f1f2f6; border-radius: 12px; cursor: pointer; 
+            border: 2px solid #dfe4ea; text-align: center; font-weight: bold; transition: 0.2s;
+        }
+        .match-item:hover { background: #eccc68; }
+        .match-item.selected { background: var(--secondary); border-color: var(--secondary); color: white; transform: scale(1.05); }
+        .match-item.correct { background: var(--success); color: white; opacity: 0.5; pointer-events: none; }
+
+        input[type="text"] {
+            width: 100%; padding: 18px; border-radius: 12px; border: 2px solid #dfe6e9;
+            font-size: 1.2rem; margin-bottom: 20px; box-sizing: border-box; font-family: 'Poppins';
+        }
+        input[type="text"]:focus { outline: none; border-color: var(--secondary); }
     </style>
 </head>
 <body>
 
-<div id="auth-overlay">
-    <div class="auth-card">
-        <img src="https://tse1.mm.bing.net/th/id/OIP.fG7NxAje_24iai2j6IQR_gAAAA?rs=1&pid=ImgDetMain&o=7&rm=3" width="50" alt="logo">
-        <h2>ICT Master Sign-In</h2>
-        <input type="text" id="username" placeholder="Enter Your Name">
-        <button class="btn" onclick="signIn()">Enter System</button>
-    </div>
-</div>
-
-<header>
-    <img src="https://tse1.mm.bing.net/th/id/OIP.fG7NxAje_24iai2j6IQR_gAAAA?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Logo" class="logo">
-    <div style="font-size: 0.7rem; font-weight: bold; color: var(--ethiopia-green);">ENGINEERED BY BETSEGAW TEKA</div>
-    <h1 style="margin: 5px 0; font-size: 1.5rem;">ICT MASTER: ETHIOPIA</h1>
-</header>
-
-<nav class="nav-tabs">
-    <button class="btn-tab active" onclick="showSection('search')">Word Search</button>
-    <button class="btn-tab" onclick="showSection('writing')">Writing</button>
-    <button class="btn-tab" onclick="showSection('matching')">Matching</button>
-    <button class="btn-tab" onclick="showSection('market')">Market</button>
-</nav>
-
-<div class="container">
-    <div class="stats-bar">
-        <div class="stat-item">🏆 <span id="lvl">1</span></div>
-        <div class="stat-item">❤️ <span id="lives-display">3</span></div>
-        <div class="stat-item">⏱️ <span id="timer">00:00</span></div>
-        <div class="stat-item">🪙 <span id="coins">0</span></div>
-    </div>
-
-    <div id="section-search" class="game-section active-section">
-        <div id="grid"></div>
-        <div id="bank" style="margin-top:15px; display:flex; flex-wrap:wrap; gap:5px;"></div>
-    </div>
-
-    <div id="section-writing" class="game-section">
-        <h3>Type the ICT Term</h3>
-        <div id="writing-word">COMPUTER</div>
-        <input type="text" id="writing-input" autocomplete="off" style="font-size: 1.5rem; text-align: center;">
-        <p>Press Enter to Submit</p>
-    </div>
-
-    <div id="section-matching" class="game-section">
-        <h3>Match Hardware with Function</h3>
-        <div class="match-container" id="match-zone"></div>
-    </div>
-
-    <div id="section-market" class="game-section">
-        <h3>ICT Market</h3>
-        <div class="market-grid">
-            <div class="item-card">
-                <h4>Extra Life ❤️</h4>
-                <p>Cost: 50 Coins</p>
-                <button class="btn" onclick="buyItem('life')">Buy</button>
-            </div>
-            <div class="item-card">
-                <h4>Time Freeze ❄️</h4>
-                <p>Cost: 30 Coins</p>
-                <button class="btn" onclick="buyItem('freeze')">Buy</button>
-            </div>
+    <div id="top-bar">
+        <div class="container-hud">
+            <div class="stat-item">👤 <span id="hud-name">Guest</span></div>
+            <div class="stat-item">❤️ <span id="hud-lives">3</span></div>
+            <div class="stat-item">🪙 <span id="hud-coins">0</span></div>
+            <div class="stat-item">⏱️ <span id="hud-timer">00:00</span></div>
+            <button class="btn btn-hint" style="padding: 8px 15px; font-size: 0.9rem;" onclick="openMarket()">🛒 Market</button>
         </div>
     </div>
-</div>
 
-<div id="modal" class="modal">
-    <div class="cert-card" id="cert-content">
-        </div>
-</div>
-
-<script>
-    // Configuration & State
-    const DATA = [
-        {w: "MOUSE", d: "Pointing Device"}, {w: "RAM", d: "Temporary Memory"},
-        {w: "WIFI", d: "Wireless Network"}, {w: "CPU", d: "Brain of Computer"},
-        {w: "URL", d: "Web Address"}, {w: "DISK", d: "Storage Media"}
-    ];
-
-    let state = {
-        user: "Guest", level: 1, lives: 3, coins: 0, 
-        time: 0, activeGame: 'search',
-        searchWords: [], foundWords: []
-    };
-
-    let timerInterval;
-
-    // Core Functions
-    function signIn() {
-        const name = document.getElementById('username').value;
-        if(name) {
-            state.user = name;
-            document.getElementById('auth-overlay').style.display = 'none';
-            startTimer();
-            initSearchGame();
-        }
-    }
-
-    function startTimer() {
-        timerInterval = setInterval(() => {
-            state.time++;
-            const m = Math.floor(state.time / 60).toString().padStart(2, '0');
-            const s = (state.time % 60).toString().padStart(2, '0');
-            document.getElementById('timer').innerText = `${m}:${s}`;
-        }, 1000);
-    }
-
-    function updateUI() {
-        document.getElementById('lvl').innerText = state.level;
-        document.getElementById('lives-display').innerText = state.lives;
-        document.getElementById('coins').innerText = state.coins;
-    }
-
-    function showSection(id) {
-        document.querySelectorAll('.game-section').forEach(s => s.classList.remove('active-section'));
-        document.querySelectorAll('.btn-tab').forEach(b => b.classList.remove('active'));
-        document.getElementById('section-' + id).classList.add('active-section');
-        event.target.classList.add('active');
-        state.activeGame = id;
-        if(id === 'writing') initWritingGame();
-        if(id === 'matching') initMatchingGame();
-    }
-
-    // --- WORD SEARCH LOGIC (Optimized Version of your code) ---
-    function initSearchGame() {
-        const gridEl = document.getElementById('grid');
-        gridEl.innerHTML = '';
-        state.searchWords = DATA.map(x => x.w).slice(0, 4);
-        gridEl.style.gridTemplateColumns = `repeat(10, 1fr)`;
+    <div id="app-container">
         
-        // Simplified grid generation for demo
-        for(let i=0; i<100; i++) {
-            const cell = document.createElement('div');
-            cell.className = 'cell';
-            cell.innerText = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-            cell.onclick = function() {
-                this.classList.toggle('highlighted');
-                checkSearchWin();
-            };
-            gridEl.appendChild(cell);
-        }
-        renderBank();
-    }
+        <!-- Welcome Screen -->
+        <div id="screen-welcome" class="screen active">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <span class="level-badge" style="background: var(--secondary); color: white;">Ethiopia National ICT Portal</span>
+            </div>
+            <h1>SOS ICT Learning System</h1>
+            <p class="subtitle">Grade 7 & 8 Curriculum Mastery</p>
+            <div style="text-align: center; margin-top: 40px;">
+                <input type="text" id="player-input" placeholder="Enter your full name to begin..." style="max-width: 400px; text-align: center;">
+                <br>
+                <button class="btn btn-main" style="font-size: 1.2rem; padding: 15px 40px;" onclick="initPlayer()">Join the Academy</button>
+            </div>
+        </div>
 
-    function renderBank() {
-        const bank = document.getElementById('bank');
-        bank.innerHTML = state.searchWords.map(w => `<span style="padding:5px; border:1px solid #ccc">${w}</span>`).join('');
-    }
+        <!-- Menu Screen -->
+        <div id="screen-menu" class="screen">
+            <h2>National ICT Challenge</h2>
+            <p class="subtitle">Select your game mode to earn your certificate</p>
+            <div class="grid">
+                <div class="card" onclick="startMode('choosing')">
+                    <div class="level-badge">30 Levels</div>
+                    <h3 style="color: var(--secondary)">Choosing Game</h3>
+                    <p>Multiple Choice Questions</p>
+                </div>
+                <div class="card" onclick="startMode('writing')">
+                    <div class="level-badge">30 Levels</div>
+                    <h3 style="color: var(--secondary)">Writing Game</h3>
+                    <p>Vocabulary & Definitions</p>
+                </div>
+                <div class="card" onclick="startMode('matching')">
+                    <div class="level-badge">30 Levels</div>
+                    <h3 style="color: var(--secondary)">Matching Game</h3>
+                    <p>Logic Connections</p>
+                </div>
+                <div class="card" onclick="startMode('fillblank')">
+                    <div class="level-badge">30 Levels</div>
+                    <h3 style="color: var(--secondary)">Fill in Blank</h3>
+                    <p>Technical Sentence Gaps</p>
+                </div>
+            </div>
+        </div>
 
-    function checkSearchWin() {
-        // In a real upgrade, we'd check coordinates. For now, simulate progress:
-        if(Math.random() > 0.95) {
-            triggerWin("Word Search Master");
-        }
-    }
+        <!-- Game Interface -->
+        <div id="screen-game" class="screen">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <button class="btn" style="background: #dfe6e9; color: var(--dark);" onclick="goHome()">🏠 Menu</button>
+                <div id="game-level-tag" class="level-badge">Level 1/30</div>
+            </div>
+            
+            <div class="progress-container">
+                <div id="progress-bar"></div>
+            </div>
 
-    // --- WRITING GAME LOGIC ---
-    function initWritingGame() {
-        const target = DATA[Math.floor(Math.random()*DATA.length)].w;
-        document.getElementById('writing-word').innerText = target;
-        const input = document.getElementById('writing-input');
-        input.value = '';
-        input.onkeyup = (e) => {
-            if(e.key === 'Enter') {
-                if(input.value.toUpperCase() === target) {
-                    state.coins += 20;
-                    triggerWin("Typing Specialist");
-                } else {
-                    loseLife();
-                }
-                initWritingGame();
+            <div id="question-area" style="text-align: center; margin: 30px 0; min-height: 100px;">
+                <h2 id="q-text" style="font-size: 1.8rem; margin-bottom: 20px;">Question loading...</h2>
+                <button class="btn" style="background:var(--success); color:white; padding: 8px 20px;" onclick="speakText()">🔊 Listen</button>
+            </div>
+
+            <div id="answer-container">
+                <!-- Content generated by JS -->
+            </div>
+
+            <div style="margin-top: 40px; display: flex; justify-content: center; gap: 20px; align-items: center;">
+                <button class="btn btn-hint" onclick="useHint()">💡 Hint (10 🪙)</button>
+                <div id="hint-box" style="display:none; color: var(--secondary); font-style: italic; font-weight: bold;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Explanation Modal -->
+    <div id="modal-feedback" class="modal">
+        <div class="modal-content">
+            <h2 id="feedback-title">Result</h2>
+            <p id="feedback-text" style="font-size: 1.2rem; margin: 20px 0;"></p>
+            <button class="btn btn-main" style="width: 100%;" onclick="closeFeedback()">Next Challenge</button>
+        </div>
+    </div>
+
+    <!-- Market Modal -->
+    <div id="modal-market" class="modal">
+        <div class="modal-content">
+            <span style="float:right; cursor:pointer; font-size: 1.5rem;" onclick="closeMarket()">✖</span>
+            <h2>🛒 ICT Market</h2>
+            <p>Your Balance: <span id="market-balance" style="font-weight: bold; color: var(--warning);">0</span> 🪙</p>
+            <hr style="border: 1px solid #eee; margin: 20px 0;">
+            <div style="display:flex; flex-direction:column; gap:15px;">
+                <button class="btn btn-main" onclick="buyItem('life')">Buy 1 ❤️ (25 Coins)</button>
+                <button class="btn btn-main" style="background: var(--dark);" onclick="buyItem('time')">Freeze Timer ⏱️ (15 Coins)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Professional Certificate Modal -->
+    <div id="modal-cert" class="modal">
+        <div class="modal-content cert-paper">
+            <div class="cert-header">SOS Children's Villages • Ethiopia</div>
+            <h2>CERTIFICATE</h2>
+            <p style="font-size: 1.2rem; letter-spacing: 2px;">OF ACADEMIC EXCELLENCE</p>
+            <p style="margin-top: 30px;">This proudly certifies that</p>
+            <div class="cert-name" id="cert-user-name">Student Name</div>
+            <p>has successfully mastered all 30 Levels in the</p>
+            <h3 id="cert-game-mode" style="color:var(--secondary); font-size: 1.8rem; margin: 10px 0;">CHOOSING GAME</h3>
+            <p>demonstrating outstanding knowledge of the Grade 7 & 8 ICT National Syllabus.</p>
+            
+            <div class="signature-line">
+                <div class="sig-box">
+                    <strong>National ICT Portal</strong><br>System Assessment
+                </div>
+                <div class="sig-box">
+                    <strong>Betsegaw Teka</strong><br>Lead Developer & Educator
+                </div>
+            </div>
+
+            <button class="btn btn-main" style="margin-top: 40px;" onclick="location.reload()">Claim Certificate & Finish</button>
+        </div>
+    </div>
+
+    <script>
+        // --- MASTER DICTIONARY (Grade 7/8 ICT) ---
+        // We use 30 core concepts to dynamically generate 120 unique questions (30 per game)
+        const ictConcepts = [
+            { term: "CPU", def: "The main brain of the computer that processes instructions.", blank: "The ___ is considered the brain of the computer.", category: "Hardware" },
+            { term: "RAM", def: "Temporary memory used by the computer while it is running.", blank: "___ is volatile memory that loses data when power is off.", category: "Hardware" },
+            { term: "ROM", def: "Permanent memory that holds startup instructions.", blank: "___ contains the BIOS and cannot be easily modified.", category: "Hardware" },
+            { term: "Motherboard", def: "The main circuit board connecting all components.", blank: "Every component inside a computer connects to the ___.", category: "Hardware" },
+            { term: "Software", def: "Programs and instructions that tell the computer what to do.", blank: "Apps and Operating Systems are examples of ___.", category: "Software" },
+            { term: "Hardware", def: "The physical parts of a computer you can touch.", blank: "Monitors, keyboards, and mice are classified as ___.", category: "Hardware" },
+            { term: "Operating System", def: "System software that manages computer hardware and software.", blank: "Windows, Linux, and Android are types of ___.", category: "Software" },
+            { term: "Network", def: "Two or more computers connected together to share resources.", blank: "A ___ allows computers in a school lab to share a printer.", category: "Networking" },
+            { term: "Internet", def: "A global network of connected computers.", blank: "The ___ connects millions of networks worldwide.", category: "Networking" },
+            { term: "Browser", def: "Software used to view websites on the Internet.", blank: "Chrome, Firefox, and Edge are examples of a web ___.", category: "Software" },
+            { term: "Search Engine", def: "A website used to look for information on the Internet.", blank: "Google and Bing are examples of a ___.", category: "Internet" },
+            { term: "URL", def: "The web address of a specific page or file on the Internet.", blank: "A web address like www.google.com is called a ___.", category: "Internet" },
+            { term: "HTML", def: "The standard language used to create web pages.", blank: "Websites are built using a markup language called ___.", category: "Coding" },
+            { term: "Virus", def: "A malicious program designed to harm a computer.", blank: "A computer ___ can delete your files or slow down your PC.", category: "Security" },
+            { term: "Antivirus", def: "Software designed to detect and remove malicious programs.", blank: "You should install an ___ to protect your computer from malware.", category: "Security" },
+            { term: "Password", def: "A secret combination of characters used to access an account.", blank: "Always keep your ___ secret to prevent unauthorized access.", category: "Security" },
+            { term: "Firewall", def: "A security system that monitors network traffic.", blank: "A ___ blocks unauthorized access from hackers on the internet.", category: "Security" },
+            { term: "Server", def: "A powerful computer that provides data to other computers.", blank: "Websites are stored on a powerful computer called a ___.", category: "Networking" },
+            { term: "Router", def: "A device that forwards data packets between computer networks.", blank: "A ___ is used to connect your home network to the internet.", category: "Networking" },
+            { term: "Word Processor", def: "Software used to create, edit, and print text documents.", blank: "Microsoft Word is the most popular ___ application.", category: "Software" },
+            { term: "Spreadsheet", def: "Software used to organize and analyze data in rows and columns.", blank: "Microsoft Excel is an example of a ___ program.", category: "Software" },
+            { term: "Database", def: "An organized collection of data, generally stored electronically.", blank: "A school uses a ___ to store all student records securely.", category: "Software" },
+            { term: "Input Device", def: "Hardware used to send data into the computer.", blank: "A keyboard and mouse are examples of an ___.", category: "Hardware" },
+            { term: "Output Device", def: "Hardware used to receive data from the computer.", blank: "A monitor and printer are examples of an ___.", category: "Hardware" },
+            { term: "Storage Device", def: "Hardware used to save data permanently.", blank: "A USB Flash Drive is a portable ___.", category: "Hardware" },
+            { term: "Algorithm", def: "A step-by-step set of instructions to solve a problem.", blank: "Programmers write an ___ before writing the actual code.", category: "Coding" },
+            { term: "Debugging", def: "The process of finding and fixing errors in a computer program.", blank: "Fixing errors in your code is called ___.", category: "Coding" },
+            { term: "ISP", def: "A company that provides access to the internet.", blank: "Ethio Telecom is an example of an ___ in Ethiopia.", category: "Networking" },
+            { term: "Email", def: "Electronic messages sent over a network.", blank: "Gmail and Outlook are used for sending ___.", category: "Internet" },
+            { term: "Cloud Computing", def: "Storing and accessing data over the internet instead of a hard drive.", blank: "Google Drive is an example of ___ storage.", category: "Internet" }
+        ];
+
+        // --- DATA HUB ---
+        const gameData = { choosing: [], writing: [], matching: [], fillblank: [] };
+
+        function generateDatabase() {
+            // Generate EXACTLY 30 challenges per game mode using the Master Dictionary
+            for(let i=0; i<30; i++) {
+                const concept = ictConcepts[i];
+                
+                // 1. Choosing Game (Generate 3 wrong options + 1 right)
+                let wrongOptions = ictConcepts.filter(c => c.term !== concept.term).sort(() => 0.5 - Math.random()).slice(0, 3).map(c => c.term);
+                let options = [concept.term, ...wrongOptions].sort(() => 0.5 - Math.random());
+                gameData.choosing.push({
+                    q: `What is the correct term for: "${concept.def}"`,
+                    options: options,
+                    answer: concept.term,
+                    hint: `Starts with ${concept.term.charAt(0)}...`,
+                    explain: concept.def
+                });
+
+                // 2. Writing Game
+                gameData.writing.push({
+                    q: `Type the exact term for: "${concept.def}"`,
+                    answer: concept.term,
+                    hint: `It has ${concept.term.length} letters.`,
+                    explain: concept.def
+                });
+
+                // 3. Fill in the Blank
+                gameData.fillblank.push({
+                    q: concept.blank,
+                    answer: concept.term,
+                    hint: `Category: ${concept.category}`,
+                    explain: concept.def
+                });
+
+                // 4. Matching Game (Generate 3 random pairs for each of the 30 levels)
+                let extraPairs = ictConcepts.filter(c => c.term !== concept.term).sort(() => 0.5 - Math.random()).slice(0, 2);
+                gameData.matching.push({
+                    pairs: [
+                        {a: concept.def.substring(0, 25) + "...", b: concept.term},
+                        {a: extraPairs[0].def.substring(0, 25) + "...", b: extraPairs[0].term},
+                        {a: extraPairs[1].def.substring(0, 25) + "...", b: extraPairs[1].term}
+                    ],
+                    explain: `Correct! ${concept.term} matched successfully.`
+                });
             }
+        }
+        generateDatabase();
+
+        // --- GAME ENGINE ---
+        let state = {
+            name: "", coins: 50, lives: 3, timer: 0,
+            currentMode: "", currentIndex: 0, timerActive: false, timerFrozen: false
         };
-    }
 
-    // --- MATCHING GAME LOGIC ---
-    let matchSelection = null;
-    function initMatchingGame() {
-        const zone = document.getElementById('match-zone');
-        zone.innerHTML = '';
-        const items = DATA.slice(0, 3);
-        const shuffled = [...items].sort(() => Math.random() - 0.5);
-        
-        items.forEach(item => {
-            const b = document.createElement('button');
-            b.className = 'match-btn';
-            b.innerText = item.w;
-            b.onclick = () => handleMatch(item.w, 'word', b);
-            zone.appendChild(b);
-        });
+        function initPlayer() {
+            let n = document.getElementById('player-input').value;
+            if(!n) return alert("Please enter your name to generate your certificate.");
+            state.name = n;
+            document.getElementById('hud-name').innerText = n;
+            showScreen('screen-menu');
+            startGlobalTimer();
+        }
 
-        shuffled.forEach(item => {
-            const b = document.createElement('button');
-            b.className = 'match-btn';
-            b.innerText = item.d;
-            b.onclick = () => handleMatch(item.w, 'def', b);
-            zone.appendChild(b);
-        });
-    }
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
 
-    function handleMatch(val, type, el) {
-        if(!matchSelection) {
-            matchSelection = { val, type, el };
-            el.classList.add('selected');
-        } else {
-            if(matchSelection.val === val && matchSelection.type !== type) {
-                el.style.background = "var(--success)";
-                matchSelection.el.style.background = "var(--success)";
-                state.coins += 10;
-                updateUI();
-                triggerWin("ICT Logician");
-            } else {
-                loseLife();
+        function startGlobalTimer() {
+            if(state.timerActive) return;
+            state.timerActive = true;
+            setInterval(() => {
+                if(!state.timerFrozen) state.timer++;
+                let m = Math.floor(state.timer/60).toString().padStart(2,'0');
+                let s = (state.timer%60).toString().padStart(2,'0');
+                document.getElementById('hud-timer').innerText = `${m}:${s}`;
+            }, 1000);
+        }
+
+        function updateHUD() {
+            document.getElementById('hud-coins').innerText = state.coins;
+            document.getElementById('hud-lives').innerText = state.lives;
+            document.getElementById('market-balance').innerText = state.coins;
+            if(state.lives <= 0) {
+                alert("Game Over! Your lives have run out. Academy reset.");
+                location.reload();
             }
-            matchSelection = null;
-            document.querySelectorAll('.match-btn').forEach(b => b.classList.remove('selected'));
         }
-    }
 
-    // --- MARKET ---
-    function buyItem(item) {
-        if(item === 'life' && state.coins >= 50) {
-            state.lives++;
-            state.coins -= 50;
-        } else if (item === 'freeze' && state.coins >= 30) {
-            state.coins -= 30;
-            alert("Time Frozen for 10 seconds!");
-        } else {
-            alert("Not enough coins!");
+        function startMode(mode) {
+            state.currentMode = mode;
+            state.currentIndex = 0;
+            state.timerFrozen = false;
+            showScreen('screen-game');
+            loadQuestion();
         }
-        updateUI();
-    }
 
-    function loseLife() {
-        state.lives--;
-        updateUI();
-        if(state.lives <= 0) {
-            alert("Game Over! Restarting...");
-            location.reload();
+        function loadQuestion() {
+            updateHUD();
+            document.getElementById('hint-box').style.display = "none";
+            const q = gameData[state.currentMode][state.currentIndex];
+            const area = document.getElementById('answer-container');
+            const prog = ((state.currentIndex) / 30) * 100;
+            document.getElementById('progress-bar').style.width = prog + "%";
+            document.getElementById('game-level-tag').innerText = `Level ${state.currentIndex + 1} of 30`;
+
+            area.innerHTML = "";
+            
+            if(state.currentMode === 'choosing') {
+                document.getElementById('q-text').innerText = q.q;
+                q.options.forEach(opt => {
+                    area.innerHTML += `<button class="btn btn-main" style="width:100%; margin-bottom:15px; font-size: 1.1rem;" onclick="checkAnswer('${opt}')">${opt}</button>`;
+                });
+            } 
+            else if(state.currentMode === 'writing' || state.currentMode === 'fillblank') {
+                document.getElementById('q-text').innerText = q.q;
+                area.innerHTML = `<input type="text" id="text-ans" placeholder="Type your answer here..." autocomplete="off" onkeypress="if(event.key==='Enter') checkTextAnswer()"><br>
+                                  <button class="btn btn-main" style="width: 100%; font-size: 1.2rem;" onclick="checkTextAnswer()">Submit Answer</button>`;
+                setTimeout(() => document.getElementById('text-ans').focus(), 100);
+            }
+            else if(state.currentMode === 'matching') {
+                document.getElementById('q-text').innerText = "Match the Definitions to the Terms!";
+                renderMatching();
+            }
         }
-    }
 
-    function triggerWin(title) {
-        state.level++;
-        updateUI();
-        const modal = document.getElementById('modal');
-        const content = document.getElementById('cert-content');
-        
-        content.innerHTML = `
-            <div class="congrats">
-                <h1 style="color:var(--ethiopia-green)">CONGRATULATIONS!</h1>
-                <p>Level ${state.level-1} Completed Successfully</p>
-            </div>
-            <div style="border: 2px solid gold; padding: 20px; margin: 10px;">
-                <h2>CERTIFICATE</h2>
-                <p>This is to certify that</p>
-                <h3 style="text-decoration: underline">${state.user}</h3>
-                <p>is now a certified <b>${title}</b></p>
-                <small>Verified by Betsegaw Teka Systems</small>
-            </div>
-            <button class="btn" onclick="document.getElementById('modal').style.display='none'">Next Level</button>
-        `;
-        modal.style.display = 'flex';
-    }
+        // Matching Logic
+        let selA = null, selB = null;
+        function renderMatching() {
+            const q = gameData.matching[state.currentIndex];
+            const area = document.getElementById('answer-container');
+            let html = `<div class="match-area"><div class="match-box">`;
+            
+            // Definitions (A)
+            q.pairs.forEach((p, i) => html += `<div class="match-item" id="ma-${i}" onclick="selectMatch('A', ${i}, this)">${p.a}</div>`);
+            html += `</div><div class="match-box">`;
+            
+            // Terms (B) shuffled
+            let shuffledB = [...q.pairs].sort(() => Math.random() - 0.5);
+            shuffledB.forEach((p, i) => html += `<div class="match-item" onclick="selectMatch('B', '${p.b}', this)">${p.b}</div>`);
+            html += `</div></div>`;
+            area.innerHTML = html;
+        }
 
-    updateUI();
-</script>
+        function selectMatch(side, val, el) {
+            if(side === 'A') {
+                if(selA) selA.el.classList.remove('selected');
+                selA = {val: val, el: el};
+            } else {
+                if(selB) selB.el.classList.remove('selected');
+                selB = {val: val, el: el};
+            }
+            el.classList.add('selected');
 
+            if(selA && selB) {
+                const q = gameData.matching[state.currentIndex];
+                if(q.pairs[selA.val].b === selB.val) {
+                    selA.el.classList.add('correct');
+                    selB.el.classList.add('correct');
+                    selA = null; selB = null;
+                    if(document.querySelectorAll('.match-item.correct').length === q.pairs.length * 2) {
+                        setTimeout(() => checkAnswer(true), 500);
+                    }
+                } else {
+                    state.lives--;
+                    updateHUD();
+                    selA.el.classList.remove('selected');
+                    selB.el.classList.remove('selected');
+                    selA = null; selB = null;
+                }
+            }
+        }
+
+        function checkTextAnswer() {
+            const val = document.getElementById('text-ans').value.toLowerCase().trim();
+            const correct = gameData[state.currentMode][state.currentIndex].answer.toLowerCase();
+            checkAnswer(val === correct);
+        }
+
+        function checkAnswer(isCorrect) {
+            const q = gameData[state.currentMode][state.currentIndex];
+            const modal = document.getElementById('modal-feedback');
+            const title = document.getElementById('feedback-title');
+            const text = document.getElementById('feedback-text');
+
+            if(typeof isCorrect === 'string') {
+                isCorrect = (isCorrect.toLowerCase() === q.answer.toLowerCase());
+            }
+
+            if(isCorrect) {
+                state.coins += 10;
+                title.innerText = "🌟 CORRECT!";
+                title.style.color = "var(--success)";
+                text.innerText = q.explain;
+            } else {
+                state.lives--;
+                title.innerText = "❌ INCORRECT!";
+                title.style.color = "var(--danger)";
+                text.innerText = "The correct answer was: " + (q.answer || "Correct Match");
+            }
+            updateHUD();
+            modal.style.display = "flex";
+        }
+
+        function closeFeedback() {
+            document.getElementById('modal-feedback').style.display = "none";
+            state.currentIndex++;
+            if(state.currentIndex >= 30) {
+                showCertificate();
+            } else {
+                loadQuestion();
+            }
+        }
+
+        function showCertificate() {
+            document.getElementById('progress-bar').style.width = "100%";
+            document.getElementById('cert-user-name').innerText = state.name;
+            document.getElementById('cert-game-mode').innerText = state.currentMode.replace('fillblank', 'Fill in Blank').toUpperCase() + " MASTERY";
+            document.getElementById('modal-cert').style.display = "flex";
+        }
+
+        // Market & Extras
+        function openMarket() { document.getElementById('modal-market').style.display = "flex"; }
+        function closeMarket() { document.getElementById('modal-market').style.display = "none"; }
+        function buyItem(type) {
+            if(type === 'life' && state.coins >= 25) {
+                state.coins -= 25; state.lives++;
+            } else if(type === 'time' && state.coins >= 15) {
+                state.coins -= 15; state.timerFrozen = true; alert("Timer frozen for the rest of this mode!");
+            } else {
+                alert("Not enough coins!");
+            }
+            updateHUD();
+        }
+
+        function useHint() {
+            if(state.coins >= 10) {
+                state.coins -= 10;
+                updateHUD();
+                const q = gameData[state.currentMode][state.currentIndex];
+                const box = document.getElementById('hint-box');
+                box.innerText = "Hint: " + q.hint;
+                box.style.display = "block";
+            } else {
+                alert("You need 10 coins for a hint!");
+            }
+        }
+
+        function speakText() {
+            let textToSpeak = document.getElementById('q-text').innerText;
+            if(textToSpeak.includes("___")) textToSpeak = textToSpeak.replace("___", "blank");
+            const speech = new SpeechSynthesisUtterance(textToSpeak);
+            speech.rate = 0.9; // Slightly slower for student comprehension
+            window.speechSynthesis.speak(speech);
+        }
+
+        function goHome() {
+            if(confirm("Return to menu? Your progress in this mode will be lost.")) {
+                showScreen('screen-menu');
+            }
+        }
+    </script>
 </body>
 </html>
