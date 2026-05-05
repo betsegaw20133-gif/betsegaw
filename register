@@ -3,283 +3,451 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>register students made by betsegaw teka</title>
+    <title>Academic Apex Master ERP - Made by Betsegaw Teka</title>
     <style>
-        : root {
-            --excel-green: #1d6f42;
-            --excel-dark: #155231;
-            --bg-gray: #f3f2f1;
-            --border-color: #d1d1d1;
-            --gold: #fff9c4;
-            --gold-border: #fbc02d;
+        :root {
+            --excel-green: #107c41;
+            --excel-dark: #0b5a30;
+            --excel-light: #e6f4ea;
+            --bg-body: #f3f2f1;
+            --border-gray: #edebe9;
             --text-main: #323130;
+            --fail-red: #a4262c;
+            --fail-bg: #fde7e9;
+            --gold: #ffb900;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.4);
         }
 
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background: var(--bg-gray); color: var(--text-main); }
+        * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
 
-        /* Office Ribbon UI */
-        .ribbon { background: var(--excel-green); color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-        .ribbon h1 { margin: 0; font-size: 1.4rem; letter-spacing: 1px; }
+        body { 
+            margin: 0; background: var(--bg-body); color: var(--text-main);
+            display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+        }
 
-        /* Institutional Header */
-        .school-branding { background: white; margin: 20px; padding: 30px; border-radius: 12px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; border-left: 10px solid var(--excel-green); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        /* Top Navigation Bar */
+        header {
+            background: var(--excel-green); color: white; padding: 0 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            height: 60px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 100;
+        }
+        header h1 { font-size: 1.3rem; margin: 0; display: flex; align-items: center; gap: 10px; letter-spacing: 0.5px; }
+        .branding { font-size: 0.75rem; opacity: 0.8; font-weight: normal; margin-left: 10px; }
+        
+        .header-actions { display: flex; gap: 10px; }
+        .btn {
+            background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+            color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer;
+            font-size: 0.85rem; font-weight: 600; transition: all 0.2s ease;
+            backdrop-filter: blur(4px);
+        }
+        .btn:hover { background: rgba(255,255,255,0.25); transform: translateY(-1px); }
+        .btn-primary { background: #fff; color: var(--excel-green); }
+        .btn-primary:hover { background: #f8f9fa; }
+        .btn-danger { color: #ff9999; border-color: rgba(255,153,153,0.3); }
+
+        /* Institutional Meta Data (Glassmorphism) */
+        .school-branding { 
+            background: var(--glass-bg); backdrop-filter: blur(10px);
+            margin: 15px 20px; padding: 20px 25px; border-radius: 12px; 
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; 
+            border: 1px solid var(--glass-border); box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+        }
         .meta-field { display: flex; flex-direction: column; }
-        .meta-field label { font-size: 0.7rem; font-weight: 800; color: #666; text-transform: uppercase; margin-bottom: 5px; }
-        .meta-field input { border: none; border-bottom: 2px solid #eee; padding: 8px 0; font-size: 1rem; font-weight: 600; color: var(--excel-green); outline: none; transition: 0.3s; }
+        .meta-field label { font-size: 0.7rem; font-weight: 800; color: #605e5c; text-transform: uppercase; margin-bottom: 5px; }
+        .meta-field input { 
+            border: none; border-bottom: 2px solid var(--border-gray); background: transparent;
+            padding: 6px 0; font-size: 1rem; font-weight: 600; color: var(--excel-green); 
+            outline: none; transition: 0.3s; 
+        }
         .meta-field input:focus { border-bottom-color: var(--excel-green); }
 
         /* Dashboard Insights */
-        .dashboard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 0 20px 20px 20px; }
-        .stat-card { background: white; padding: 15px; border-radius: 8px; text-align: center; border: 1px solid var(--border-color); }
-        .stat-card span { display: block; font-size: 0.7rem; font-weight: bold; color: #888; text-transform: uppercase; }
-        .stat-card strong { font-size: 1.6rem; color: var(--excel-green); }
-
-        /* Excel Toolbar */
-        .toolbar { background: white; margin: 0 20px 20px 20px; padding: 15px; border-radius: 8px; display: flex; gap: 15px; align-items: center; border: 1px solid var(--border-color); flex-wrap: wrap; }
-        .btn { padding: 10px 20px; border-radius: 4px; border: none; font-weight: bold; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
-        .btn-add { background: var(--excel-green); color: white; }
-        .btn-generate { background: #2b78ad; color: white; }
-        .btn-print { background: #fff; color: var(--excel-green); border: 1px solid var(--excel-green); }
-
-        /* Spreadsheet Grid */
-        .grid-container { background: white; margin: 0 20px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        .table-scroll { overflow-x: auto; max-height: 550px; }
-        table { width: 100%; border-collapse: collapse; min-width: 1300px; text-align: center; }
-        th { background: #f8f9fa; padding: 12px; font-size: 12px; border: 1px solid var(--border-color); position: sticky; top: 0; z-index: 10; }
-        td { padding: 10px; border: 1px solid #eee; font-size: 14px; }
-        
-        /* Rank Coloring */
-        .rank-1 { background-color: #ffd700 !important; font-weight: bold; color: #000; }
-        .rank-2 { background-color: #e0e0e0 !important; font-weight: bold; }
-        .rank-3 { background-color: #cd7f3233 !important; font-weight: bold; }
-        .fail-mark { color: #d32f2f; font-weight: bold; }
-        .pass-badge { background: #e6f4ea; color: #1e7e34; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; }
-
-        /* Printing & Signatures */
-        .print-only { display: none; }
-        @media print {
-            .no-print { display: none !important; }
-            .print-only { display: block; }
-            body { background: white; padding: 0; }
-            .grid-container { height: auto; border: 1px solid #000; }
-            .table-scroll { max-height: none; }
-            .signature-box { display: flex; justify-content: space-between; margin-top: 80px; padding: 0 50px; }
-            .sig-line { border-top: 2px solid black; width: 220px; text-align: center; padding-top: 10px; font-weight: bold; }
+        .dashboard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 0 20px 15px 20px; }
+        .stat-card { 
+            background: white; padding: 15px; border-radius: 10px; text-align: center; 
+            border: 1px solid var(--border-gray); box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            transition: transform 0.2s;
         }
+        .stat-card:hover { transform: translateY(-2px); }
+        .stat-card span { display: block; font-size: 0.75rem; font-weight: 700; color: #8a8886; text-transform: uppercase; }
+        .stat-card strong { font-size: 1.6rem; color: var(--excel-green); line-height: 1.2; }
+
+        /* Toolbar */
+        .toolbar { 
+            margin: 0 20px 15px 20px; display: flex; gap: 15px; align-items: center; 
+        }
+        .toolbar input { padding: 8px 12px; border-radius: 6px; border: 1px solid #d1d1d1; outline: none; }
+        .toolbar input:focus { border-color: var(--excel-green); box-shadow: 0 0 0 2px var(--excel-light); }
+        .btn-add { background: var(--excel-green); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+        .btn-add:hover { background: var(--excel-dark); }
+
+        /* Main Dashboard Area */
+        main { display: flex; flex: 1; overflow: hidden; padding: 0 20px 20px 20px; gap: 20px; }
+
+        /* Left Side: Spreadsheet */
+        .sheet-container {
+            flex: 1; background: white; border-radius: 10px; border: 1px solid var(--border-gray);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.04); display: flex; flex-direction: column; overflow: hidden;
+        }
+        .table-scroll { overflow: auto; flex: 1; }
+        table { border-collapse: collapse; width: 100%; min-width: 1400px; table-layout: fixed; }
+        th { 
+            background: #f8f9fa; color: #605e5c; font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
+            padding: 12px; border: 1px solid var(--border-gray); position: sticky; top: 0; z-index: 10;
+        }
+        td { border: 1px solid var(--border-gray); padding: 8px; font-size: 14px; text-align: center; height: 35px; }
+        
+        .row-idx { background: #f8f9fa; width: 45px; font-weight: bold; color: #a19f9d; font-size: 0.75rem; position: sticky; left: 0; z-index: 5; }
+        [contenteditable="true"] { outline: none; transition: background 0.1s; cursor: text; }
+        [contenteditable="true"]:focus { background: #fff !important; box-shadow: inset 0 0 0 2px var(--excel-green); z-index: 5; position: relative; }
+        [contenteditable="true"]:empty:before { content: attr(placeholder); color: #ccc; pointer-events: none; display: block; }
+
+        /* Formatting */
+        .fail { background-color: var(--fail-bg) !important; color: var(--fail-red) !important; font-weight: bold; }
+        .pass-chip { background: #dff6dd; color: #107c41; padding: 3px 10px; border-radius: 12px; font-weight: bold; font-size: 12px; display: inline-block; }
+        .fail-chip { background: #fde7e9; color: #a4262c; padding: 3px 10px; border-radius: 12px; font-weight: bold; font-size: 12px; display: inline-block; }
+        
+        .rank-1 { background-color: #fff9c4 !important; font-weight: bold; color: #f57f17; }
+        .rank-2 { background-color: #f5f5f5 !important; font-weight: bold; }
+        .rank-3 { background-color: #efebe9 !important; font-weight: bold; }
+
+        /* Signatures (Print Only) */
+        .print-footer { display: none; margin-top: 50px; justify-content: space-between; padding: 0 40px; }
+        .sig-block { text-align: center; width: 250px; }
+        .sig-line { border-bottom: 2px solid #000; height: 40px; margin-bottom: 10px; }
+        .sig-title { font-weight: bold; font-size: 0.9rem; text-transform: uppercase; }
+
+        @media print {
+            header, .school-branding, .dashboard, .toolbar, .no-print { display: none !important; }
+            body { background: white; height: auto; overflow: visible; padding: 0; }
+            main { padding: 0; display: block; }
+            .sheet-container { border: none; box-shadow: none; border-radius: 0; overflow: visible; }
+            .table-scroll { overflow: visible; }
+            table { min-width: 100%; page-break-inside: auto; }
+            tr { page-break-inside: avoid; page-break-after: auto; }
+            th, td { border: 1px solid black !important; color: black !important; padding: 6px; }
+            .print-footer { display: flex; page-break-inside: avoid; }
+            .print-header { display: block !important; text-align: center; margin-bottom: 20px; }
+            .print-header h2 { margin: 0; color: #000; }
+            .print-header p { margin: 5px 0 15px 0; font-weight: bold; }
+        }
+
+        .print-header { display: none; }
     </style>
 </head>
 <body>
 
-<div class="ribbon no-print">
-    <h1>🏛️ Academic Apex Master ERP</h1>
-    <div style="display: flex; gap: 10px;">
-        <button class="btn btn-generate" onclick="generate50Students()">⚡ Generate 50 Students</button>
-        <button class="btn btn-print" onclick="window.print()">🖨️ Print Report Card</button>
+<header class="no-print">
+    <h1>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M19,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.9 20.1,3 19,3M19,19H5V7H19V19M16.4,10L14.7,11.7L18.2,15.2L14.7,18.7L16.4,20.4L21.7,15.2L16.4,10M7.6,20.4L9.3,18.7L5.8,15.2L9.3,11.7L7.6,10L2.3,15.2L7.6,20.4Z"/></svg> 
+        Academic Apex Master ERP <span class="branding">Made by Betsegaw Teka</span>
+    </h1>
+    <div class="header-actions">
+        <button class="btn btn-primary" onclick="window.print()">🖨️ Print Roster & Grades</button>
+        <button class="btn" onclick="downloadCSV()">💾 Export CSV</button>
+        <button class="btn btn-danger" onclick="resetData()">🔄 Factory Reset</button>
     </div>
+</header>
+
+<div class="school-branding no-print">
+    <div class="meta-field"><label>Institution / School Name</label><input type="text" id="schName" placeholder="Ethiopia National Academy" oninput="saveMeta()"></div>
+    <div class="meta-field"><label>Lead Teacher Name</label><input type="text" id="teaName" placeholder="Mr./Ms. Instructor" oninput="saveMeta()"></div>
+    <div class="meta-field"><label>Academic Period</label><input type="text" id="period" placeholder="2025/2026" oninput="saveMeta()"></div>
+    <div class="meta-field"><label>Region / City</label><input type="text" id="regName" placeholder="Addis Ababa" oninput="saveMeta()"></div>
+    <div class="meta-field"><label>Global Class Target</label><input type="text" id="gradeLvl" placeholder="Grade 7" oninput="saveMeta()"></div>
 </div>
 
-<div class="school-branding">
-    <div class="meta-field"><label>Institution Name</label><input type="text" id="schName" placeholder="Royal High School" oninput="saveMeta()"></div>
-    <div class="meta-field"><label>Lead Teacher</label><input type="text" id="teaName" placeholder="Mr./Ms. Instructor" oninput="saveMeta()"></div>
-    <div class="meta-field"><label>Academic Period</label><input type="text" id="period" placeholder="2025/2026" oninput="saveMeta()"></div>
-    <div class="meta-field"><label>Administrative Region</label><input type="text" id="regName" placeholder="Addis Ababa" oninput="saveMeta()"></div>
+<div class="print-header">
+    <h2 id="printSchName">Institution Name</h2>
+    <p>Official Academic Roster & Grade Report - <span id="printPeriod"></span> | Instructor: <span id="printTeaName"></span></p>
 </div>
 
 <div class="dashboard no-print">
-    <div class="stat-card"><span>Enrollment</span><strong id="countStat">0</strong></div>
-    <div class="stat-card"><span>Class Average</span><strong id="avgStat">0%</strong></div>
+    <div class="stat-card"><span>Active Enrollment</span><strong id="countStat">0</strong></div>
+    <div class="stat-card"><span>Overall Class Average</span><strong id="avgStat">0%</strong></div>
     <div class="stat-card"><span>Promotion Rate</span><strong id="passStat">0%</strong></div>
-    <div class="stat-card"><span>Rank #1 (Champion)</span><strong id="topStat" style="font-size:1rem;">-</strong></div>
+    <div class="stat-card"><span>Top Rank #1 (Champion)</span><strong id="topStat" style="font-size:1.3rem;">-</strong></div>
 </div>
 
 <div class="toolbar no-print">
-    <strong>Subjects:</strong>
-    <input type="text" id="newSub" placeholder="e.g. History" style="width:120px; padding:8px; border:1px solid #ddd;">
-    <button class="btn btn-add" onclick="addSubject()">+ Add Subject</button>
-    <div style="width:1px; height:30px; background:#ddd; margin: 0 10px;"></div>
-    <strong>Quick Record:</strong>
-    <input type="text" id="sName" placeholder="Student Name" style="width:180px; padding:8px; border:1px solid #ddd;">
-    <input type="number" id="sAge" placeholder="Age" style="width:55px; padding:8px; border:1px solid #ddd;">
-    <div id="dynamicScoreInputs" style="display:inline-flex; gap:5px;"></div>
-    <button class="btn btn-add" onclick="addStudent()" style="background:#2b78ad;">Register Student</button>
+    <span style="font-size: 0.8rem; font-weight: bold; color: #666; text-transform: uppercase;">Curriculum Mgmt:</span>
+    <input type="text" id="subjectInput" placeholder="New Subject (e.g. ICT)">
+    <button class="btn-add" onclick="addNewSubject()">+ Add Subject</button>
+    
+    <div style="width: 1px; height: 30px; background: #ddd; margin: 0 15px;"></div>
+    
+    <span style="font-size: 0.8rem; font-weight: bold; color: #666; text-transform: uppercase;">Grid Control:</span>
+    <button class="btn-add" style="background: #2b78ad;" onclick="generateDummyData()">⚡ Auto-Fill Demo Data</button>
+    <button class="btn-add" style="background: #605e5c;" onclick="addBlankRows(10)">+ Add 10 Blank Rows</button>
 </div>
 
-<div class="grid-container">
-    <div class="table-scroll">
-        <table id="excelTable">
-            <thead>
-                <tr id="tableHeader">
-                    <th>No.</th>
-                    <th>Full Name</th>
-                    <th>Age</th>
-                    <th>Region</th>
-                    <th style="background:#e8f0fe;">Total</th>
-                    <th style="background:#e8f0fe;">Average</th>
-                    <th style="background:#e8f0fe;">Grade</th>
-                    <th style="background:#fff9c4;">Rank</th>
-                    <th class="no-print">Action</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-        </table>
+<main>
+    <div class="sheet-container">
+        <div class="table-scroll">
+            <table id="mainGrid">
+                <thead><tr id="gridHeader"></tr></thead>
+                <tbody id="gridBody"></tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<div class="print-footer">
+    <div class="sig-block">
+        <div class="sig-line"></div>
+        <div class="sig-title">Instructor Signature</div>
+    </div>
+    <div class="sig-block">
+        <div class="sig-line"></div>
+        <div class="sig-title">School Seal / Stamp</div>
+    </div>
+    <div class="sig-block">
+        <div class="sig-line"></div>
+        <div class="sig-title">Director's Approval</div>
     </div>
 </div>
 
-<div class="print-only signature-box">
-    <div class="sig-line">Instructor Signature</div>
-    <div class="sig-line">School Seal / Stamp</div>
-    <div class="sig-line">Director's Approval</div>
-</div>
-
 <script>
-    let subjects = JSON.parse(localStorage.getItem('apex_subs')) || ["Mathematics", "English", "Science"];
-    let students = JSON.parse(localStorage.getItem('apex_stds')) || [];
+    // System Initialization & Storage Management
+    const DEFAULT_ROWS = 100;
+    let subjects = JSON.parse(localStorage.getItem('apex_v4_subs')) || ["Mathematics", "English", "Science", "Afan Oromo", "Amharic", "ICT"];
+    
+    // Initialize 100 rows if no data exists
+    let initialData = Array.from({length: DEFAULT_ROWS}, () => ({ name: '', age: '', grade: '', section: '', scores: {} }));
+    let studentData = JSON.parse(localStorage.getItem('apex_v4_data')) || initialData;
 
-    // Load Meta
-    document.getElementById('schName').value = localStorage.getItem('meta_sch') || '';
-    document.getElementById('teaName').value = localStorage.getItem('meta_tea') || '';
-    document.getElementById('period').value = localStorage.getItem('meta_per') || '2025/2026';
-    document.getElementById('regName').value = localStorage.getItem('meta_reg') || 'Addis Ababa';
+    // Load Metadata
+    document.getElementById('schName').value = localStorage.getItem('apex_v4_sch') || 'Ethiopia National Academy';
+    document.getElementById('teaName').value = localStorage.getItem('apex_v4_tea') || '';
+    document.getElementById('period').value = localStorage.getItem('apex_v4_per') || '2025/2026';
+    document.getElementById('regName').value = localStorage.getItem('apex_v4_reg') || 'Addis Ababa';
+    document.getElementById('gradeLvl').value = localStorage.getItem('apex_v4_glvl') || 'Grade 7';
 
     function saveMeta() {
-        localStorage.setItem('meta_sch', document.getElementById('schName').value);
-        localStorage.setItem('meta_tea', document.getElementById('teaName').value);
-        localStorage.setItem('meta_per', document.getElementById('period').value);
-        localStorage.setItem('meta_reg', document.getElementById('regName').value);
-    }
-
-    function calculateGPA(avg) {
-        if(avg >= 90) return 'A+';
-        if(avg >= 80) return 'A';
-        if(avg >= 70) return 'B';
-        if(avg >= 60) return 'C';
-        if(avg >= 50) return 'D';
-        return 'F';
-    }
-
-    function updateUI() {
-        const header = document.getElementById('tableHeader');
-        const scoreIn = document.getElementById('dynamicScoreInputs');
+        localStorage.setItem('apex_v4_sch', document.getElementById('schName').value);
+        localStorage.setItem('apex_v4_tea', document.getElementById('teaName').value);
+        localStorage.setItem('apex_v4_per', document.getElementById('period').value);
+        localStorage.setItem('apex_v4_reg', document.getElementById('regName').value);
+        localStorage.setItem('apex_v4_glvl', document.getElementById('gradeLvl').value);
         
-        let subHtml = subjects.map(s => `<th>${s}</th>`).join('');
-        header.innerHTML = `<th>No.</th><th style="text-align:left;">Full Name</th><th>Age</th><th>Region</th>${subHtml}<th style="background:#e8f0fe;">Total</th><th style="background:#e8f0fe;">Average</th><th style="background:#e8f0fe;">Grade</th><th style="background:#fff9c4;">Rank</th><th class="no-print">Action</th>`;
-        
-        scoreIn.innerHTML = subjects.map(s => `<input type="number" class="sc-field" data-s="${s}" placeholder="${s.slice(0,3)}" style="width:55px; padding:8px; border:1px solid #ddd; border-radius:4px;">`).join('');
+        // Update Print Headers
+        document.getElementById('printSchName').innerText = document.getElementById('schName').value;
+        document.getElementById('printPeriod').innerText = document.getElementById('period').value;
+        document.getElementById('printTeaName').innerText = document.getElementById('teaName').value;
     }
+    saveMeta(); // Initial sync for print headers
 
-    function addSubject() {
-        let name = document.getElementById('newSub').value.trim();
-        if(name && !subjects.includes(name)) {
-            subjects.push(name);
-            localStorage.setItem('apex_subs', JSON.stringify(subjects));
-            document.getElementById('newSub').value = '';
-            updateUI();
-            render();
-        }
-    }
-
-    function addStudent() {
-        let name = document.getElementById('sName').value;
-        if(!name) return alert("Please enter Student Name!");
+    // Render Grid Headers
+    function renderHeaders() {
+        const header = document.getElementById('gridHeader');
+        let html = `
+            <th class="row-idx">#</th>
+            <th style="width: 220px; text-align: left;">Full Name</th>
+            <th style="width: 60px;">Age</th>
+            <th style="width: 80px;">Grade</th>
+            <th style="width: 80px;">Section</th>
+        `;
         
-        let sc = {};
-        let total = 0;
-        document.querySelectorAll('.sc-field').forEach(inp => {
-            let val = parseFloat(inp.value) || 0;
-            sc[inp.dataset.s] = val;
-            total += val;
+        subjects.forEach(sub => {
+            html += `<th style="width: 100px;">${sub}</th>`;
         });
-
-        let avg = (total / subjects.length).toFixed(1);
-        students.push({
-            id: Date.now(),
-            name, age: document.getElementById('sAge').value || '?',
-            region: document.getElementById('regName').value,
-            scores: sc, total, avg, grade: calculateGPA(avg)
-        });
-
-        saveAndRefresh();
-        document.getElementById('sName').value = '';
-        document.getElementById('sAge').value = '';
-        document.querySelectorAll('.sc-field').forEach(i => i.value = '');
+        
+        html += `
+            <th style="width: 80px; background: #e8f0fe;">Total</th>
+            <th style="width: 90px; background: #e8f0fe;">Average</th>
+            <th style="width: 90px; background: #e8f0fe;">Status</th>
+            <th style="width: 80px; background: #fff9c4;">Rank</th>
+        `;
+        header.innerHTML = html;
     }
 
-    function generate50Students() {
-        const fnames = ["Abebe", "Kebede", "Mulu", "Hanna", "Samuel", "Sara", "Yonas", "Aster", "Dawit", "Genet"];
-        const lnames = ["Tesfaye", "Mekonnen", "Girma", "Kassa", "Alemu", "Baye", "Tadesse", "Zeleke"];
-        
-        for(let i=0; i<50; i++) {
-            let name = fnames[Math.floor(Math.random()*fnames.length)] + " " + lnames[Math.floor(Math.random()*lnames.length)];
-            let sc = {};
-            let total = 0;
-            subjects.forEach(s => {
-                let v = Math.floor(Math.random() * 60) + 40; // Random scores 40-100
-                sc[s] = v;
-                total += v;
+    // Process Analytics & Ranking
+    function processData() {
+        let activeStudents = [];
+        studentData.forEach((s, idx) => {
+            let total = 0, count = 0, fails = 0;
+            subjects.forEach(sub => {
+                if (s.scores[sub] && s.scores[sub] !== '') {
+                    let val = parseFloat(s.scores[sub]);
+                    total += val;
+                    count++;
+                    if (val < 50) fails++;
+                }
             });
-            let avg = (total / subjects.length).toFixed(1);
-            students.push({
-                id: Date.now() + i,
-                name, age: Math.floor(Math.random()*5) + 14,
-                region: document.getElementById('regName').value,
-                scores: sc, total, avg, grade: calculateGPA(avg)
-            });
-        }
-        saveAndRefresh();
-    }
-
-    function render() {
-        const body = document.getElementById('tableBody');
-        const sorted = [...students].sort((a, b) => b.total - a.total);
-        
-        let classSum = 0;
-        let passCount = 0;
-
-        body.innerHTML = students.map((s, idx) => {
-            const rank = sorted.findIndex(x => x.id === s.id) + 1;
-            classSum += parseFloat(s.avg);
-            if(s.avg >= 50) passCount++;
+            let avg = count > 0 ? parseFloat((total / subjects.length).toFixed(1)) : 0; // Using total subjects to penalize missing scores
+            let isActive = s.name.trim() !== '';
             
-            let rankClass = (rank === 1) ? 'rank-1' : (rank === 2 ? 'rank-2' : (rank === 3 ? 'rank-3' : ''));
+            s._calc = { total, avg, fails, active: isActive, originalIdx: idx };
+            if (isActive) activeStudents.push(s);
+        });
 
-            return `
-                <tr class="${rankClass}">
-                    <td>${idx + 1}</td>
-                    <td style="text-align:left; font-weight:bold;">${s.name}</td>
-                    <td>${s.age}</td>
-                    <td>${s.region}</td>
-                    ${subjects.map(sub => `<td class="${s.scores[sub] < 50 ? 'fail-mark' : ''}">${s.scores[sub]}</td>`).join('')}
-                    <td style="font-weight:bold; color:var(--excel-green);">${s.total}</td>
-                    <td style="font-weight:bold;">${s.avg}%</td>
-                    <td><span class="pass-badge">${s.grade}</span></td>
-                    <td>Rank #${rank}</td>
-                    <td class="no-print"><button onclick="delStud(${s.id})" style="border:none; background:none; color:red; cursor:pointer;">🗑️</button></td>
-                </tr>
-            `;
-        }).join('');
+        // Sort by Average for Ranking
+        activeStudents.sort((a, b) => b._calc.avg - a._calc.avg);
+        activeStudents.forEach((s, rankIdx) => {
+            s._calc.rank = rankIdx + 1;
+        });
 
-        // Stats Update
-        document.getElementById('countStat').innerText = students.length;
-        document.getElementById('avgStat').innerText = students.length ? (classSum / students.length).toFixed(1) + "%" : "0%";
-        document.getElementById('passStat').innerText = students.length ? ((passCount/students.length)*100).toFixed(0) + "%" : "0%";
-        document.getElementById('topStat').innerText = sorted.length ? sorted[0].name : "-";
+        updateDashboard(activeStudents);
     }
 
-    function delStud(id) {
-        if(confirm("Confirm Student Removal?")) {
-            students = students.filter(s => s.id !== id);
-            saveAndRefresh();
-        }
+    function getGradeBadge(avg, fails) {
+        if (avg === 0) return '-';
+        if (avg >= 50 && fails <= 1) return '<span class="pass-chip">PASS</span>';
+        return '<span class="fail-chip">FAIL</span>';
+    }
+
+    // Render Grid Rows
+    function renderGrid() {
+        renderHeaders();
+        processData(); // Calculates totals and ranks
+        
+        const body = document.getElementById('gridBody');
+        body.innerHTML = '';
+        
+        studentData.forEach((student, i) => {
+            const calc = student._calc;
+            const tr = document.createElement('tr');
+            
+            // Highlighting top 3 ranks
+            if (calc.active && calc.rank === 1) tr.className = 'rank-1';
+            else if (calc.active && calc.rank === 2) tr.className = 'rank-2';
+            else if (calc.active && calc.rank === 3) tr.className = 'rank-3';
+            
+            let rowHtml = `
+                <td class="row-idx">${i + 1}</td>
+                <td contenteditable="true" onblur="updateField(${i}, 'name', this.innerText)" style="text-align: left; font-weight: 600;" placeholder="Student Name">${student.name}</td>
+                <td contenteditable="true" onblur="updateField(${i}, 'age', this.innerText)" placeholder="14">${student.age || ''}</td>
+                <td contenteditable="true" onblur="updateField(${i}, 'grade', this.innerText)" placeholder="7">${student.grade || ''}</td>
+                <td contenteditable="true" onblur="updateField(${i}, 'section', this.innerText)" placeholder="A">${student.section || ''}</td>
+            `;
+            
+            subjects.forEach(sub => {
+                const score = student.scores[sub] || '';
+                const failClass = (score !== '' && parseFloat(score) < 50) ? 'fail' : '';
+                rowHtml += `<td contenteditable="true" onblur="updateScore(${i}, '${sub}', this.innerText)" class="${failClass}">${score}</td>`;
+            });
+
+            rowHtml += `
+                <td style="font-weight: bold; background: rgba(232,240,254,0.3);">${calc.active ? calc.total : '-'}</td>
+                <td style="font-weight: bold; color: var(--excel-green); background: rgba(232,240,254,0.3);">${calc.active ? calc.avg + '%' : '-'}</td>
+                <td style="background: rgba(232,240,254,0.3);">${calc.active ? getGradeBadge(calc.avg, calc.fails) : '-'}</td>
+                <td style="font-weight: bold; background: rgba(255,249,196,0.3);">${calc.active ? '#' + calc.rank : '-'}</td>
+            `;
+            
+            tr.innerHTML = rowHtml;
+            body.appendChild(tr);
+        });
+    }
+
+    // Dashboard Statistics
+    function updateDashboard(activeStudents) {
+        let totalAvg = 0;
+        let passCount = 0;
+        
+        activeStudents.forEach(s => {
+            totalAvg += s._calc.avg;
+            if (s._calc.avg >= 50 && s._calc.fails <= 1) passCount++;
+        });
+
+        const count = activeStudents.length;
+        document.getElementById('countStat').innerText = count;
+        document.getElementById('avgStat').innerText = count ? (totalAvg / count).toFixed(1) + '%' : '0%';
+        document.getElementById('passStat').innerText = count ? ((passCount / count) * 100).toFixed(0) + '%' : '0%';
+        document.getElementById('topStat').innerText = count > 0 ? activeStudents[0].name : '-';
+    }
+
+    // Data Updates
+    function updateField(idx, field, val) {
+        studentData[idx][field] = val.trim();
+        saveAndRefresh();
+    }
+
+    function updateScore(idx, sub, val) {
+        let numVal = parseFloat(val);
+        studentData[idx].scores[sub] = isNaN(numVal) ? '' : numVal;
+        saveAndRefresh();
     }
 
     function saveAndRefresh() {
-        localStorage.setItem('apex_stds', JSON.stringify(students));
-        render();
+        localStorage.setItem('apex_v4_data', JSON.stringify(studentData));
+        clearTimeout(window.refreshTimer);
+        window.refreshTimer = setTimeout(renderGrid, 800); // Slight delay for smooth typing
     }
 
-    updateUI();
-    render();
-</script>
+    // Actions
+    function addNewSubject() {
+        const input = document.getElementById('subjectInput');
+        const name = input.value.trim();
+        if (name && !subjects.includes(name)) {
+            subjects.push(name);
+            localStorage.setItem('apex_v4_subs', JSON.stringify(subjects));
+            input.value = '';
+            renderGrid();
+        }
+    }
 
+    function addBlankRows(n) {
+        for(let i=0; i<n; i++) {
+            studentData.push({ name: '', age: '', grade: '', section: '', scores: {} });
+        }
+        renderGrid();
+    }
+
+    function generateDummyData() {
+        const fnames = ["Abebe", "Kebede", "Mulu", "Hanna", "Samuel", "Sara", "Yonas", "Aster", "Dawit", "Genet", "Betsegaw", "Meron", "Elias"];
+        const lnames = ["Tesfaye", "Mekonnen", "Girma", "Kassa", "Alemu", "Baye", "Tadesse", "Zeleke", "Teka", "Worku"];
+        const defaultGrade = document.getElementById('gradeLvl').value.replace('Grade ', '') || '7';
+        const sections = ['A', 'B', 'C'];
+        
+        let added = 0;
+        for(let i=0; i<studentData.length; i++) {
+            if(studentData[i].name === '' && added < 25) { // Fill up to 25 empty rows as a demo
+                let name = fnames[Math.floor(Math.random()*fnames.length)] + " " + lnames[Math.floor(Math.random()*lnames.length)];
+                studentData[i].name = name;
+                studentData[i].age = Math.floor(Math.random() * 3) + 13; // 13-15 years
+                studentData[i].grade = defaultGrade;
+                studentData[i].section = sections[Math.floor(Math.random()*sections.length)];
+                
+                subjects.forEach(sub => {
+                    studentData[i].scores[sub] = Math.floor(Math.random() * 50) + 50; // Random passing scores 50-100
+                });
+                added++;
+            }
+        }
+        saveAndRefresh();
+    }
+
+    function downloadCSV() {
+        let csv = "No,Full Name,Age,Grade,Section," + subjects.join(",") + ",Total,Average,Rank\n";
+        studentData.forEach((s, idx) => {
+            if (s.name.trim() !== '') {
+                let row = `${idx+1},${s.name},${s.age},${s.grade},${s.section},`;
+                subjects.forEach(sub => row += `${s.scores[sub] || 0},`);
+                row += `${s._calc.total},${s._calc.avg},${s._calc.rank}\n`;
+                csv += row;
+            }
+        });
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('href', url);
+        a.setAttribute('download', 'Academic_Apex_Report.csv');
+        a.click();
+    }
+
+    function resetData() {
+        if (confirm("FACTORY RESET: This will clear all subjects and all student records. Are you entirely sure?")) {
+            localStorage.removeItem('apex_v4_subs');
+            localStorage.removeItem('apex_v4_data');
+            location.reload();
+        }
+    }
+
+    // Init
+    renderGrid();
+
+</script>
 </body>
 </html>
