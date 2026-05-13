@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academic Apex Master ERP - Made by Betsegaw Teka</title>
+    <title>Academic Apex Master ERP</title>
     <style>
         :root {
             --excel-green: #107c41;
@@ -35,7 +35,11 @@
         header h1 { font-size: 1.3rem; margin: 0; display: flex; align-items: center; gap: 10px; letter-spacing: 0.5px; }
         .branding { font-size: 0.75rem; opacity: 0.8; font-weight: normal; margin-left: 10px; }
         
-        .header-actions { display: flex; gap: 10px; }
+        .header-actions { display: flex; gap: 10px; align-items: center; }
+        .lang-select { 
+            background: white; border: 1px solid rgba(0,0,0,0.2); 
+            border-radius: 6px; padding: 6px; font-weight: bold; color: var(--excel-green); outline: none;
+        }
         .btn {
             background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
             color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer;
@@ -47,7 +51,7 @@
         .btn-primary:hover { background: #f8f9fa; }
         .btn-danger { color: #ff9999; border-color: rgba(255,153,153,0.3); }
 
-        /* Institutional Meta Data (Glassmorphism) */
+        /* Institutional Meta Data */
         .school-branding { 
             background: var(--glass-bg); backdrop-filter: blur(10px);
             margin: 15px 20px; padding: 20px 25px; border-radius: 12px; 
@@ -86,7 +90,6 @@
         /* Main Dashboard Area */
         main { display: flex; flex: 1; overflow: hidden; padding: 0 20px 20px 20px; gap: 20px; }
 
-        /* Left Side: Spreadsheet */
         .sheet-container {
             flex: 1; background: white; border-radius: 10px; border: 1px solid var(--border-gray);
             box-shadow: 0 8px 16px rgba(0,0,0,0.04); display: flex; flex-direction: column; overflow: hidden;
@@ -142,45 +145,50 @@
 <header class="no-print">
     <h1>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M19,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.9 20.1,3 19,3M19,19H5V7H19V19M16.4,10L14.7,11.7L18.2,15.2L14.7,18.7L16.4,20.4L21.7,15.2L16.4,10M7.6,20.4L9.3,18.7L5.8,15.2L9.3,11.7L7.6,10L2.3,15.2L7.6,20.4Z"/></svg> 
-        Academic Apex Master ERP <span class="branding">Made by Betsegaw Teka</span>
+        <span data-i18n="title">Academic Apex Master ERP</span>
+        <span class="branding" data-i18n="madeBy">Made by Betsegaw Teka</span>
     </h1>
     <div class="header-actions">
-        <button class="btn btn-primary" onclick="window.print()">🖨️ Print Roster & Grades</button>
-        <button class="btn" onclick="downloadCSV()">💾 Export CSV</button>
-        <button class="btn btn-danger" onclick="resetData()">🔄 Factory Reset</button>
+        <select id="langSelect" class="lang-select" onchange="changeLanguage()">
+            <option value="en">English</option>
+            <option value="am">አማርኛ</option>
+            <option value="om">Afaan Oromoo</option>
+        </select>
+        <button class="btn btn-primary" onclick="window.print()" data-i18n="printBtn">🖨️ Print Roster & Grades</button>
+        <button class="btn" onclick="downloadCSV()" data-i18n="exportBtn">💾 Export CSV</button>
+        <button class="btn btn-danger" onclick="resetData()" data-i18n="resetBtn">🔄 Factory Reset</button>
     </div>
 </header>
 
 <div class="school-branding no-print">
-    <div class="meta-field"><label>Institution / School Name</label><input type="text" id="schName" placeholder="Ethiopia National Academy" oninput="saveMeta()"></div>
-    <div class="meta-field"><label>Lead Teacher Name</label><input type="text" id="teaName" placeholder="Mr./Ms. Instructor" oninput="saveMeta()"></div>
-    <div class="meta-field"><label>Academic Period</label><input type="text" id="period" placeholder="2025/2026" oninput="saveMeta()"></div>
-    <div class="meta-field"><label>Region / City</label><input type="text" id="regName" placeholder="Addis Ababa" oninput="saveMeta()"></div>
-    <div class="meta-field"><label>Global Class Target</label><input type="text" id="gradeLvl" placeholder="Grade 7" oninput="saveMeta()"></div>
+    <div class="meta-field"><label data-i18n="instLbl">Institution / School Name</label><input type="text" id="schName" oninput="saveMeta()"></div>
+    <div class="meta-field"><label data-i18n="teacherLbl">Lead Teacher Name</label><input type="text" id="teaName" oninput="saveMeta()"></div>
+    <div class="meta-field"><label data-i18n="periodLbl">Academic Period</label><input type="text" id="period" oninput="saveMeta()"></div>
+    <div class="meta-field"><label data-i18n="regionLbl">Region / City</label><input type="text" id="regName" oninput="saveMeta()"></div>
+    <div class="meta-field"><label data-i18n="targetLbl">Global Class Target</label><input type="text" id="gradeLvl" oninput="saveMeta()"></div>
 </div>
 
 <div class="print-header">
     <h2 id="printSchName">Institution Name</h2>
-    <p>Official Academic Roster & Grade Report - <span id="printPeriod"></span> | Instructor: <span id="printTeaName"></span></p>
+    <p><span data-i18n="printSubtitle">Official Academic Roster & Grade Report</span> - <span id="printPeriod"></span> | <span data-i18n="printInstructor">Instructor:</span> <span id="printTeaName"></span></p>
 </div>
 
 <div class="dashboard no-print">
-    <div class="stat-card"><span>Active Enrollment</span><strong id="countStat">0</strong></div>
-    <div class="stat-card"><span>Overall Class Average</span><strong id="avgStat">0%</strong></div>
-    <div class="stat-card"><span>Promotion Rate</span><strong id="passStat">0%</strong></div>
-    <div class="stat-card"><span>Top Rank #1 (Champion)</span><strong id="topStat" style="font-size:1.3rem;">-</strong></div>
+    <div class="stat-card"><span data-i18n="statEnroll">Active Enrollment</span><strong id="countStat">0</strong></div>
+    <div class="stat-card"><span data-i18n="statAvg">Overall Class Average</span><strong id="avgStat">0%</strong></div>
+    <div class="stat-card"><span data-i18n="statPass">Promotion Rate</span><strong id="passStat">0%</strong></div>
+    <div class="stat-card"><span data-i18n="statTop">Top Rank #1 (Champion)</span><strong id="topStat" style="font-size:1.3rem;">-</strong></div>
 </div>
 
 <div class="toolbar no-print">
-    <span style="font-size: 0.8rem; font-weight: bold; color: #666; text-transform: uppercase;">Curriculum Mgmt:</span>
-    <input type="text" id="subjectInput" placeholder="New Subject (e.g. ICT)">
-    <button class="btn-add" onclick="addNewSubject()">+ Add Subject</button>
+    <span style="font-size: 0.8rem; font-weight: bold; color: #666; text-transform: uppercase;" data-i18n="currMgmt">Curriculum Mgmt:</span>
+    <input type="text" id="subjectInput" data-i18n-placeholder="newSubjPh">
+    <button class="btn-add" onclick="addNewSubject()" data-i18n="addBtn">+ Add Subject</button>
     
     <div style="width: 1px; height: 30px; background: #ddd; margin: 0 15px;"></div>
     
-    <span style="font-size: 0.8rem; font-weight: bold; color: #666; text-transform: uppercase;">Grid Control:</span>
-    <button class="btn-add" style="background: #2b78ad;" onclick="generateDummyData()">⚡ Auto-Fill Demo Data</button>
-    <button class="btn-add" style="background: #605e5c;" onclick="addBlankRows(10)">+ Add 10 Blank Rows</button>
+    <span style="font-size: 0.8rem; font-weight: bold; color: #666; text-transform: uppercase;" data-i18n="gridCtrl">Grid Control:</span>
+    <button class="btn-add" style="background: #605e5c;" onclick="addBlankRows(10)" data-i18n="addRowsBtn">+ Add 10 Blank Rows</button>
 </div>
 
 <main>
@@ -197,15 +205,15 @@
 <div class="print-footer">
     <div class="sig-block">
         <div class="sig-line"></div>
-        <div class="sig-title">Instructor Signature</div>
+        <div class="sig-title" data-i18n="sigInst">Instructor Signature</div>
     </div>
     <div class="sig-block">
         <div class="sig-line"></div>
-        <div class="sig-title">School Seal / Stamp</div>
+        <div class="sig-title" data-i18n="sigSeal">School Seal / Stamp</div>
     </div>
     <div class="sig-block">
         <div class="sig-line"></div>
-        <div class="sig-title">Director's Approval</div>
+        <div class="sig-title" data-i18n="sigDir">Director's Approval</div>
     </div>
 </div>
 
@@ -214,16 +222,91 @@
     const DEFAULT_ROWS = 100;
     let subjects = JSON.parse(localStorage.getItem('apex_v4_subs')) || ["Mathematics", "English", "Science", "Afan Oromo", "Amharic", "ICT"];
     
-    // Initialize 100 rows if no data exists
-    let initialData = Array.from({length: DEFAULT_ROWS}, () => ({ name: '', age: '', grade: '', section: '', scores: {} }));
+    // Initialize rows with 'sex' property added
+    let initialData = Array.from({length: DEFAULT_ROWS}, () => ({ name: '', sex: '', age: '', grade: '', section: '', scores: {} }));
     let studentData = JSON.parse(localStorage.getItem('apex_v4_data')) || initialData;
 
+    // Translation Dictionary
+    const translations = {
+        en: {
+            title: "Academic Apex Master ERP", madeBy: "Made by Betsegaw Teka",
+            printBtn: "🖨️ Print Roster & Grades", exportBtn: "💾 Export CSV", resetBtn: "🔄 Factory Reset",
+            instLbl: "Institution / School Name", teacherLbl: "Lead Teacher Name", periodLbl: "Academic Period",
+            regionLbl: "Region / City", targetLbl: "Global Class Target",
+            schNamePh: "Ethiopia National Academy", teaNamePh: "Mr./Ms. Instructor", periodPh: "2025/2026",
+            regNamePh: "Addis Ababa", gradeLvlPh: "Grade 7",
+            printSubtitle: "Official Academic Roster & Grade Report", printInstructor: "Instructor:",
+            statEnroll: "Active Enrollment", statAvg: "Overall Class Average", statPass: "Promotion Rate", statTop: "Top Rank #1 (Champion)",
+            currMgmt: "Curriculum Mgmt:", newSubjPh: "New Subject (e.g. ICT)", addBtn: "+ Add Subject",
+            gridCtrl: "Grid Control:", addRowsBtn: "+ Add 10 Blank Rows",
+            thName: "Full Name", thSex: "Sex", thAge: "Age", thGrade: "Grade", thSection: "Section",
+            thTotal: "Total", thAvg: "Average", thStatus: "Status", thRank: "Rank",
+            pass: "PASS", fail: "FAIL",
+            sigInst: "Instructor Signature", sigSeal: "School Seal / Stamp", sigDir: "Director's Approval"
+        },
+        am: {
+            title: "የአካዳሚክ አፕክስ ማስተር ኢአርፒ", madeBy: "በጸጋው ተካ የተሰራ",
+            printBtn: "🖨️ ማውጫ እና ውጤቶችን አትም", exportBtn: "💾 CSV ላክ", resetBtn: "🔄 መረጃዎችን አጥፋ",
+            instLbl: "የትምህርት ቤት ስም", teacherLbl: "የመምህር ስም", periodLbl: "የአካዳሚክ ዘመን",
+            regionLbl: "ክልል / ከተማ", targetLbl: "የክፍል ደረጃ",
+            schNamePh: "የኢትዮጵያ ብሄራዊ አካዳሚ", teaNamePh: "መምህር", periodPh: "2018/2019",
+            regNamePh: "አዲስ አበባ", gradeLvlPh: "7ኛ ክፍል",
+            printSubtitle: "ይፋዊ የተማሪዎች ውጤት ማውጫ", printInstructor: "መምህር:",
+            statEnroll: "ገቢር ተማሪዎች", statAvg: "የክፍል አማካይ", statPass: "የማለፊያ ምጣኔ", statTop: "ቀዳሚ (አንደኛ)",
+            currMgmt: "የትምህርት አስተዳደር:", newSubjPh: "አዲስ ትምህርት (ለምሳሌ ICT)", addBtn: "+ ትምህርት አክል",
+            gridCtrl: "የሰንጠረዥ ቁጥጥር:", addRowsBtn: "+ 10 ባዶ መስመሮች አክል",
+            thName: "ሙሉ ስም", thSex: "ፆታ", thAge: "ዕድሜ", thGrade: "ክፍል", thSection: "መለያ",
+            thTotal: "ድምር", thAvg: "አማካይ", thStatus: "ሁኔታ", thRank: "ደረጃ",
+            pass: "አልፏል", fail: "ወድቋል",
+            sigInst: "የመምህር ፊርማ", sigSeal: "የትምህርት ቤቱ ማህተም", sigDir: "የዳይሬክተር ፊርማ"
+        },
+        om: {
+            title: "Sirna To'annoo Barnootaa Apex", madeBy: "Kan Hojjetame Betsegaw Teka",
+            printBtn: "🖨️ Rosterii fi Qabxii Maxxansi", exportBtn: "💾 CSV Al-ergi", resetBtn: "🔄 Guutummaatti Haqi",
+            instLbl: "Maqaa Mana Barumsaa", teacherLbl: "Maqaa Barsiisaa", periodLbl: "Bara Barnootaa",
+            regionLbl: "Naannoo / Magaalaa", targetLbl: "Kutaa",
+            schNamePh: "Akkaadaamii Biyyaalessaa Itoophiyaa", teaNamePh: "Barsiisaa", periodPh: "2018/2019",
+            regNamePh: "Finfinnee", gradeLvlPh: "Kutaa 7",
+            printSubtitle: "Rosterii Barattootaa fi Gabaasa Qabxii", printInstructor: "Barsiisaa:",
+            statEnroll: "Barattoota Galmaa'an", statAvg: "Giddugaleessa Kutaa", statPass: "Dhibbeentaa Darbiinsaa", statTop: "Sadarkaa 1ffaa",
+            currMgmt: "To'annoo Barnootaa:", newSubjPh: "Gosa Barnootaa Haaraa", addBtn: "+ Barnoota Ida'i",
+            gridCtrl: "To'annoo Gabatee:", addRowsBtn: "+ Tarree Duwwaa 10 Ida'i",
+            thName: "Maqaa Guutuu", thSex: "Saala", thAge: "Umrii", thGrade: "Kutaa", thSection: "Garee",
+            thTotal: "Ida'ama", thAvg: "Giddugaleessa", thStatus: "Haala", thRank: "Sadarkaa",
+            pass: "DARBEERA", fail: "KUFEERA",
+            sigInst: "Mallattoo Barsiisaa", sigSeal: "Chaappaa Mana Barumsaa", sigDir: "Mallattoo Daayirektaraa"
+        }
+    };
+
+    let currentLang = localStorage.getItem('apex_v4_lang') || 'en';
+    document.getElementById('langSelect').value = currentLang;
+
+    function applyTranslations() {
+        const t = translations[currentLang];
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            el.innerHTML = t[el.getAttribute('data-i18n')];
+        });
+        document.getElementById('schName').placeholder = t.schNamePh;
+        document.getElementById('teaName').placeholder = t.teaNamePh;
+        document.getElementById('period').placeholder = t.periodPh;
+        document.getElementById('regName').placeholder = t.regNamePh;
+        document.getElementById('gradeLvl').placeholder = t.gradeLvlPh;
+        document.getElementById('subjectInput').placeholder = t.newSubjPh;
+    }
+
+    function changeLanguage() {
+        currentLang = document.getElementById('langSelect').value;
+        localStorage.setItem('apex_v4_lang', currentLang);
+        applyTranslations();
+        renderGrid();
+    }
+
     // Load Metadata
-    document.getElementById('schName').value = localStorage.getItem('apex_v4_sch') || 'Ethiopia National Academy';
+    document.getElementById('schName').value = localStorage.getItem('apex_v4_sch') || '';
     document.getElementById('teaName').value = localStorage.getItem('apex_v4_tea') || '';
-    document.getElementById('period').value = localStorage.getItem('apex_v4_per') || '2025/2026';
-    document.getElementById('regName').value = localStorage.getItem('apex_v4_reg') || 'Addis Ababa';
-    document.getElementById('gradeLvl').value = localStorage.getItem('apex_v4_glvl') || 'Grade 7';
+    document.getElementById('period').value = localStorage.getItem('apex_v4_per') || '';
+    document.getElementById('regName').value = localStorage.getItem('apex_v4_reg') || '';
+    document.getElementById('gradeLvl').value = localStorage.getItem('apex_v4_glvl') || '';
 
     function saveMeta() {
         localStorage.setItem('apex_v4_sch', document.getElementById('schName').value);
@@ -233,21 +316,22 @@
         localStorage.setItem('apex_v4_glvl', document.getElementById('gradeLvl').value);
         
         // Update Print Headers
-        document.getElementById('printSchName').innerText = document.getElementById('schName').value;
-        document.getElementById('printPeriod').innerText = document.getElementById('period').value;
-        document.getElementById('printTeaName').innerText = document.getElementById('teaName').value;
+        document.getElementById('printSchName').innerText = document.getElementById('schName').value || translations[currentLang].schNamePh;
+        document.getElementById('printPeriod').innerText = document.getElementById('period').value || translations[currentLang].periodPh;
+        document.getElementById('printTeaName').innerText = document.getElementById('teaName').value || translations[currentLang].teaNamePh;
     }
-    saveMeta(); // Initial sync for print headers
 
     // Render Grid Headers
     function renderHeaders() {
+        const t = translations[currentLang];
         const header = document.getElementById('gridHeader');
         let html = `
             <th class="row-idx">#</th>
-            <th style="width: 220px; text-align: left;">Full Name</th>
-            <th style="width: 60px;">Age</th>
-            <th style="width: 80px;">Grade</th>
-            <th style="width: 80px;">Section</th>
+            <th style="width: 220px; text-align: left;">${t.thName}</th>
+            <th style="width: 60px;">${t.thSex}</th>
+            <th style="width: 60px;">${t.thAge}</th>
+            <th style="width: 80px;">${t.thGrade}</th>
+            <th style="width: 80px;">${t.thSection}</th>
         `;
         
         subjects.forEach(sub => {
@@ -255,10 +339,10 @@
         });
         
         html += `
-            <th style="width: 80px; background: #e8f0fe;">Total</th>
-            <th style="width: 90px; background: #e8f0fe;">Average</th>
-            <th style="width: 90px; background: #e8f0fe;">Status</th>
-            <th style="width: 80px; background: #fff9c4;">Rank</th>
+            <th style="width: 80px; background: #e8f0fe;">${t.thTotal}</th>
+            <th style="width: 90px; background: #e8f0fe;">${t.thAvg}</th>
+            <th style="width: 90px; background: #e8f0fe;">${t.thStatus}</th>
+            <th style="width: 80px; background: #fff9c4;">${t.thRank}</th>
         `;
         header.innerHTML = html;
     }
@@ -276,7 +360,7 @@
                     if (val < 50) fails++;
                 }
             });
-            let avg = count > 0 ? parseFloat((total / subjects.length).toFixed(1)) : 0; // Using total subjects to penalize missing scores
+            let avg = count > 0 ? parseFloat((total / subjects.length).toFixed(1)) : 0; 
             let isActive = s.name.trim() !== '';
             
             s._calc = { total, avg, fails, active: isActive, originalIdx: idx };
@@ -294,14 +378,15 @@
 
     function getGradeBadge(avg, fails) {
         if (avg === 0) return '-';
-        if (avg >= 50 && fails <= 1) return '<span class="pass-chip">PASS</span>';
-        return '<span class="fail-chip">FAIL</span>';
+        const t = translations[currentLang];
+        if (avg >= 50 && fails <= 1) return `<span class="pass-chip">${t.pass}</span>`;
+        return `<span class="fail-chip">${t.fail}</span>`;
     }
 
     // Render Grid Rows
     function renderGrid() {
         renderHeaders();
-        processData(); // Calculates totals and ranks
+        processData(); 
         
         const body = document.getElementById('gridBody');
         body.innerHTML = '';
@@ -310,17 +395,17 @@
             const calc = student._calc;
             const tr = document.createElement('tr');
             
-            // Highlighting top 3 ranks
             if (calc.active && calc.rank === 1) tr.className = 'rank-1';
             else if (calc.active && calc.rank === 2) tr.className = 'rank-2';
             else if (calc.active && calc.rank === 3) tr.className = 'rank-3';
             
             let rowHtml = `
                 <td class="row-idx">${i + 1}</td>
-                <td contenteditable="true" onblur="updateField(${i}, 'name', this.innerText)" style="text-align: left; font-weight: 600;" placeholder="Student Name">${student.name}</td>
-                <td contenteditable="true" onblur="updateField(${i}, 'age', this.innerText)" placeholder="14">${student.age || ''}</td>
-                <td contenteditable="true" onblur="updateField(${i}, 'grade', this.innerText)" placeholder="7">${student.grade || ''}</td>
-                <td contenteditable="true" onblur="updateField(${i}, 'section', this.innerText)" placeholder="A">${student.section || ''}</td>
+                <td contenteditable="true" onblur="updateField(${i}, 'name', this.innerText)" style="text-align: left; font-weight: 600;">${student.name}</td>
+                <td contenteditable="true" onblur="updateField(${i}, 'sex', this.innerText)">${student.sex || ''}</td>
+                <td contenteditable="true" onblur="updateField(${i}, 'age', this.innerText)">${student.age || ''}</td>
+                <td contenteditable="true" onblur="updateField(${i}, 'grade', this.innerText)">${student.grade || ''}</td>
+                <td contenteditable="true" onblur="updateField(${i}, 'section', this.innerText)">${student.section || ''}</td>
             `;
             
             subjects.forEach(sub => {
@@ -360,6 +445,8 @@
 
     // Data Updates
     function updateField(idx, field, val) {
+        // Handle undefined or missing fields gracefully for older localized data
+        if(!studentData[idx]) return;
         studentData[idx][field] = val.trim();
         saveAndRefresh();
     }
@@ -373,7 +460,7 @@
     function saveAndRefresh() {
         localStorage.setItem('apex_v4_data', JSON.stringify(studentData));
         clearTimeout(window.refreshTimer);
-        window.refreshTimer = setTimeout(renderGrid, 800); // Slight delay for smooth typing
+        window.refreshTimer = setTimeout(renderGrid, 800); 
     }
 
     // Actions
@@ -390,46 +477,23 @@
 
     function addBlankRows(n) {
         for(let i=0; i<n; i++) {
-            studentData.push({ name: '', age: '', grade: '', section: '', scores: {} });
+            studentData.push({ name: '', sex: '', age: '', grade: '', section: '', scores: {} });
         }
         renderGrid();
     }
 
-    function generateDummyData() {
-        const fnames = ["Abebe", "Kebede", "Mulu", "Hanna", "Samuel", "Sara", "Yonas", "Aster", "Dawit", "Genet", "Betsegaw", "Meron", "Elias"];
-        const lnames = ["Tesfaye", "Mekonnen", "Girma", "Kassa", "Alemu", "Baye", "Tadesse", "Zeleke", "Teka", "Worku"];
-        const defaultGrade = document.getElementById('gradeLvl').value.replace('Grade ', '') || '7';
-        const sections = ['A', 'B', 'C'];
-        
-        let added = 0;
-        for(let i=0; i<studentData.length; i++) {
-            if(studentData[i].name === '' && added < 25) { // Fill up to 25 empty rows as a demo
-                let name = fnames[Math.floor(Math.random()*fnames.length)] + " " + lnames[Math.floor(Math.random()*lnames.length)];
-                studentData[i].name = name;
-                studentData[i].age = Math.floor(Math.random() * 3) + 13; // 13-15 years
-                studentData[i].grade = defaultGrade;
-                studentData[i].section = sections[Math.floor(Math.random()*sections.length)];
-                
-                subjects.forEach(sub => {
-                    studentData[i].scores[sub] = Math.floor(Math.random() * 50) + 50; // Random passing scores 50-100
-                });
-                added++;
-            }
-        }
-        saveAndRefresh();
-    }
-
     function downloadCSV() {
-        let csv = "No,Full Name,Age,Grade,Section," + subjects.join(",") + ",Total,Average,Rank\n";
+        const t = translations[currentLang];
+        let csv = `No,${t.thName},${t.thSex},${t.thAge},${t.thGrade},${t.thSection},` + subjects.join(",") + `,${t.thTotal},${t.thAvg},${t.thRank}\n`;
         studentData.forEach((s, idx) => {
             if (s.name.trim() !== '') {
-                let row = `${idx+1},${s.name},${s.age},${s.grade},${s.section},`;
+                let row = `${idx+1},${s.name},${s.sex || ''},${s.age},${s.grade},${s.section},`;
                 subjects.forEach(sub => row += `${s.scores[sub] || 0},`);
                 row += `${s._calc.total},${s._calc.avg},${s._calc.rank}\n`;
                 csv += row;
             }
         });
-        const blob = new Blob([csv], { type: 'text/csv' });
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.setAttribute('href', url);
@@ -445,7 +509,9 @@
         }
     }
 
-    // Init
+    // Init System
+    applyTranslations();
+    saveMeta();
     renderGrid();
 
 </script>
