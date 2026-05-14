@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Apex Master ERP v6</title>
+    <style>
+        :root {
+            /* Light Theme */
+            --excel-green: #107c41; --excel-dark: #0b5a30; --excel-light: #e6f4ea;
+            --bg-body: #f3f2f1; --container-bg: #ffffff; --border-gray: #edebe9;
+            --text-main: #323130; --text-muted: #605e5c; 
+            --fail-red: #d32f2f; --fail-bg: #ffebee; --fail-bar: #f44336;
+            --pass-bg: #e8f5e9; --pass-text: #2e7d32;
+            --gold: #ffb900; --th-bg: #f8f9fa; --row-alt: #fafafa;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme */
+            --excel-green: #21a55d; --excel-dark: #1e874c; --excel-light: #123321;
+            --bg-body: #121212; --container-bg: #1e1e1e; --border-gray: #333333;
+            --text-main: #e0e0e0; --text-muted: #aaaaaa;
+            --fail-red: #ff5252; --fail-bg: #3b1616; --fail-bar: #ff5252;
+            --pass-bg: #1b3a1e; --pass-text: #66bb6a;
+            --th-bg: #2d2d2d; --row-alt: #252525;
+        }
+
+        * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+
+        body { 
+            margin: 0; background: var(--bg-body); color: var(--text-main);
+            display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* Top Navigation */
+        header {
+            background: var(--excel-green); color: white; padding: 0 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            height: 60px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 100;
+        }
+        header h1 { font-size: 1.3rem; margin: 0; display: flex; align-items: center; gap: 10px; }
+        .branding { font-size: 0.75rem; opacity: 0.9; font-weight: bold; margin-left: 10px; background: rgba(0,0,0,0.25); padding: 3px 8px; border-radius: 6px;}
+        
+        .header-actions { display: flex; gap: 10px; align-items: center; }
+        .lang-select, .header-input { 
+            background: white; border: 1px solid rgba(0,0,0,0.2); 
+            border-radius: 6px; padding: 6px; font-weight: bold; color: var(--excel-green); outline: none;
+        }
+        .header-input { width: 70px; text-align: center; }
+        .btn {
+            background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+            color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer;
+            font-size: 0.85rem; font-weight: 600; transition: all 0.2s ease;
+        }
+        .btn:hover { background: rgba(255,255,255,0.25); transform: translateY(-1px); }
+        .btn-primary { background: #fff; color: var(--excel-green); }
+        .btn-primary:hover { background: #f8f9fa; }
+        .btn-danger { color: #ff9999; border-color: rgba(255,153,153,0.3); }
+
+        /* Meta Data */
+        .school-branding { 
+            background: var(--container-bg); margin: 15px 20px; padding: 15px 25px; border-radius: 12px; 
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; 
+            border: 1px solid var(--border-gray); box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+        }
+        .meta-field { display: flex; flex-direction: column; }
+        .meta-field label { font-size: 0.7rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; }
+        .meta-field input { 
+            border: none; border-bottom: 2px solid var(--border-gray); background: transparent;
+            padding: 6px 0; font-size: 1rem; font-weight: 600; color: var(--excel-green); outline: none; 
+        }
+        .meta-field input:focus { border-bottom-color: var(--excel-green); }
+
+        /* Dashboard */
+        .dashboard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 0 20px 15px 20px; }
+        .stat-card { 
+            background: var(--container-bg); padding: 15px; border-radius: 10px; text-align: center; 
+            border: 1px solid var(--border-gray); box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+        .stat-card span { display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+        .stat-card strong { font-size: 1.6rem; color: var(--excel-green); line-height: 1.2; display: block; margin-top: 5px; }
+
+        /* Toolbar */
+        .toolbar { 
+            margin: 0 20px 15px 20px; display: flex; gap: 15px; align-items: center; background: var(--container-bg);
+            padding: 10px 15px; border-radius: 8px; border: 1px solid var(--border-gray);
+        }
+        .toolbar input { padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-gray); outline: none; background: var(--bg-body); color: var(--text-main); }
+        .toolbar input:focus { border-color: var(--excel-green); }
+        .btn-add { background: var(--excel-green); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+        .search-box { flex-grow: 1; display: flex; justify-content: flex-end; }
+
+        /* Main Grid */
+        main { display: flex; flex: 1; overflow: hidden; padding: 0 20px 20px 20px; gap: 20px; }
+        .sheet-container { flex: 1; background: var(--container-bg); border-radius: 10px; border: 1px solid var(--border-gray); overflow: hidden; display: flex; flex-direction: column; }
+        .table-scroll { overflow: auto; flex: 1; }
+        table { border-collapse: collapse; width: 100%; min-width: 1700px; table-layout: fixed; }
+        
+        th { 
+            background: var(--th-bg); color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
+            padding: 12px 8px; border: 1px solid var(--border-gray); position: sticky; top: 0; z-index: 10;
+        }
+        td { border: 1px solid var(--border-gray); padding: 8px; font-size: 14px; text-align: center; height: 35px; color: var(--text-main); }
+        tr:nth-child(even) td { background: var(--row-alt); }
+        
+        .row-idx { background: var(--th-bg); width: 45px; font-weight: bold; color: var(--text-muted); font-size: 0.75rem; position: sticky; left: 0; z-index: 5; }
+        
+        [contenteditable="true"] { outline: none; transition: background 0.1s; cursor: text; }
+        [contenteditable="true"]:focus { background: var(--container-bg) !important; box-shadow: inset 0 0 0 2px var(--excel-green); z-index: 5; position: relative; }
+        
+        /* Highlighting - The Magic Red Marks */
+        .score-fail { background-color: var(--fail-bg) !important; color: var(--fail-red) !important; font-weight: 900 !important; }
+        .text-danger { color: var(--fail-red) !important; font-weight: bold; }
+        
+        .pass-chip { background: var(--pass-bg); color: var(--pass-text); padding: 3px 10px; border-radius: 12px; font-weight: bold; font-size: 12px; display: inline-block; }
+        .fail-chip { background: var(--fail-bg); color: var(--fail-red); padding: 3px 10px; border-radius: 12px; font-weight: bold; font-size: 12px; display: inline-block; }
+        .letter-grade { font-weight: 900; font-size: 15px; }
+        
+        .avg-bar-bg { width: 100%; background: var(--border-gray); height: 5px; border-radius: 3px; margin-top: 4px; overflow: hidden; }
+        .avg-bar-fill { height: 100%; background: var(--excel-green); border-radius: 3px; transition: width 0.3s; }
+        .avg-bar-fill.danger { background: var(--fail-bar); }
+
+        .btn-icon { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1.1rem; transition: 0.2s; margin: 0 2px; }
+        .btn-icon:hover { color: var(--excel-green); transform: scale(1.15); }
+        .btn-icon.del:hover { color: var(--fail-red); }
+
+        /* Print Settings for Master Roster */
+        @media print {
+            header, .school-branding, .dashboard, .toolbar, .no-print, .actions-col { display: none !important; }
+            body { background: white; height: auto; overflow: visible; padding: 0; color: #000 !important; }
+            main { padding: 0; display: block; }
+            .sheet-container { border: none; box-shadow: none; border-radius: 0; overflow: visible; }
+            .table-scroll { overflow: visible; }
+            table { min-width: 100%; }
+            th, td { border: 1px solid black !important; color: black !important; padding: 6px; background: none !important; }
+            .score-fail { font-weight: bold !important; color: #ff0000 !important; } /* Keep red print if color printer used */
+            .avg-bar-bg { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="no-print">
+    <h1>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M19,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.9 20.1,3 19,3M19,19H5V7H19V19M16.4,10L14.7,11.7L18.2,15.2L14.7,18.7L16.4,20.4L21.7,15.2L16.4,10M7.6,20.4L9.3,18.7L5.8,15.2L9.3,11.7L7.6,10L2.3,15.2L7.6,20.4Z"/></svg> 
+        <span data-i18n="title">Academic Apex Master ERP</span>
+        <span class="branding">v6 | Made by Betsegaw Teka</span>
+    </h1>
+    <div class="header-actions">
+        <label style="font-size: 0.8rem;">Pass Mark:</label>
+        <input type="number" id="passThresh" class="header-input" value="50" onchange="updateThreshold()" title="Minimum passing score">
+        <button class="btn" onclick="toggleTheme()" id="themeBtn" title="Toggle Dark Mode">🌗</button>
+        <select id="langSelect" class="lang-select" onchange="changeLanguage()">
+            <option value="en">English</option>
+            <option value="am">አማርኛ</option>
+            <option value="om">Afaan Oromoo</option>
+        </select>
+        <button class="btn btn-primary" onclick="window.print()">🖨️ Print Master</button>
+        <button class="btn btn-danger" onclick="resetData()">🔄 Reset</button>
+    </div>
+</header>
+
+<div class="school-branding no-print">
+    <div class="meta-field"><label data-i18n="instLbl">Institution Name</label><input type="text" id="schName" oninput="saveMeta()" placeholder="Ethiopia National Academy"></div>
+    <div class="meta-field"><label data-i18n="teacherLbl">Lead Teacher</label><input type="text" id="teaName" oninput="saveMeta()" placeholder="Instructor Name"></div>
+    <div class="meta-field"><label data-i18n="periodLbl">Academic Period</label><input type="text" id="period" oninput="saveMeta()" placeholder="2025/2026"></div>
+    <div class="meta-field"><label data-i18n="regionLbl">Region / City</label><input type="text" id="regName" oninput="saveMeta()" placeholder="Addis Ababa"></div>
+    <div class="meta-field"><label data-i18n="targetLbl">Class Target</label><input type="text" id="gradeLvl" oninput="saveMeta()" placeholder="Grade 8"></div>
+</div>
+
+<div class="dashboard no-print">
+    <div class="stat-card"><span>Active Enrollment</span><strong id="countStat">0</strong></div>
+    <div class="stat-card"><span>Overall Class Average</span><strong id="avgStat">0%</strong></div>
+    <div class="stat-card"><span>Promotion Rate</span><strong id="passStat">0%</strong></div>
+    <div class="stat-card"><span>Top Rank #1</span><strong id="topStat">-</strong></div>
+</div>
+
+<div class="toolbar no-print">
+    <span style="font-size: 0.8rem; font-weight: bold; color: var(--text-muted);">CURRICULUM:</span>
+    <input type="text" id="subjectInput" placeholder="New Subject...">
+    <button class="btn-add" onclick="addNewSubject()">+ Add Subject</button>
+    
+    <div style="width: 1px; height: 30px; background: var(--border-gray); margin: 0 15px;"></div>
+    
+    <button class="btn-add" style="background: var(--text-muted);" onclick="addBlankRows(5)">+ Add 5 Rows</button>
+    <button class="btn-add" style="background: #e6a23c; margin-left: 10px;" onclick="loadDummyData()">🪄 Load Demo Data</button>
+
+    <div class="search-box">
+        <input type="text" id="searchInput" onkeyup="renderGrid()" placeholder="🔍 Search student...">
+    </div>
+</div>
+
+<main>
+    <div class="sheet-container">
+        <div class="table-scroll">
+            <table id="mainGrid">
+                <thead><tr id="gridHeader"></tr></thead>
+                <tbody id="gridBody"></tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<script>
+    // --- Configuration & State ---
+    const DEFAULT_ROWS = 50;
+    let subjects = JSON.parse(localStorage.getItem('apex_v6_subs')) || ["Mathematics", "English", "Science", "Afan Oromo", "Amharic", "ICT"];
+    let passMark = parseFloat(localStorage.getItem('apex_v6_pass')) || 50;
+    document.getElementById('passThresh').value = passMark;
+    
+    let initialData = Array.from({length: DEFAULT_ROWS}, () => ({ name: '', sex: '', age: '', grade: '', section: '', remarks: '', scores: {} }));
+    let studentData = JSON.parse(localStorage.getItem('apex_v6_data')) || initialData;
+
+    // --- Localization ---
+    const translations = {
+        en: { title: "Academic Apex Master ERP", instLbl: "Institution Name", teacherLbl: "Lead Teacher Name", periodLbl: "Academic Period", regionLbl: "Region / City", targetLbl: "Class Target" },
+        am: { title: "የአካዳሚክ አፕክስ ማስተር ኢአርፒ", instLbl: "የትምህርት ቤት ስም", teacherLbl: "የመምህር ስም", periodLbl: "የአካዳሚክ ዘመን", regionLbl: "ክልል / ከተማ", targetLbl: "የክፍል ደረጃ" },
+        om: { title: "Sirna To'annoo Barnootaa Apex", instLbl: "Maqaa Mana Barumsaa", teacherLbl: "Maqaa Barsiisaa", periodLbl: "Bara Barnootaa", regionLbl: "Naannoo / Magaalaa", targetLbl: "Kutaa" }
+    };
+    let currentLang = localStorage.getItem('apex_v6_lang') || 'en';
+    document.getElementById('langSelect').value = currentLang;
+
+    // --- Core UI Functions ---
+    function toggleTheme() {
+        let isDark = document.body.getAttribute('data-theme') === 'dark';
+        document.body.setAttribute('data-theme', isDark ? '' : 'dark');
+        localStorage.setItem('apex_v6_theme', isDark ? 'light' : 'dark');
+    }
+    if(localStorage.getItem('apex_v6_theme') === 'dark') document.body.setAttribute('data-theme', 'dark');
+
+    function changeLanguage() {
+        currentLang = document.getElementById('langSelect').value;
+        localStorage.setItem('apex_v6_lang', currentLang);
+        const t = translations[currentLang];
+        document.querySelectorAll('[data-i18n]').forEach(el => { el.innerHTML = t[el.getAttribute('data-i18n')]; });
+    }
+    changeLanguage();
+
+    function updateThreshold() {
+        passMark = parseFloat(document.getElementById('passThresh').value) || 50;
+        localStorage.setItem('apex_v6_pass', passMark);
+        renderGrid();
+    }
+
+    function saveMeta() {
+        ['schName', 'teaName', 'period', 'regName', 'gradeLvl'].forEach(f => localStorage.setItem(`apex_v6_${f}`, document.getElementById(f).value));
+    }
+    ['schName', 'teaName', 'period', 'regName', 'gradeLvl'].forEach(f => document.getElementById(f).value = localStorage.getItem(`apex_v6_${f}`) || '');
+
+    // Letter Grade Logic (Standard Scale)
+    function getLetterGrade(avg) {
+        if(avg >= 90) return { l: 'A+', c: '#2e7d32' };
+        if(avg >= 85) return { l: 'A', c: '#388e3c' };
+        if(avg >= 80) return { l: 'A-', c: '#4caf50' };
+        if(avg >= 75) return { l: 'B+', c: '#1976d2' };
+        if(avg >= 70) return { l: 'B', c: '#2196f3' };
+        if(avg >= 65) return { l: 'C+', c: '#f57c00' };
+        if(avg >= 60) return { l: 'C', c: '#ff9800' };
+        if(avg >= passMark) return { l: 'D', c: '#8d6e63' };
+        return { l: 'F', c: '#d32f2f' };
+    }
+
+    function renderHeaders() {
+        const header = document.getElementById('gridHeader');
+        let html = `<th class="row-idx">#</th><th style="width: 200px; text-align: left;">Full Name</th><th style="width: 50px;">Sex</th><th style="width: 50px;">Age</th><th style="width: 60px;">Grade</th><th style="width: 60px;">Section</th>`;
+        subjects.forEach(sub => html += `<th style="width: 85px;">${sub}</th>`);
+        html += `<th style="width: 80px;">Total</th><th style="width: 100px;">Avg</th><th style="width: 60px;">Grade</th><th style="width: 80px;">Status</th><th style="width: 70px;">Rank</th><th style="width: 150px; text-align:left;">Remarks</th><th style="width: 80px;" class="actions-col">Action</th>`;
+        header.innerHTML = html;
+    }
+
+    function processData() {
+        let activeStudents = [];
+        studentData.forEach((s, idx) => {
+            let total = 0, count = 0, fails = 0;
+            subjects.forEach(sub => {
+                if (s.scores[sub] !== undefined && s.scores[sub] !== '') {
+                    let val = parseFloat(s.scores[sub]);
+                    total += val; count++;
+                    if (val < passMark) fails++;
+                }
+            });
+            s._calc = { 
+                total, 
+                avg: count > 0 ? parseFloat((total / subjects.length).toFixed(1)) : 0, 
+                fails, 
+                active: s.name.trim() !== '', 
+                idx 
+            };
+            if (s._calc.active) activeStudents.push(s);
+        });
+
+        activeStudents.sort((a, b) => b._calc.avg - a._calc.avg);
+        activeStudents.forEach((s, r) => s._calc.rank = r + 1);
+
+        // Dashboard Stats
+        let tAvg = 0, pCount = 0;
+        activeStudents.forEach(s => {
+            tAvg += s._calc.avg;
+            if (s._calc.fails === 0 && s._calc.avg >= passMark) pCount++;
+        });
+        const cnt = activeStudents.length;
+        document.getElementById('countStat').innerText = cnt;
+        document.getElementById('avgStat').innerText = cnt ? (tAvg / cnt).toFixed(1) + '%' : '0%';
+        document.getElementById('passStat').innerText = cnt ? ((pCount / cnt) * 100).toFixed(0) + '%' : '0%';
+        document.getElementById('topStat').innerText = cnt > 0 ? activeStudents[0].name : '-';
+    }
+
+    function renderGrid() {
+        renderHeaders();
+        processData();
+        const body = document.getElementById('gridBody');
+        body.innerHTML = '';
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        
+        studentData.forEach((student, idx) => {
+            if(query && student.name.toLowerCase().indexOf(query) === -1) return;
+            const c = student._calc;
+            const tr = document.createElement('tr');
+            
+            let rowHtml = `<td class="row-idx">${idx + 1}</td>
+                <td contenteditable="true" onblur="updateField(${idx}, 'name', this.innerText)" style="text-align: left; font-weight: 600;">${student.name}</td>
+                <td contenteditable="true" onblur="updateField(${idx}, 'sex', this.innerText)">${student.sex}</td>
+                <td contenteditable="true" onblur="updateField(${idx}, 'age', this.innerText)">${student.age}</td>
+                <td contenteditable="true" onblur="updateField(${idx}, 'grade', this.innerText)">${student.grade}</td>
+                <td contenteditable="true" onblur="updateField(${idx}, 'section', this.innerText)">${student.section}</td>`;
+            
+            // Render Subject Scores (with RED Warning Logic)
+            subjects.forEach(sub => {
+                const score = student.scores[sub] !== undefined ? student.scores[sub] : '';
+                const isFailing = score !== '' && parseFloat(score) < passMark;
+                const failClass = isFailing ? 'score-fail' : ''; // RED MAGIC
+                rowHtml += `<td contenteditable="true" onblur="updateScore(${idx}, '${sub}', this.innerText)" class="${failClass}">${score}</td>`;
+            });
+
+            const isAvgFailing = c.avg < passMark;
+            const lGrade = getLetterGrade(c.avg);
+            const statusBadge = (c.fails === 0 && !isAvgFailing) ? `<span class="pass-chip">PASS</span>` : `<span class="fail-chip">FAIL</span>`;
+
+            rowHtml += `
+                <td style="font-weight: bold; background: rgba(0,0,0,0.02);">${c.active ? c.total : '-'}</td>
+                <td style="font-weight: bold; background: rgba(0,0,0,0.02);" class="${c.active && isAvgFailing ? 'text-danger' : ''}">
+                    ${c.active ? c.avg + '%' : '-'}
+                    ${c.active ? `<div class="avg-bar-bg"><div class="avg-bar-fill ${isAvgFailing ? 'danger' : ''}" style="width: ${Math.min(c.avg, 100)}%"></div></div>` : ''}
+                </td>
+                <td style="background: rgba(0,0,0,0.02);"><span class="letter-grade" style="color:${lGrade.c}">${c.active ? lGrade.l : '-'}</span></td>
+                <td style="background: rgba(0,0,0,0.02);">${c.active ? statusBadge : '-'}</td>
+                <td style="font-weight: bold; background: rgba(255,185,0,0.1);">${c.active ? '#' + c.rank : '-'}</td>
+                <td contenteditable="true" onblur="updateField(${idx}, 'remarks', this.innerText)" style="text-align:left; font-size:12px;">${student.remarks || ''}</td>
+                <td class="actions-col">
+                    <button class="btn-icon" onclick="printReportCard(${idx})" title="Print Report Card">📄</button>
+                    <button class="btn-icon del" onclick="clearRow(${idx})" title="Clear Row">🗑️</button>
+                </td>`;
+            tr.innerHTML = rowHtml;
+            body.appendChild(tr);
+        });
+    }
+
+    // --- Data Handlers ---
+    let saveTimeout;
+    function triggerSave() {
+        localStorage.setItem('apex_v6_data', JSON.stringify(studentData));
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(renderGrid, 400);
+    }
+
+    function updateField(idx, field, val) {
+        val = val.trim();
+        if(studentData[idx][field] !== val) { studentData[idx][field] = val; triggerSave(); }
+    }
+
+    function updateScore(idx, sub, val) {
+        val = val.trim();
+        if(val === '') { if(studentData[idx].scores[sub] !== '') { studentData[idx].scores[sub] = ''; triggerSave(); } return; }
+        let numVal = parseFloat(val);
+        if (isNaN(numVal)) { renderGrid(); return; }
+        if(numVal > 100) numVal = 100; if(numVal < 0) numVal = 0;
+        if(studentData[idx].scores[sub] !== numVal) { studentData[idx].scores[sub] = numVal; triggerSave(); } 
+        else renderGrid();
+    }
+
+    function addNewSubject() {
+        const name = document.getElementById('subjectInput').value.trim();
+        if (name && !subjects.includes(name)) {
+            subjects.push(name);
+            localStorage.setItem('apex_v6_subs', JSON.stringify(subjects));
+            document.getElementById('subjectInput').value = '';
+            renderGrid();
+        }
+    }
+
+    function clearRow(idx) {
+        if(confirm("Clear this student's data?")) {
+            studentData[idx] = { name: '', sex: '', age: '', grade: '', section: '', remarks: '', scores: {} };
+            triggerSave();
+        }
+    }
+
+    function addBlankRows(n) {
+        for(let i=0; i<n; i++) studentData.push({ name: '', sex: '', age: '', grade: '', section: '', remarks: '', scores: {} });
+        triggerSave();
+    }
+
+    function loadDummyData() {
+        if(confirm("Load sample data? This will overwrite existing data!")) {
+            studentData = initialData.map(s => ({...s})); // reset
+            const names = ["Abebe Kebede", "Chaltu Tolosa", "Dawit Bekele", "Fatuma Ali", "Girma Tadesse"];
+            names.forEach((n, i) => {
+                studentData[i].name = n; studentData[i].sex = i%2===0?"M":"F"; 
+                studentData[i].age = "14"; studentData[i].grade = "8"; studentData[i].section = "A";
+                subjects.forEach(sub => studentData[i].scores[sub] = Math.floor(Math.random() * 60) + 40); // Random scores 40-100
+                studentData[i].remarks = "Good effort";
+            });
+            triggerSave();
+        }
+    }
+
+    function resetData() {
+        if (prompt("Type YES to delete everything forever") === "YES") { localStorage.clear(); location.reload(); }
+    }
+
+    // --- REPORT CARD GENERATOR MAGIC ---
+    function printReportCard(idx) {
+        const s = studentData[idx];
+        if(!s || s.name.trim() === '') return alert("Cannot print empty row.");
+        
+        const sch = document.getElementById('schName').value || 'Ethiopia National Academy';
+        const tea = document.getElementById('teaName').value || 'Instructor';
+        const per = document.getElementById('period').value || '2025/2026';
+        
+        const isFailing = s._calc.avg < passMark || s._calc.fails > 0;
+        const statusText = isFailing ? "FAIL" : "PASS";
+        const statusColor = isFailing ? "#d32f2f" : "#2e7d32";
+        const letterGr = getLetterGrade(s._calc.avg);
+
+        let subsHtml = '';
+        subjects.forEach(sub => {
+            let sc = s.scores[sub] !== undefined ? s.scores[sub] : '-';
+            let c = (sc !== '-' && parseFloat(sc) < passMark) ? 'color:#d32f2f; font-weight:bold;' : '';
+            subsHtml += `<tr><td style="padding:8px; border:1px solid #ccc;">${sub}</td><td style="padding:8px; border:1px solid #ccc; text-align:center; ${c}">${sc}</td></tr>`;
+        });
+
+        const printWindow = window.open('', '_blank', 'width=800,height=900');
+        printWindow.document.write(`
+            <html><head><title>Report Card - ${s.name}</title>
+            <style>
+                body { font-family: 'Segoe UI', sans-serif; padding: 40px; color: #333; }
+                .card { border: 2px solid #107c41; padding: 30px; border-radius: 10px; max-width: 700px; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+                .header { text-align: center; border-bottom: 2px solid #107c41; padding-bottom: 20px; margin-bottom: 20px; }
+                .header h1 { margin: 0; color: #107c41; text-transform: uppercase; }
+                .header h3 { margin: 5px 0; color: #666; }
+                .student-info { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; font-size: 16px; background: #f8f9fa; padding: 15px; border-radius: 6px;}
+                table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+                th { background: #107c41; color: white; padding: 10px; text-align: left; }
+                .summary { display: flex; justify-content: space-between; background: #eee; padding: 15px; border-radius: 6px; font-weight: bold; font-size: 18px; margin-bottom: 20px;}
+                .remarks { padding: 15px; border: 1px solid #ccc; min-height: 80px; border-radius: 6px; margin-bottom: 40px; font-style: italic; }
+                .signatures { display: flex; justify-content: space-between; margin-top: 50px; text-align: center; }
+                .sig-line { width: 200px; border-bottom: 1px solid #000; margin-bottom: 5px; }
+                @media print { .no-print { display: none; } .card { box-shadow: none; border: none; } }
+            </style>
+            </head><body>
+            <button class="no-print" onclick="window.print()" style="margin-bottom:20px; padding:10px 20px; background:#107c41; color:white; border:none; border-radius:5px; cursor:pointer;">🖨️ Print Document</button>
+            <div class="card">
+                <div class="header">
+                    <h1>${sch}</h1>
+                    <h3>Official Student Report Card</h3>
+                    <p>Academic Year: <strong>${per}</strong></p>
+                </div>
+                <div class="student-info">
+                    <div><strong>Name:</strong> ${s.name}</div>
+                    <div><strong>Sex:</strong> ${s.sex || '-'} &nbsp;&nbsp; <strong>Age:</strong> ${s.age || '-'}</div>
+                    <div><strong>Grade:</strong> ${s.grade || '-'}</div>
+                    <div><strong>Section:</strong> ${s.section || '-'}</div>
+                </div>
+                <table>
+                    <thead><tr><th>Subject</th><th style="text-align:center;">Score (100%)</th></tr></thead>
+                    <tbody>${subsHtml}</tbody>
+                </table>
+                <div class="summary">
+                    <span>Total: ${s._calc.total}</span>
+                    <span>Average: ${s._calc.avg}%</span>
+                    <span>Rank: #${s._calc.rank}</span>
+                    <span style="color: ${letterGr.c}; font-size: 24px; line-height: 18px;">${letterGr.l}</span>
+                    <span style="color: ${statusColor};">Status: ${statusText}</span>
+                </div>
+                <div class="remarks">
+                    <strong>Teacher Remarks:</strong><br><br>
+                    ${s.remarks || 'No remarks provided.'}
+                </div>
+                <div class="signatures">
+                    <div><div class="sig-line"></div><strong>${tea}</strong><br><span style="font-size:12px; color:#666;">Lead Instructor</span></div>
+                    <div><div class="sig-line"></div><strong>Director / Principal</strong><br><span style="font-size:12px; color:#666;">Official Signature</span></div>
+                </div>
+            </div>
+            <div style="text-align:center; margin-top:20px; font-size:12px; color:#999;">Powered by Academic Apex Master ERP v6 | Made by Betsegaw Teka</div>
+            </body></html>
+        `);
+        printWindow.document.close();
+    }
+
+    renderGrid();
+</script>
+</body>
+</html>
