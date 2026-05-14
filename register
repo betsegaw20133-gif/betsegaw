@@ -3,20 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academic Apex Master ERP</title>
+    <title>Academic Apex Master ERP v5</title>
     <style>
         :root {
+            /* Light Theme Variables */
             --excel-green: #107c41;
             --excel-dark: #0b5a30;
             --excel-light: #e6f4ea;
             --bg-body: #f3f2f1;
+            --container-bg: #ffffff;
             --border-gray: #edebe9;
             --text-main: #323130;
+            --text-muted: #605e5c;
             --fail-red: #a4262c;
             --fail-bg: #fde7e9;
             --gold: #ffb900;
             --glass-bg: rgba(255, 255, 255, 0.85);
             --glass-border: rgba(255, 255, 255, 0.4);
+            --th-bg: #f8f9fa;
+            --row-alt: #fafafa;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme Variables */
+            --excel-green: #21a55d;
+            --excel-dark: #1e874c;
+            --excel-light: #123321;
+            --bg-body: #121212;
+            --container-bg: #1e1e1e;
+            --border-gray: #333333;
+            --text-main: #e0e0e0;
+            --text-muted: #aaaaaa;
+            --fail-red: #ff6b6b;
+            --fail-bg: #4a1c1c;
+            --glass-bg: rgba(30, 30, 30, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --th-bg: #2d2d2d;
+            --row-alt: #252525;
         }
 
         * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
@@ -24,6 +47,7 @@
         body { 
             margin: 0; background: var(--bg-body); color: var(--text-main);
             display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+            transition: background 0.3s, color 0.3s;
         }
 
         /* Top Navigation Bar */
@@ -33,7 +57,7 @@
             height: 60px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 100;
         }
         header h1 { font-size: 1.3rem; margin: 0; display: flex; align-items: center; gap: 10px; letter-spacing: 0.5px; }
-        .branding { font-size: 0.75rem; opacity: 0.8; font-weight: normal; margin-left: 10px; }
+        .branding { font-size: 0.75rem; opacity: 0.8; font-weight: normal; margin-left: 10px; background: rgba(0,0,0,0.2); padding: 2px 6px; border-radius: 4px;}
         
         .header-actions { display: flex; gap: 10px; align-items: center; }
         .lang-select { 
@@ -59,7 +83,7 @@
             border: 1px solid var(--glass-border); box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
         }
         .meta-field { display: flex; flex-direction: column; }
-        .meta-field label { font-size: 0.7rem; font-weight: 800; color: #605e5c; text-transform: uppercase; margin-bottom: 5px; }
+        .meta-field label { font-size: 0.7rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; }
         .meta-field input { 
             border: none; border-bottom: 2px solid var(--border-gray); background: transparent;
             padding: 6px 0; font-size: 1rem; font-weight: 600; color: var(--excel-green); 
@@ -70,71 +94,105 @@
         /* Dashboard Insights */
         .dashboard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 0 20px 15px 20px; }
         .stat-card { 
-            background: white; padding: 15px; border-radius: 10px; text-align: center; 
+            background: var(--container-bg); padding: 15px; border-radius: 10px; text-align: center; 
             border: 1px solid var(--border-gray); box-shadow: 0 2px 6px rgba(0,0,0,0.02);
             transition: transform 0.2s;
         }
         .stat-card:hover { transform: translateY(-2px); }
-        .stat-card span { display: block; font-size: 0.75rem; font-weight: 700; color: #8a8886; text-transform: uppercase; }
-        .stat-card strong { font-size: 1.6rem; color: var(--excel-green); line-height: 1.2; }
+        .stat-card span { display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+        .stat-card strong { font-size: 1.6rem; color: var(--excel-green); line-height: 1.2; display: block; margin-top: 5px; }
 
         /* Toolbar */
         .toolbar { 
-            margin: 0 20px 15px 20px; display: flex; gap: 15px; align-items: center; 
+            margin: 0 20px 15px 20px; display: flex; gap: 15px; align-items: center; background: var(--container-bg);
+            padding: 10px 15px; border-radius: 8px; border: 1px solid var(--border-gray);
         }
-        .toolbar input { padding: 8px 12px; border-radius: 6px; border: 1px solid #d1d1d1; outline: none; }
+        .toolbar input { 
+            padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-gray); 
+            outline: none; background: var(--bg-body); color: var(--text-main);
+        }
         .toolbar input:focus { border-color: var(--excel-green); box-shadow: 0 0 0 2px var(--excel-light); }
-        .btn-add { background: var(--excel-green); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+        .btn-add { background: var(--excel-green); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s;}
         .btn-add:hover { background: var(--excel-dark); }
+        .search-box { flex-grow: 1; display: flex; justify-content: flex-end; }
+        .search-box input { width: 300px; }
 
         /* Main Dashboard Area */
         main { display: flex; flex: 1; overflow: hidden; padding: 0 20px 20px 20px; gap: 20px; }
 
         .sheet-container {
-            flex: 1; background: white; border-radius: 10px; border: 1px solid var(--border-gray);
+            flex: 1; background: var(--container-bg); border-radius: 10px; border: 1px solid var(--border-gray);
             box-shadow: 0 8px 16px rgba(0,0,0,0.04); display: flex; flex-direction: column; overflow: hidden;
         }
         .table-scroll { overflow: auto; flex: 1; }
-        table { border-collapse: collapse; width: 100%; min-width: 1400px; table-layout: fixed; }
+        table { border-collapse: collapse; width: 100%; min-width: 1600px; table-layout: fixed; }
+        
         th { 
-            background: #f8f9fa; color: #605e5c; font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
-            padding: 12px; border: 1px solid var(--border-gray); position: sticky; top: 0; z-index: 10;
+            background: var(--th-bg); color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
+            padding: 12px 8px; border: 1px solid var(--border-gray); position: sticky; top: 0; z-index: 10;
+            cursor: pointer; user-select: none; transition: background 0.2s;
         }
-        td { border: 1px solid var(--border-gray); padding: 8px; font-size: 14px; text-align: center; height: 35px; }
-        
-        .row-idx { background: #f8f9fa; width: 45px; font-weight: bold; color: #a19f9d; font-size: 0.75rem; position: sticky; left: 0; z-index: 5; }
-        [contenteditable="true"] { outline: none; transition: background 0.1s; cursor: text; }
-        [contenteditable="true"]:focus { background: #fff !important; box-shadow: inset 0 0 0 2px var(--excel-green); z-index: 5; position: relative; }
-        [contenteditable="true"]:empty:before { content: attr(placeholder); color: #ccc; pointer-events: none; display: block; }
+        th:hover { background: var(--border-gray); }
+        th .sort-icon { font-size: 0.7rem; opacity: 0.5; margin-left: 4px; }
+        th .del-sub { color: #ff6b6b; cursor: pointer; margin-left: 5px; font-size: 0.8rem; float: right; visibility: hidden; }
+        th:hover .del-sub { visibility: visible; }
 
-        /* Formatting */
-        .fail { background-color: var(--fail-bg) !important; color: var(--fail-red) !important; font-weight: bold; }
-        .pass-chip { background: #dff6dd; color: #107c41; padding: 3px 10px; border-radius: 12px; font-weight: bold; font-size: 12px; display: inline-block; }
-        .fail-chip { background: #fde7e9; color: #a4262c; padding: 3px 10px; border-radius: 12px; font-weight: bold; font-size: 12px; display: inline-block; }
+        td { border: 1px solid var(--border-gray); padding: 8px; font-size: 14px; text-align: center; height: 35px; color: var(--text-main); }
+        tr:nth-child(even) td { background: var(--row-alt); }
         
-        .rank-1 { background-color: #fff9c4 !important; font-weight: bold; color: #f57f17; }
-        .rank-2 { background-color: #f5f5f5 !important; font-weight: bold; }
-        .rank-3 { background-color: #efebe9 !important; font-weight: bold; }
+        .row-idx { background: var(--th-bg); width: 45px; font-weight: bold; color: var(--text-muted); font-size: 0.75rem; position: sticky; left: 0; z-index: 5; }
+        
+        [contenteditable="true"] { outline: none; transition: background 0.1s; cursor: text; }
+        [contenteditable="true"]:focus { background: var(--container-bg) !important; box-shadow: inset 0 0 0 2px var(--excel-green); z-index: 5; position: relative; }
+        [contenteditable="true"]:empty:before { content: attr(placeholder); color: var(--text-muted); pointer-events: none; display: block; opacity: 0.5; }
+
+        /* Formatting & Data Bars */
+        .fail { background-color: var(--fail-bg) !important; color: var(--fail-red) !important; font-weight: bold; }
+        .pass-chip { background: rgba(16, 124, 65, 0.15); color: var(--excel-green); padding: 3px 10px; border-radius: 12px; font-weight: bold; font-size: 12px; display: inline-block; }
+        .fail-chip { background: var(--fail-bg); color: var(--fail-red); padding: 3px 10px; border-radius: 12px; font-weight: bold; font-size: 12px; display: inline-block; }
+        
+        .rank-1 { background-color: rgba(255, 185, 0, 0.15) !important; font-weight: bold; color: #d49a00; }
+        [data-theme="dark"] .rank-1 { color: #ffca28; }
+        
+        .avg-bar-bg { width: 100%; background: var(--border-gray); height: 4px; border-radius: 2px; margin-top: 4px; overflow: hidden; }
+        .avg-bar-fill { height: 100%; background: var(--excel-green); border-radius: 2px; }
+        .avg-bar-fill.danger { background: var(--fail-red); }
+
+        .btn-icon { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1rem; opacity: 0.6; transition: 0.2s; }
+        .btn-icon:hover { opacity: 1; color: var(--fail-red); transform: scale(1.1); }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 9999;
+        }
+        .toast {
+            background: var(--excel-green); color: white; padding: 12px 20px; border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 600; font-size: 0.9rem;
+            animation: slideIn 0.3s ease-out forwards; opacity: 0; transform: translateY(20px);
+        }
+        @keyframes slideIn { to { opacity: 1; transform: translateY(0); } }
 
         /* Signatures (Print Only) */
         .print-footer { display: none; margin-top: 50px; justify-content: space-between; padding: 0 40px; }
         .sig-block { text-align: center; width: 250px; }
         .sig-line { border-bottom: 2px solid #000; height: 40px; margin-bottom: 10px; }
-        .sig-title { font-weight: bold; font-size: 0.9rem; text-transform: uppercase; }
+        .sig-title { font-weight: bold; font-size: 0.9rem; text-transform: uppercase; color: #000; }
 
         @media print {
-            header, .school-branding, .dashboard, .toolbar, .no-print { display: none !important; }
-            body { background: white; height: auto; overflow: visible; padding: 0; }
+            header, .school-branding, .dashboard, .toolbar, .no-print, .actions-col { display: none !important; }
+            body { background: white; height: auto; overflow: visible; padding: 0; color: #000 !important; }
             main { padding: 0; display: block; }
             .sheet-container { border: none; box-shadow: none; border-radius: 0; overflow: visible; }
             .table-scroll { overflow: visible; }
             table { min-width: 100%; page-break-inside: auto; }
             tr { page-break-inside: avoid; page-break-after: auto; }
-            th, td { border: 1px solid black !important; color: black !important; padding: 6px; }
+            th, td { border: 1px solid black !important; color: black !important; padding: 6px; background: none !important; }
+            .pass-chip, .fail-chip { background: none !important; padding: 0; font-size: 14px; }
+            .avg-bar-bg { display: none; }
             .print-footer { display: flex; page-break-inside: avoid; }
             .print-header { display: block !important; text-align: center; margin-bottom: 20px; }
-            .print-header h2 { margin: 0; color: #000; }
-            .print-header p { margin: 5px 0 15px 0; font-weight: bold; }
+            .print-header h2 { margin: 0; color: #000; font-size: 24px; }
+            .print-header p { margin: 5px 0 15px 0; font-weight: bold; color: #000; }
         }
 
         .print-header { display: none; }
@@ -146,26 +204,27 @@
     <h1>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M19,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.9 20.1,3 19,3M19,19H5V7H19V19M16.4,10L14.7,11.7L18.2,15.2L14.7,18.7L16.4,20.4L21.7,15.2L16.4,10M7.6,20.4L9.3,18.7L5.8,15.2L9.3,11.7L7.6,10L2.3,15.2L7.6,20.4Z"/></svg> 
         <span data-i18n="title">Academic Apex Master ERP</span>
-        <span class="branding" data-i18n="madeBy">Made by Betsegaw Teka</span>
+        <span class="branding" data-i18n="madeBy">Made by Betsegaw Teka v5</span>
     </h1>
     <div class="header-actions">
+        <button class="btn" onclick="toggleTheme()" id="themeBtn" title="Toggle Dark/Light Mode">🌗</button>
         <select id="langSelect" class="lang-select" onchange="changeLanguage()">
             <option value="en">English</option>
             <option value="am">አማርኛ</option>
             <option value="om">Afaan Oromoo</option>
         </select>
-        <button class="btn btn-primary" onclick="window.print()" data-i18n="printBtn">🖨️ Print Roster & Grades</button>
+        <button class="btn btn-primary" onclick="window.print()" data-i18n="printBtn">🖨️ Print Roster</button>
         <button class="btn" onclick="downloadCSV()" data-i18n="exportBtn">💾 Export CSV</button>
-        <button class="btn btn-danger" onclick="resetData()" data-i18n="resetBtn">🔄 Factory Reset</button>
+        <button class="btn btn-danger" onclick="resetData()" data-i18n="resetBtn">🔄 Reset</button>
     </div>
 </header>
 
 <div class="school-branding no-print">
-    <div class="meta-field"><label data-i18n="instLbl">Institution / School Name</label><input type="text" id="schName" oninput="saveMeta()"></div>
+    <div class="meta-field"><label data-i18n="instLbl">Institution Name</label><input type="text" id="schName" oninput="saveMeta()"></div>
     <div class="meta-field"><label data-i18n="teacherLbl">Lead Teacher Name</label><input type="text" id="teaName" oninput="saveMeta()"></div>
     <div class="meta-field"><label data-i18n="periodLbl">Academic Period</label><input type="text" id="period" oninput="saveMeta()"></div>
     <div class="meta-field"><label data-i18n="regionLbl">Region / City</label><input type="text" id="regName" oninput="saveMeta()"></div>
-    <div class="meta-field"><label data-i18n="targetLbl">Global Class Target</label><input type="text" id="gradeLvl" oninput="saveMeta()"></div>
+    <div class="meta-field"><label data-i18n="targetLbl">Class Target</label><input type="text" id="gradeLvl" oninput="saveMeta()"></div>
 </div>
 
 <div class="print-header">
@@ -177,18 +236,21 @@
     <div class="stat-card"><span data-i18n="statEnroll">Active Enrollment</span><strong id="countStat">0</strong></div>
     <div class="stat-card"><span data-i18n="statAvg">Overall Class Average</span><strong id="avgStat">0%</strong></div>
     <div class="stat-card"><span data-i18n="statPass">Promotion Rate</span><strong id="passStat">0%</strong></div>
-    <div class="stat-card"><span data-i18n="statTop">Top Rank #1 (Champion)</span><strong id="topStat" style="font-size:1.3rem;">-</strong></div>
+    <div class="stat-card"><span data-i18n="statTop">Top Rank #1</span><strong id="topStat">-</strong></div>
 </div>
 
 <div class="toolbar no-print">
-    <span style="font-size: 0.8rem; font-weight: bold; color: #666; text-transform: uppercase;" data-i18n="currMgmt">Curriculum Mgmt:</span>
+    <span style="font-size: 0.8rem; font-weight: bold; color: var(--text-muted); text-transform: uppercase;" data-i18n="currMgmt">Curriculum Mgmt:</span>
     <input type="text" id="subjectInput" data-i18n-placeholder="newSubjPh">
     <button class="btn-add" onclick="addNewSubject()" data-i18n="addBtn">+ Add Subject</button>
     
-    <div style="width: 1px; height: 30px; background: #ddd; margin: 0 15px;"></div>
+    <div style="width: 1px; height: 30px; background: var(--border-gray); margin: 0 15px;"></div>
     
-    <span style="font-size: 0.8rem; font-weight: bold; color: #666; text-transform: uppercase;" data-i18n="gridCtrl">Grid Control:</span>
-    <button class="btn-add" style="background: #605e5c;" onclick="addBlankRows(10)" data-i18n="addRowsBtn">+ Add 10 Blank Rows</button>
+    <button class="btn-add" style="background: var(--text-muted);" onclick="addBlankRows(5)" data-i18n="addRowsBtn">+ Add 5 Rows</button>
+
+    <div class="search-box">
+        <input type="text" id="searchInput" data-i18n-placeholder="searchPh" onkeyup="renderGrid()" placeholder="Search student...">
+    </div>
 </div>
 
 <main>
@@ -203,160 +265,181 @@
 </main>
 
 <div class="print-footer">
-    <div class="sig-block">
-        <div class="sig-line"></div>
-        <div class="sig-title" data-i18n="sigInst">Instructor Signature</div>
-    </div>
-    <div class="sig-block">
-        <div class="sig-line"></div>
-        <div class="sig-title" data-i18n="sigSeal">School Seal / Stamp</div>
-    </div>
-    <div class="sig-block">
-        <div class="sig-line"></div>
-        <div class="sig-title" data-i18n="sigDir">Director's Approval</div>
-    </div>
+    <div class="sig-block"><div class="sig-line"></div><div class="sig-title" data-i18n="sigInst">Instructor Signature</div></div>
+    <div class="sig-block"><div class="sig-line"></div><div class="sig-title" data-i18n="sigSeal">School Seal / Stamp</div></div>
+    <div class="sig-block"><div class="sig-line"></div><div class="sig-title" data-i18n="sigDir">Director's Approval</div></div>
 </div>
 
-<script>
-    // System Initialization & Storage Management
-    const DEFAULT_ROWS = 100;
-    let subjects = JSON.parse(localStorage.getItem('apex_v4_subs')) || ["Mathematics", "English", "Science", "Afan Oromo", "Amharic", "ICT"];
-    
-    // Initialize rows with 'sex' property added
-    let initialData = Array.from({length: DEFAULT_ROWS}, () => ({ name: '', sex: '', age: '', grade: '', section: '', scores: {} }));
-    let studentData = JSON.parse(localStorage.getItem('apex_v4_data')) || initialData;
+<div class="toast-container" id="toastContainer"></div>
 
-    // Translation Dictionary
+<script>
+    // --- State Management ---
+    const DEFAULT_ROWS = 50;
+    let subjects = JSON.parse(localStorage.getItem('apex_v5_subs')) || ["Mathematics", "English", "Science", "Afan Oromo", "Amharic", "ICT"];
+    
+    let initialData = Array.from({length: DEFAULT_ROWS}, () => ({ name: '', sex: '', age: '', grade: '', section: '', remarks: '', scores: {} }));
+    let studentData = JSON.parse(localStorage.getItem('apex_v5_data'));
+    
+    // Migration/Fallback logic
+    if(!studentData) {
+        let oldData = JSON.parse(localStorage.getItem('apex_v4_data'));
+        studentData = oldData ? oldData.map(s => ({...s, remarks: s.remarks || ''})) : initialData;
+    }
+
+    let sortConfig = { key: 'originalIdx', asc: true };
+
+    // --- Translations ---
     const translations = {
         en: {
-            title: "Academic Apex Master ERP", madeBy: "Made by Betsegaw Teka",
-            printBtn: "🖨️ Print Roster & Grades", exportBtn: "💾 Export CSV", resetBtn: "🔄 Factory Reset",
-            instLbl: "Institution / School Name", teacherLbl: "Lead Teacher Name", periodLbl: "Academic Period",
-            regionLbl: "Region / City", targetLbl: "Global Class Target",
+            title: "Academic Apex Master ERP", madeBy: "Made by Betsegaw Teka v5",
+            printBtn: "🖨️ Print Roster", exportBtn: "💾 Export CSV", resetBtn: "🔄 Factory Reset",
+            instLbl: "Institution Name", teacherLbl: "Lead Teacher Name", periodLbl: "Academic Period",
+            regionLbl: "Region / City", targetLbl: "Class Target",
             schNamePh: "Ethiopia National Academy", teaNamePh: "Mr./Ms. Instructor", periodPh: "2025/2026",
             regNamePh: "Addis Ababa", gradeLvlPh: "Grade 7",
             printSubtitle: "Official Academic Roster & Grade Report", printInstructor: "Instructor:",
-            statEnroll: "Active Enrollment", statAvg: "Overall Class Average", statPass: "Promotion Rate", statTop: "Top Rank #1 (Champion)",
-            currMgmt: "Curriculum Mgmt:", newSubjPh: "New Subject (e.g. ICT)", addBtn: "+ Add Subject",
-            gridCtrl: "Grid Control:", addRowsBtn: "+ Add 10 Blank Rows",
-            thName: "Full Name", thSex: "Sex", thAge: "Age", thGrade: "Grade", thSection: "Section",
-            thTotal: "Total", thAvg: "Average", thStatus: "Status", thRank: "Rank",
-            pass: "PASS", fail: "FAIL",
+            statEnroll: "Active Enrollment", statAvg: "Overall Class Average", statPass: "Promotion Rate", statTop: "Top Rank #1",
+            currMgmt: "Curriculum Mgmt:", newSubjPh: "New Subject (e.g. History)", addBtn: "+ Add Subject",
+            addRowsBtn: "+ Add 5 Rows", searchPh: "🔍 Search student name...",
+            thName: "Full Name", thSex: "Sex", thAge: "Age", thGrade: "Grade", thSection: "Section", thRemarks: "Remarks",
+            thTotal: "Total", thAvg: "Average", thStatus: "Status", thRank: "Rank", thAction: "Action",
+            pass: "PASS", fail: "FAIL", saved: "💾 Data Auto-Saved",
             sigInst: "Instructor Signature", sigSeal: "School Seal / Stamp", sigDir: "Director's Approval"
         },
         am: {
-            title: "የአካዳሚክ አፕክስ ማስተር ኢአርፒ", madeBy: "በጸጋው ተካ የተሰራ",
-            printBtn: "🖨️ ማውጫ እና ውጤቶችን አትም", exportBtn: "💾 CSV ላክ", resetBtn: "🔄 መረጃዎችን አጥፋ",
+            title: "የአካዳሚክ አፕክስ ማስተር ኢአርፒ", madeBy: "በጸጋው ተካ የተሰራ (v5)",
+            printBtn: "🖨️ አትም", exportBtn: "💾 CSV ላክ", resetBtn: "🔄 አጥፋ",
             instLbl: "የትምህርት ቤት ስም", teacherLbl: "የመምህር ስም", periodLbl: "የአካዳሚክ ዘመን",
             regionLbl: "ክልል / ከተማ", targetLbl: "የክፍል ደረጃ",
-            schNamePh: "የኢትዮጵያ ብሄራዊ አካዳሚ", teaNamePh: "መምህር", periodPh: "2018/2019",
+            schNamePh: "ብሄራዊ አካዳሚ", teaNamePh: "መምህር", periodPh: "2018/2019",
             regNamePh: "አዲስ አበባ", gradeLvlPh: "7ኛ ክፍል",
             printSubtitle: "ይፋዊ የተማሪዎች ውጤት ማውጫ", printInstructor: "መምህር:",
-            statEnroll: "ገቢር ተማሪዎች", statAvg: "የክፍል አማካይ", statPass: "የማለፊያ ምጣኔ", statTop: "ቀዳሚ (አንደኛ)",
-            currMgmt: "የትምህርት አስተዳደር:", newSubjPh: "አዲስ ትምህርት (ለምሳሌ ICT)", addBtn: "+ ትምህርት አክል",
-            gridCtrl: "የሰንጠረዥ ቁጥጥር:", addRowsBtn: "+ 10 ባዶ መስመሮች አክል",
-            thName: "ሙሉ ስም", thSex: "ፆታ", thAge: "ዕድሜ", thGrade: "ክፍል", thSection: "መለያ",
-            thTotal: "ድምር", thAvg: "አማካይ", thStatus: "ሁኔታ", thRank: "ደረጃ",
-            pass: "አልፏል", fail: "ወድቋል",
-            sigInst: "የመምህር ፊርማ", sigSeal: "የትምህርት ቤቱ ማህተም", sigDir: "የዳይሬክተር ፊርማ"
+            statEnroll: "ገቢር ተማሪዎች", statAvg: "የክፍል አማካይ", statPass: "የማለፊያ ምጣኔ", statTop: "ቀዳሚ (1ኛ)",
+            currMgmt: "ትምህርት:", newSubjPh: "አዲስ ትምህርት...", addBtn: "+ አክል",
+            addRowsBtn: "+ 5 መስመሮች", searchPh: "🔍 ተማሪ ፈልግ...",
+            thName: "ሙሉ ስም", thSex: "ፆታ", thAge: "ዕድሜ", thGrade: "ክፍል", thSection: "መለያ", thRemarks: "አስተያየት",
+            thTotal: "ድምር", thAvg: "አማካይ", thStatus: "ሁኔታ", thRank: "ደረጃ", thAction: "ድርጊት",
+            pass: "አልፏል", fail: "ወድቋል", saved: "💾 መረጃ ተቀምጧል",
+            sigInst: "የመምህር ፊርማ", sigSeal: "ማህተም", sigDir: "የዳይሬክተር ፊርማ"
         },
         om: {
-            title: "Sirna To'annoo Barnootaa Apex", madeBy: "Kan Hojjetame Betsegaw Teka",
-            printBtn: "🖨️ Rosterii fi Qabxii Maxxansi", exportBtn: "💾 CSV Al-ergi", resetBtn: "🔄 Guutummaatti Haqi",
+            title: "Sirna To'annoo Barnootaa Apex", madeBy: "Kan Hojjetame Betsegaw Teka v5",
+            printBtn: "🖨️ Maxxansi", exportBtn: "💾 CSV Al-ergi", resetBtn: "🔄 Haqi",
             instLbl: "Maqaa Mana Barumsaa", teacherLbl: "Maqaa Barsiisaa", periodLbl: "Bara Barnootaa",
             regionLbl: "Naannoo / Magaalaa", targetLbl: "Kutaa",
-            schNamePh: "Akkaadaamii Biyyaalessaa Itoophiyaa", teaNamePh: "Barsiisaa", periodPh: "2018/2019",
+            schNamePh: "Akkaadaamii Biyyaalessaa", teaNamePh: "Barsiisaa", periodPh: "2018/2019",
             regNamePh: "Finfinnee", gradeLvlPh: "Kutaa 7",
             printSubtitle: "Rosterii Barattootaa fi Gabaasa Qabxii", printInstructor: "Barsiisaa:",
-            statEnroll: "Barattoota Galmaa'an", statAvg: "Giddugaleessa Kutaa", statPass: "Dhibbeentaa Darbiinsaa", statTop: "Sadarkaa 1ffaa",
-            currMgmt: "To'annoo Barnootaa:", newSubjPh: "Gosa Barnootaa Haaraa", addBtn: "+ Barnoota Ida'i",
-            gridCtrl: "To'annoo Gabatee:", addRowsBtn: "+ Tarree Duwwaa 10 Ida'i",
-            thName: "Maqaa Guutuu", thSex: "Saala", thAge: "Umrii", thGrade: "Kutaa", thSection: "Garee",
-            thTotal: "Ida'ama", thAvg: "Giddugaleessa", thStatus: "Haala", thRank: "Sadarkaa",
-            pass: "DARBEERA", fail: "KUFEERA",
-            sigInst: "Mallattoo Barsiisaa", sigSeal: "Chaappaa Mana Barumsaa", sigDir: "Mallattoo Daayirektaraa"
+            statEnroll: "Barattoota", statAvg: "Giddugaleessa Kutaa", statPass: "Dhibbeentaa Darbiinsaa", statTop: "Sadarkaa 1ffaa",
+            currMgmt: "Barnoota:", newSubjPh: "Gosa Barnootaa Haaraa", addBtn: "+ Ida'i",
+            addRowsBtn: "+ Tarree 5 Ida'i", searchPh: "🔍 Barataa barbaadi...",
+            thName: "Maqaa Guutuu", thSex: "Saala", thAge: "Umrii", thGrade: "Kutaa", thSection: "Garee", thRemarks: "Yaada",
+            thTotal: "Ida'ama", thAvg: "Giddugaleessa", thStatus: "Haala", thRank: "Sadarkaa", thAction: "Gocha",
+            pass: "DARBEERA", fail: "KUFEERA", saved: "💾 Ragaan Kuufameera",
+            sigInst: "Mallattoo Barsiisaa", sigSeal: "Chaappaa", sigDir: "Mallattoo Daayirektaraa"
         }
     };
 
-    let currentLang = localStorage.getItem('apex_v4_lang') || 'en';
+    let currentLang = localStorage.getItem('apex_v5_lang') || 'en';
     document.getElementById('langSelect').value = currentLang;
 
+    // --- Theme Management ---
+    let isDark = localStorage.getItem('apex_v5_theme') === 'dark';
+    if(isDark) document.body.setAttribute('data-theme', 'dark');
+
+    function toggleTheme() {
+        isDark = !isDark;
+        if(isDark) document.body.setAttribute('data-theme', 'dark');
+        else document.body.removeAttribute('data-theme');
+        localStorage.setItem('apex_v5_theme', isDark ? 'dark' : 'light');
+    }
+
+    // --- Core Functions ---
     function applyTranslations() {
         const t = translations[currentLang];
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-            el.innerHTML = t[el.getAttribute('data-i18n')];
-        });
-        document.getElementById('schName').placeholder = t.schNamePh;
-        document.getElementById('teaName').placeholder = t.teaNamePh;
-        document.getElementById('period').placeholder = t.periodPh;
-        document.getElementById('regName').placeholder = t.regNamePh;
-        document.getElementById('gradeLvl').placeholder = t.gradeLvlPh;
-        document.getElementById('subjectInput').placeholder = t.newSubjPh;
+        document.querySelectorAll('[data-i18n]').forEach(el => { el.innerHTML = t[el.getAttribute('data-i18n')]; });
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.placeholder = t[el.getAttribute('data-i18n-placeholder')]; });
     }
 
     function changeLanguage() {
         currentLang = document.getElementById('langSelect').value;
-        localStorage.setItem('apex_v4_lang', currentLang);
-        applyTranslations();
-        renderGrid();
+        localStorage.setItem('apex_v5_lang', currentLang);
+        applyTranslations(); renderGrid();
     }
 
-    // Load Metadata
-    document.getElementById('schName').value = localStorage.getItem('apex_v4_sch') || '';
-    document.getElementById('teaName').value = localStorage.getItem('apex_v4_tea') || '';
-    document.getElementById('period').value = localStorage.getItem('apex_v4_per') || '';
-    document.getElementById('regName').value = localStorage.getItem('apex_v4_reg') || '';
-    document.getElementById('gradeLvl').value = localStorage.getItem('apex_v4_glvl') || '';
-
     function saveMeta() {
-        localStorage.setItem('apex_v4_sch', document.getElementById('schName').value);
-        localStorage.setItem('apex_v4_tea', document.getElementById('teaName').value);
-        localStorage.setItem('apex_v4_per', document.getElementById('period').value);
-        localStorage.setItem('apex_v4_reg', document.getElementById('regName').value);
-        localStorage.setItem('apex_v4_glvl', document.getElementById('gradeLvl').value);
+        const fields = ['schName', 'teaName', 'period', 'regName', 'gradeLvl'];
+        fields.forEach(f => localStorage.setItem(`apex_v5_${f}`, document.getElementById(f).value));
         
-        // Update Print Headers
         document.getElementById('printSchName').innerText = document.getElementById('schName').value || translations[currentLang].schNamePh;
         document.getElementById('printPeriod').innerText = document.getElementById('period').value || translations[currentLang].periodPh;
         document.getElementById('printTeaName').innerText = document.getElementById('teaName').value || translations[currentLang].teaNamePh;
     }
 
-    // Render Grid Headers
+    // Restore Meta
+    ['schName', 'teaName', 'period', 'regName', 'gradeLvl'].forEach(f => {
+        document.getElementById(f).value = localStorage.getItem(`apex_v5_${f}`) || '';
+    });
+
+    function showToast(msgKey) {
+        const t = translations[currentLang];
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerText = t[msgKey] || msgKey;
+        document.getElementById('toastContainer').appendChild(toast);
+        setTimeout(() => { toast.style.opacity='0'; setTimeout(()=>toast.remove(), 300); }, 2500);
+    }
+
+    function sortTable(key) {
+        if(sortConfig.key === key) sortConfig.asc = !sortConfig.asc;
+        else { sortConfig.key = key; sortConfig.asc = true; }
+        renderGrid();
+    }
+
+    function getSortIcon(key) {
+        if(sortConfig.key !== key) return '';
+        return sortConfig.asc ? '▲' : '▼';
+    }
+
     function renderHeaders() {
         const t = translations[currentLang];
         const header = document.getElementById('gridHeader');
         let html = `
             <th class="row-idx">#</th>
-            <th style="width: 220px; text-align: left;">${t.thName}</th>
-            <th style="width: 60px;">${t.thSex}</th>
-            <th style="width: 60px;">${t.thAge}</th>
-            <th style="width: 80px;">${t.thGrade}</th>
-            <th style="width: 80px;">${t.thSection}</th>
+            <th style="width: 200px; text-align: left;" onclick="sortTable('name')">${t.thName} <span class="sort-icon">${getSortIcon('name')}</span></th>
+            <th style="width: 50px;" onclick="sortTable('sex')">${t.thSex}</th>
+            <th style="width: 50px;">${t.thAge}</th>
+            <th style="width: 60px;">${t.thGrade}</th>
+            <th style="width: 60px;">${t.thSection}</th>
         `;
         
         subjects.forEach(sub => {
-            html += `<th style="width: 100px;">${sub}</th>`;
+            html += `<th style="width: 85px;" onclick="sortTable('sub_${sub}')">
+                        ${sub} <span class="sort-icon">${getSortIcon('sub_'+sub)}</span>
+                        <span class="del-sub" title="Delete Subject" onclick="deleteSubject(event, '${sub}')">✖</span>
+                     </th>`;
         });
         
         html += `
-            <th style="width: 80px; background: #e8f0fe;">${t.thTotal}</th>
-            <th style="width: 90px; background: #e8f0fe;">${t.thAvg}</th>
-            <th style="width: 90px; background: #e8f0fe;">${t.thStatus}</th>
-            <th style="width: 80px; background: #fff9c4;">${t.thRank}</th>
+            <th style="width: 80px;" onclick="sortTable('total')">${t.thTotal} <span class="sort-icon">${getSortIcon('total')}</span></th>
+            <th style="width: 100px;" onclick="sortTable('avg')">${t.thAvg} <span class="sort-icon">${getSortIcon('avg')}</span></th>
+            <th style="width: 90px;">${t.thStatus}</th>
+            <th style="width: 70px;" onclick="sortTable('rank')">${t.thRank} <span class="sort-icon">${getSortIcon('rank')}</span></th>
+            <th style="width: 150px; text-align:left;">${t.thRemarks}</th>
+            <th style="width: 50px;" class="actions-col no-print">${t.thAction}</th>
         `;
         header.innerHTML = html;
     }
 
-    // Process Analytics & Ranking
-    function processData() {
+    function processAndSortData() {
+        // 1. Calculate stats and ranks (always absolute based on Average)
         let activeStudents = [];
         studentData.forEach((s, idx) => {
             let total = 0, count = 0, fails = 0;
             subjects.forEach(sub => {
-                if (s.scores[sub] && s.scores[sub] !== '') {
+                if (s.scores[sub] !== undefined && s.scores[sub] !== '') {
                     let val = parseFloat(s.scores[sub]);
-                    total += val;
-                    count++;
+                    total += val; count++;
                     if (val < 50) fails++;
                 }
             });
@@ -367,58 +450,85 @@
             if (isActive) activeStudents.push(s);
         });
 
-        // Sort by Average for Ranking
         activeStudents.sort((a, b) => b._calc.avg - a._calc.avg);
-        activeStudents.forEach((s, rankIdx) => {
-            s._calc.rank = rankIdx + 1;
-        });
+        activeStudents.forEach((s, rankIdx) => s._calc.rank = rankIdx + 1);
 
         updateDashboard(activeStudents);
+
+        // 2. Filter & Sort UI Array
+        let displayArray = [...studentData];
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        
+        if(query) {
+            displayArray = displayArray.filter(s => s.name.toLowerCase().includes(query) || (s.section||'').toLowerCase().includes(query));
+        }
+
+        displayArray.sort((a, b) => {
+            let valA, valB;
+            if(sortConfig.key === 'originalIdx') { valA = a._calc.originalIdx; valB = b._calc.originalIdx; }
+            else if(sortConfig.key === 'name') { valA = a.name.toLowerCase(); valB = b.name.toLowerCase(); }
+            else if(sortConfig.key === 'total') { valA = a._calc.total; valB = b._calc.total; }
+            else if(sortConfig.key === 'avg') { valA = a._calc.avg; valB = b._calc.avg; }
+            else if(sortConfig.key === 'rank') { valA = a._calc.rank || 9999; valB = b._calc.rank || 9999; }
+            else if(sortConfig.key.startsWith('sub_')) {
+                let sub = sortConfig.key.replace('sub_', '');
+                valA = parseFloat(a.scores[sub]) || 0; valB = parseFloat(b.scores[sub]) || 0;
+            } else {
+                valA = a[sortConfig.key] || ''; valB = b[sortConfig.key] || '';
+            }
+
+            if(valA < valB) return sortConfig.asc ? -1 : 1;
+            if(valA > valB) return sortConfig.asc ? 1 : -1;
+            return 0;
+        });
+
+        return displayArray;
     }
 
-    function getGradeBadge(avg, fails) {
-        if (avg === 0) return '-';
-        const t = translations[currentLang];
-        if (avg >= 50 && fails <= 1) return `<span class="pass-chip">${t.pass}</span>`;
-        return `<span class="fail-chip">${t.fail}</span>`;
-    }
-
-    // Render Grid Rows
     function renderGrid() {
         renderHeaders();
-        processData(); 
-        
+        const displayData = processAndSortData(); 
         const body = document.getElementById('gridBody');
         body.innerHTML = '';
+        const t = translations[currentLang];
         
-        studentData.forEach((student, i) => {
+        displayData.forEach((student) => {
             const calc = student._calc;
+            const idx = calc.originalIdx; // Maps back to absolute array for editing
             const tr = document.createElement('tr');
             
             if (calc.active && calc.rank === 1) tr.className = 'rank-1';
-            else if (calc.active && calc.rank === 2) tr.className = 'rank-2';
-            else if (calc.active && calc.rank === 3) tr.className = 'rank-3';
             
             let rowHtml = `
-                <td class="row-idx">${i + 1}</td>
-                <td contenteditable="true" onblur="updateField(${i}, 'name', this.innerText)" style="text-align: left; font-weight: 600;">${student.name}</td>
-                <td contenteditable="true" onblur="updateField(${i}, 'sex', this.innerText)">${student.sex || ''}</td>
-                <td contenteditable="true" onblur="updateField(${i}, 'age', this.innerText)">${student.age || ''}</td>
-                <td contenteditable="true" onblur="updateField(${i}, 'grade', this.innerText)">${student.grade || ''}</td>
-                <td contenteditable="true" onblur="updateField(${i}, 'section', this.innerText)">${student.section || ''}</td>
+                <td class="row-idx">${idx + 1}</td>
+                <td contenteditable="true" onblur="updateField(${idx}, 'name', this.innerText)" style="text-align: left; font-weight: 600;">${student.name}</td>
+                <td contenteditable="true" onblur="updateField(${idx}, 'sex', this.innerText)">${student.sex || ''}</td>
+                <td contenteditable="true" onblur="updateField(${idx}, 'age', this.innerText)">${student.age || ''}</td>
+                <td contenteditable="true" onblur="updateField(${idx}, 'grade', this.innerText)">${student.grade || ''}</td>
+                <td contenteditable="true" onblur="updateField(${idx}, 'section', this.innerText)">${student.section || ''}</td>
             `;
             
             subjects.forEach(sub => {
-                const score = student.scores[sub] || '';
+                const score = student.scores[sub] === undefined ? '' : student.scores[sub];
                 const failClass = (score !== '' && parseFloat(score) < 50) ? 'fail' : '';
-                rowHtml += `<td contenteditable="true" onblur="updateScore(${i}, '${sub}', this.innerText)" class="${failClass}">${score}</td>`;
+                rowHtml += `<td contenteditable="true" onblur="updateScore(${idx}, '${sub}', this.innerText)" class="${failClass}">${score}</td>`;
             });
 
+            const barW = calc.active ? Math.min(calc.avg, 100) : 0;
+            const barClass = calc.avg < 50 ? 'danger' : '';
+
             rowHtml += `
-                <td style="font-weight: bold; background: rgba(232,240,254,0.3);">${calc.active ? calc.total : '-'}</td>
-                <td style="font-weight: bold; color: var(--excel-green); background: rgba(232,240,254,0.3);">${calc.active ? calc.avg + '%' : '-'}</td>
-                <td style="background: rgba(232,240,254,0.3);">${calc.active ? getGradeBadge(calc.avg, calc.fails) : '-'}</td>
-                <td style="font-weight: bold; background: rgba(255,249,196,0.3);">${calc.active ? '#' + calc.rank : '-'}</td>
+                <td style="font-weight: bold; background: rgba(0,0,0,0.03);">${calc.active ? calc.total : '-'}</td>
+                <td style="font-weight: bold; background: rgba(0,0,0,0.03);">
+                    ${calc.active ? calc.avg + '%' : '-'}
+                    ${calc.active ? `<div class="avg-bar-bg"><div class="avg-bar-fill ${barClass}" style="width: ${barW}%"></div></div>` : ''}
+                </td>
+                <td style="background: rgba(0,0,0,0.03);">${calc.active ? (calc.avg>=50&&calc.fails<=1 ? `<span class="pass-chip">${t.pass}</span>` : `<span class="fail-chip">${t.fail}</span>`) : '-'}</td>
+                <td style="font-weight: bold; background: rgba(255,185,0,0.1);">${calc.active ? '#' + calc.rank : '-'}</td>
+                <td contenteditable="true" onblur="updateField(${idx}, 'remarks', this.innerText)" style="text-align:left; font-size:12px;">${student.remarks || ''}</td>
+                <td class="actions-col no-print">
+                    <button class="btn-icon" onclick="deleteStudent(${idx})" title="Clear/Delete Row">🗑️</button>
+                </td>
             `;
             
             tr.innerHTML = rowHtml;
@@ -426,16 +536,12 @@
         });
     }
 
-    // Dashboard Statistics
     function updateDashboard(activeStudents) {
-        let totalAvg = 0;
-        let passCount = 0;
-        
+        let totalAvg = 0, passCount = 0;
         activeStudents.forEach(s => {
             totalAvg += s._calc.avg;
             if (s._calc.avg >= 50 && s._calc.fails <= 1) passCount++;
         });
-
         const count = activeStudents.length;
         document.getElementById('countStat').innerText = count;
         document.getElementById('avgStat').innerText = count ? (totalAvg / count).toFixed(1) + '%' : '0%';
@@ -443,77 +549,112 @@
         document.getElementById('topStat').innerText = count > 0 ? activeStudents[0].name : '-';
     }
 
-    // Data Updates
+    // --- Data Mutations ---
+    let debounceTimer;
+    function triggerSave() {
+        localStorage.setItem('apex_v5_data', JSON.stringify(studentData));
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => { renderGrid(); showToast('saved'); }, 600); 
+    }
+
     function updateField(idx, field, val) {
-        // Handle undefined or missing fields gracefully for older localized data
-        if(!studentData[idx]) return;
-        studentData[idx][field] = val.trim();
-        saveAndRefresh();
+        val = val.trim();
+        if(studentData[idx][field] !== val) {
+            studentData[idx][field] = val;
+            triggerSave();
+        }
     }
 
     function updateScore(idx, sub, val) {
+        val = val.trim();
+        if(val === '') {
+            if(studentData[idx].scores[sub] !== '') { studentData[idx].scores[sub] = ''; triggerSave(); }
+            return;
+        }
         let numVal = parseFloat(val);
-        studentData[idx].scores[sub] = isNaN(numVal) ? '' : numVal;
-        saveAndRefresh();
+        if (isNaN(numVal)) { renderGrid(); return; } // Invalid, reset grid
+        
+        // Clamp between 0 and 100
+        if(numVal > 100) numVal = 100;
+        if(numVal < 0) numVal = 0;
+
+        if(studentData[idx].scores[sub] !== numVal) {
+            studentData[idx].scores[sub] = numVal;
+            triggerSave();
+        } else {
+            renderGrid(); // Enforce clamping visually if user typed > 100
+        }
     }
 
-    function saveAndRefresh() {
-        localStorage.setItem('apex_v4_data', JSON.stringify(studentData));
-        clearTimeout(window.refreshTimer);
-        window.refreshTimer = setTimeout(renderGrid, 800); 
+    function deleteStudent(idx) {
+        if(confirm("Clear this student's data?")) {
+            studentData[idx] = { name: '', sex: '', age: '', grade: '', section: '', remarks: '', scores: {} };
+            triggerSave();
+        }
     }
 
-    // Actions
     function addNewSubject() {
         const input = document.getElementById('subjectInput');
         const name = input.value.trim();
         if (name && !subjects.includes(name)) {
             subjects.push(name);
-            localStorage.setItem('apex_v4_subs', JSON.stringify(subjects));
+            localStorage.setItem('apex_v5_subs', JSON.stringify(subjects));
             input.value = '';
             renderGrid();
         }
     }
 
-    function addBlankRows(n) {
-        for(let i=0; i<n; i++) {
-            studentData.push({ name: '', sex: '', age: '', grade: '', section: '', scores: {} });
+    function deleteSubject(e, sub) {
+        e.stopPropagation(); // prevent sorting
+        if(confirm(`Remove subject: ${sub}? This does NOT delete existing scores, just hides the column.`)) {
+            subjects = subjects.filter(s => s !== sub);
+            localStorage.setItem('apex_v5_subs', JSON.stringify(subjects));
+            renderGrid();
         }
-        renderGrid();
+    }
+
+    function addBlankRows(n) {
+        for(let i=0; i<n; i++) studentData.push({ name: '', sex: '', age: '', grade: '', section: '', remarks: '', scores: {} });
+        triggerSave();
     }
 
     function downloadCSV() {
         const t = translations[currentLang];
-        let csv = `No,${t.thName},${t.thSex},${t.thAge},${t.thGrade},${t.thSection},` + subjects.join(",") + `,${t.thTotal},${t.thAvg},${t.thRank}\n`;
-        studentData.forEach((s, idx) => {
+        let csv = `No,${t.thName},${t.thSex},${t.thAge},${t.thGrade},${t.thSection},` + subjects.join(",") + `,${t.thTotal},${t.thAvg},${t.thRank},${t.thRemarks}\n`;
+        let count = 1;
+        studentData.forEach((s) => {
             if (s.name.trim() !== '') {
-                let row = `${idx+1},${s.name},${s.sex || ''},${s.age},${s.grade},${s.section},`;
-                subjects.forEach(sub => row += `${s.scores[sub] || 0},`);
-                row += `${s._calc.total},${s._calc.avg},${s._calc.rank}\n`;
+                let row = `${count++},"${s.name}",${s.sex||''},${s.age||''},${s.grade||''},${s.section||''},`;
+                subjects.forEach(sub => row += `${s.scores[sub] !== undefined ? s.scores[sub] : ''},`);
+                row += `${s._calc.total},${s._calc.avg},${s._calc.rank},"${s.remarks||''}"\n`;
                 csv += row;
             }
         });
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.setAttribute('href', url);
-        a.setAttribute('download', 'Academic_Apex_Report.csv');
+        a.href = window.URL.createObjectURL(blob);
+        a.download = `Academic_Roster_${document.getElementById('period').value || 'Export'}.csv`;
         a.click();
     }
 
     function resetData() {
-        if (confirm("FACTORY RESET: This will clear all subjects and all student records. Are you entirely sure?")) {
-            localStorage.removeItem('apex_v4_subs');
-            localStorage.removeItem('apex_v4_data');
-            location.reload();
+        if (confirm("FACTORY RESET: This will clear ALL records forever. Type 'YES' to confirm.")) {
+            let p = prompt("Type YES");
+            if(p === "YES") {
+                localStorage.clear();
+                location.reload();
+            }
         }
     }
 
-    // Init System
+    // Init
     applyTranslations();
     saveMeta();
     renderGrid();
 
+</script>
+</body>
+</html>
 </script>
 </body>
 </html>
