@@ -24,11 +24,17 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: radial-gradient(circle at top right, #1e293b, #0f172a);
-            background-attachment: fixed;
+            background-color: #0f172a;
             color: var(--text-light);
             margin: 0; min-height: 100vh;
             display: flex; flex-direction: column; align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* --- BACKGROUND CANVAS --- */
+        #bg-canvas {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1; opacity: 0.6;
         }
 
         /* --- HUD BAR --- */
@@ -37,37 +43,50 @@
             padding: 12px 5%; position: sticky; top: 0; z-index: 1000;
             border-bottom: 1px solid rgba(255,255,255,0.1);
             display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 10px;
         }
 
         .stat-pill { 
             background: rgba(255,255,255,0.05); padding: 6px 15px; border-radius: 20px; 
             border: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; font-family: 'Space Grotesk';
-            display: flex; align-items: center; gap: 8px;
+            display: flex; align-items: center; gap: 8px; font-weight: bold;
         }
+        
+        .combo-active { color: var(--eth-yellow); text-shadow: 0 0 10px var(--eth-yellow); border-color: var(--eth-yellow); }
 
         /* --- MAIN CONTAINER --- */
         #app-container {
             width: 95%; max-width: 1100px; margin: 30px 0;
-            background: rgba(255, 255, 255, 0.03); border-radius: 30px;
-            border: 1px solid rgba(255,255,255,0.1); padding: 40px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5); position: relative;
-            min-height: 600px;
+            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);
+            border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); padding: 40px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(0, 210, 255, 0.05);
+            position: relative; min-height: 600px;
         }
 
         .screen { display: none; animation: fadeIn 0.5s ease; }
         .active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Shake Animation for Errors */
+        .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; border-color: var(--eth-red) !important; }
+        @keyframes shake { 10%, 90% { transform: translate3d(-2px, 0, 0); } 20%, 80% { transform: translate3d(4px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-6px, 0, 0); } 40%, 60% { transform: translate3d(6px, 0, 0); } }
 
         /* --- UI ELEMENTS --- */
         .branding-header { text-align: center; margin-bottom: 30px; }
-        .dev-tag { font-size: 0.7rem; color: var(--eth-green); font-weight: 900; letter-spacing: 4px; }
+        .dev-tag { font-size: 0.75rem; color: var(--eth-green); font-weight: 900; letter-spacing: 4px; text-transform: uppercase; }
         
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-top: 20px; }
         .card {
-            background: rgba(255,255,255,0.05); padding: 20px; border-radius: 20px; text-align: center;
-            border: 1px solid rgba(255,255,255,0.1); cursor: pointer;
+            background: rgba(255,255,255,0.03); padding: 20px; border-radius: 20px; text-align: center;
+            border: 1px solid rgba(255,255,255,0.1); cursor: pointer; position: relative; overflow: hidden;
         }
-        .card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.1); border-color: var(--primary); }
+        .card::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+            transform: skewX(-20deg); transition: 0.5s;
+        }
+        .card:hover::before { left: 150%; }
+        .card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.08); border-color: var(--primary); box-shadow: 0 10px 20px rgba(0, 210, 255, 0.1); }
         .card h3 { margin: 10px 0 5px; color: var(--primary); font-size: 1.1rem; }
         .card p { margin: 0; font-size: 0.8rem; opacity: 0.7; }
 
@@ -75,52 +94,61 @@
             padding: 12px 25px; border: none; border-radius: 12px; font-weight: 700;
             cursor: pointer; text-transform: uppercase; font-family: 'Space Grotesk';
             color: white; background: linear-gradient(135deg, var(--secondary), var(--primary));
+            box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3);
         }
-        .btn:hover { filter: brightness(1.2); transform: scale(1.02); }
-        .btn-market { background: var(--eth-yellow); color: var(--dark); }
+        .btn:hover { filter: brightness(1.2); transform: scale(1.03); }
+        .btn-market { background: var(--eth-yellow); color: var(--dark); box-shadow: 0 4px 15px rgba(241, 196, 15, 0.3); }
 
         .input-box {
             width: 100%; padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);
-            background: rgba(0,0,0,0.2); color: white; font-size: 1.1rem; margin-bottom: 20px;
+            background: rgba(0,0,0,0.4); color: white; font-size: 1.1rem; margin-bottom: 20px;
+            font-family: 'Space Grotesk'; outline: none;
         }
+        .input-box:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(0,210,255,0.3); }
 
         /* --- GAME SPECIFICS --- */
-        .progress-container { width: 100%; height: 8px; background: #334155; border-radius: 10px; margin: 20px 0; overflow: hidden; }
-        .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--eth-green), var(--success)); }
+        .progress-container { width: 100%; height: 10px; background: rgba(0,0,0,0.5); border-radius: 10px; margin: 20px 0; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
+        .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--eth-green), var(--primary)); transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         
-        #ws-grid { display: grid; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 12px; margin: 15px auto; user-select: none; }
-        .ws-cell { width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; font-weight: 700; cursor: pointer; border-radius: 4px; }
-        .ws-cell.highlighted { background: var(--eth-yellow); color: var(--dark); }
-        .ws-cell.found { background: var(--eth-green); color: white; }
+        #ws-grid { display: grid; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; margin: 15px auto; user-select: none; border: 1px solid rgba(255,255,255,0.1); width: fit-content; }
+        .ws-cell { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-weight: 700; cursor: pointer; border-radius: 8px; font-size: 1.2rem; }
+        .ws-cell:hover { background: rgba(255,255,255,0.1); }
+        .ws-cell.highlighted { background: var(--eth-yellow); color: var(--dark); transform: scale(1.1); box-shadow: 0 0 10px var(--eth-yellow); }
+        .ws-cell.found { background: var(--eth-green); color: white; animation: fadeIn 0.3s; }
 
-        .match-area { display: flex; gap: 20px; }
-        .match-box { flex: 1; display: flex; flex-direction: column; gap: 10px; }
-        .match-item { padding: 15px; background: rgba(255,255,255,0.05); border-radius: 10px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); font-size: 0.9rem; text-align: center; }
-        .match-item.selected { background: var(--secondary); border-color: var(--primary); }
-        .match-item.correct { opacity: 0.3; pointer-events: none; border-color: var(--success); }
+        .match-area { display: flex; gap: 20px; flex-wrap: wrap; }
+        .match-box { flex: 1; display: flex; flex-direction: column; gap: 10px; min-width: 250px; }
+        .match-item { padding: 15px; background: rgba(0,0,0,0.3); border-radius: 10px; cursor: pointer; border: 1px solid rgba(255,255,255,0.2); font-size: 0.95rem; text-align: center; transition: 0.2s; }
+        .match-item:hover { background: rgba(255,255,255,0.1); }
+        .match-item.selected { background: var(--secondary); border-color: var(--primary); transform: scale(1.02); box-shadow: 0 0 15px rgba(0,210,255,0.4); }
+        .match-item.correct { background: var(--eth-green); opacity: 0.5; pointer-events: none; border-color: var(--success); }
 
         .item-list { max-height: 400px; overflow-y: auto; padding: 10px; }
-        .tutorial-item { background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid var(--eth-green); }
+        .item-list::-webkit-scrollbar { width: 8px; }
+        .item-list::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+        .tutorial-item { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid var(--eth-green); }
 
         /* --- MODALS --- */
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 2000; }
-        .modal-content { background: #1e293b; padding: 40px; border-radius: 25px; max-width: 500px; width: 90%; text-align: center; border: 1px solid var(--primary); }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; }
+        .modal-content { background: #1e293b; padding: 40px; border-radius: 25px; max-width: 500px; width: 90%; text-align: center; border: 1px solid var(--primary); box-shadow: 0 0 30px rgba(0, 210, 255, 0.2); animation: fadeIn 0.3s; }
 
         /* --- CERTIFICATE --- */
-        .cert-paper {
-            background: #fff; color: #000; padding: 40px; border: 15px solid #f1c40f; font-family: 'Georgia', serif;
-        }
+        .cert-paper { background: #fff; color: #000; padding: 40px; border: 15px solid #f1c40f; font-family: 'Georgia', serif; box-shadow: 0 0 50px rgba(241, 196, 15, 0.5); }
     </style>
 </head>
 <body>
+
+    <!-- Particle Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
 
     <div id="top-bar">
         <div class="stat-pill">👤 <span id="hud-name">Guest</span></div>
         <div class="stat-pill">⭐ LVL <span id="hud-lvl">1</span></div>
         <div class="stat-pill">🔥 XP <span id="hud-xp">0</span></div>
+        <div class="stat-pill" id="combo-pill">⚡ COMBO x<span id="hud-combo">1</span></div>
         <div class="stat-pill">❤️ <span id="hud-lives">3</span></div>
         <div class="stat-pill">🪙 <span id="hud-coins">50</span></div>
-        <button class="btn btn-market" onclick="openModal('modal-market')">🛒 SHOP</button>
+        <button class="btn btn-market" onclick="openModal('modal-market'); playSound('click');">🛒 SHOP</button>
     </div>
 
     <div id="app-container">
@@ -129,12 +157,12 @@
         <div id="scr-welcome" class="screen active" style="text-align: center;">
             <div class="branding-header">
                 <div class="dev-tag">ENGINEERED BY BETSEGAW TEKA</div>
-                <h1 style="font-family: 'Space Grotesk'; font-size: 3rem; margin: 10px 0; background: linear-gradient(to right, #2ecc71, #f1c40f, #e74c3c); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">ICT MASTER OMEGA</h1>
-                <p>National Portal • SOS Children's Villages Ethiopia • Grade 7-12 Mastery</p>
+                <h1 style="font-family: 'Space Grotesk'; font-size: 3.5rem; margin: 10px 0; background: linear-gradient(to right, #2ecc71, #f1c40f, #e74c3c, #00d2ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: pulse 2s infinite;">ICT MASTER OMEGA</h1>
+                <p style="font-size: 1.1rem; letter-spacing: 1px;">National Portal • SOS Children's Villages Ethiopia • Grade 7-12</p>
             </div>
-            <input type="text" id="player-input" class="input-box" style="max-width: 400px; text-align: center;" placeholder="Enter Student Full Name...">
+            <input type="text" id="player-input" class="input-box" style="max-width: 400px; text-align: center;" placeholder="Enter Student Full Name..." onkeypress="if(event.key==='Enter') initPlayer()">
             <br>
-            <button class="btn" style="font-size: 1.2rem; padding: 15px 50px;" onclick="initPlayer()">Access Portal</button>
+            <button class="btn" style="font-size: 1.2rem; padding: 15px 50px; margin-top: 10px;" onclick="initPlayer()">Access Portal</button>
         </div>
 
         <!-- SCREEN: DASHBOARD -->
@@ -144,8 +172,8 @@
             
             <p style="opacity: 0.6; font-size: 0.9rem;">LEARNING MODULES</p>
             <div class="grid">
-                <div class="card" onclick="openModule('academy')"><h3>🎓 Academy</h3><p>50 Master Lessons</p></div>
-                <div class="card" onclick="openModule('lexicon')"><h3>📖 Lexicon</h3><p>50 Technical Terms</p></div>
+                <div class="card" onclick="openModule('academy')"><h3>🎓 Academy</h3><p>Master Lessons</p></div>
+                <div class="card" onclick="openModule('lexicon')"><h3>📖 Lexicon</h3><p>Technical Terms</p></div>
             </div>
 
             <p style="opacity: 0.6; font-size: 0.9rem; margin-top: 20px;">CHALLENGE ZONE</p>
@@ -161,13 +189,13 @@
                 <div class="card" onclick="startSpecial('wordsearch')"><h3>🔍 Word Search</h3><p>Pattern Finding</p></div>
                 <div class="card" onclick="startSpecial('typer')"><h3>⚡ Neural Typer</h3><p>Speed Training</p></div>
                 <div class="card" onclick="startSpecial('puzzle')"><h3>🧩 Unscramble</h3><p>Code Decryption</p></div>
-                <div class="card" style="border-color: var(--eth-yellow);" onclick="checkCert()"><h3>🏆 Certification</h3><p>Claim Diploma</p></div>
+                <div class="card" style="border-color: var(--eth-yellow); box-shadow: inset 0 0 20px rgba(241,196,15,0.2);" onclick="checkCert()"><h3>🏆 Certification</h3><p>Claim Diploma</p></div>
             </div>
         </div>
 
         <!-- SCREEN: ACADEMY/LEXICON -->
         <div id="scr-list" class="screen">
-            <button class="btn" style="padding: 5px 15px; margin-bottom: 15px;" onclick="showScreen('scr-dash')">← Back</button>
+            <button class="btn" style="padding: 5px 15px; margin-bottom: 15px;" onclick="showScreen('scr-dash'); playSound('click');">← Back</button>
             <h2 id="list-title">Module</h2>
             <input type="text" id="list-search" class="input-box" placeholder="Search content..." onkeyup="filterList()">
             <div id="list-content" class="item-list"></div>
@@ -176,29 +204,33 @@
         <!-- SCREEN: QUIZ ENGINE -->
         <div id="scr-quiz" class="screen">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <button class="btn" style="padding: 5px 15px;" onclick="showScreen('scr-dash')">🏠 Menu</button>
+                <button class="btn" style="padding: 5px 15px;" onclick="showScreen('scr-dash'); playSound('click');">🏠 Menu</button>
                 <div id="quiz-lvl-tag" style="font-weight: bold; color: var(--primary);">Level 1/30</div>
             </div>
             <div class="progress-container"><div id="quiz-progress" class="progress-bar"></div></div>
             <div id="quiz-area" style="text-align: center; margin-top: 30px;">
                 <h2 id="q-text" style="font-size: 1.5rem; margin-bottom: 30px;">Question loading...</h2>
-                <div id="q-options"></div>
+                <div id="q-options" style="display: flex; flex-direction: column; gap: 10px; align-items: center;"></div>
             </div>
         </div>
 
         <!-- SCREEN: WORDSEARCH -->
         <div id="scr-ws" class="screen">
-            <button class="btn" style="padding: 5px 15px;" onclick="showScreen('scr-dash')">🏠 Menu</button>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <button class="btn" style="padding: 5px 15px;" onclick="showScreen('scr-dash'); playSound('click');">🏠 Menu</button>
+                <h3 style="margin: 0;">Find the Tech Words</h3>
+            </div>
             <div id="ws-grid"></div>
-            <div id="ws-bank" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;"></div>
+            <div id="ws-bank" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 20px;"></div>
         </div>
 
         <!-- SCREEN: SKILL GAMES (TYPER/PUZZLE) -->
         <div id="scr-skill" class="screen" style="text-align: center;">
-            <button class="btn" style="padding: 5px 15px;" onclick="showScreen('scr-dash')">🏠 Menu</button>
+            <button class="btn" style="padding: 5px 15px; float: left;" onclick="showScreen('scr-dash'); playSound('click');">🏠 Menu</button>
+            <div style="clear:both;"></div>
             <h2 id="skill-hint" style="margin-top: 20px; color: var(--primary);"></h2>
-            <div id="skill-display" style="font-size: 3.5rem; font-weight: bold; margin: 30px 0; font-family: 'Space Grotesk';"></div>
-            <input type="text" id="skill-input" class="input-box" style="max-width: 400px; text-align: center; font-size: 1.5rem;" autocomplete="off">
+            <div id="skill-display" style="font-size: 3.5rem; font-weight: bold; margin: 30px 0; font-family: 'Space Grotesk'; letter-spacing: 5px;"></div>
+            <input type="text" id="skill-input" class="input-box" style="max-width: 400px; text-align: center; font-size: 1.5rem;" autocomplete="off" placeholder="Type here...">
         </div>
 
     </div>
@@ -207,20 +239,21 @@
     <div id="modal-feedback" class="modal">
         <div class="modal-content">
             <h2 id="fb-title">Result</h2>
-            <p id="fb-text"></p>
-            <button class="btn" onclick="closeModal('modal-feedback'); nextQuizStep();">Continue</button>
+            <p id="fb-text" style="font-size: 1.1rem; opacity: 0.9;"></p>
+            <p id="fb-combo-msg" style="color: var(--eth-yellow); font-weight: bold; font-size: 1.2rem;"></p>
+            <button class="btn" style="margin-top: 20px; width: 100%;" onclick="closeModal('modal-feedback'); nextQuizStep();">Continue ➔</button>
         </div>
     </div>
 
     <!-- MODAL: MARKET -->
     <div id="modal-market" class="modal">
         <div class="modal-content">
-            <span style="float:right; cursor:pointer;" onclick="closeModal('modal-market')">✖</span>
-            <h2>🛒 ICT Market</h2>
-            <p>Your Balance: <span id="mkt-coins" style="color:var(--eth-yellow)">0</span> 🪙</p>
-            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
+            <span style="float:right; cursor:pointer; font-size: 1.5rem;" onclick="closeModal('modal-market'); playSound('click');">✖</span>
+            <h2 style="color: var(--eth-yellow); font-family: 'Space Grotesk';">🛒 Omega Market</h2>
+            <p>Your Balance: <span id="mkt-coins" style="color:var(--eth-yellow); font-weight: bold; font-size: 1.2rem;">0</span> 🪙</p>
+            <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 30px;">
                 <button class="btn" onclick="buyItem('life')">Buy 1 Heart ❤️ (25 Coins)</button>
-                <button class="btn" style="background:var(--eth-red)" onclick="buyItem('xp')">Buy 50 XP 🔥 (40 Coins)</button>
+                <button class="btn" style="background: linear-gradient(135deg, #e74c3c, #c0392b);" onclick="buyItem('xp')">Buy 50 XP 🔥 (40 Coins)</button>
             </div>
         </div>
     </div>
@@ -228,22 +261,113 @@
     <!-- MODAL: CERTIFICATE -->
     <div id="modal-cert" class="modal">
         <div class="modal-content cert-paper">
-            <h3 style="color:#138808; margin:0;">SOS Children's Villages Ethiopia</h3>
-            <h1 style="border-bottom: 2px solid #000; padding-bottom: 10px;">CERTIFICATE OF COMPLETION</h1>
-            <p>This is to certify that</p>
-            <h2 id="cert-name" style="font-style: italic; color: #b8860b;">Student Name</h2>
-            <p>has successfully mastered the National ICT Portal Assessment</p>
-            <h3>OMEGA PRO LEVEL</h3>
-            <div style="display:flex; justify-content: space-between; margin-top: 40px; font-size: 0.8rem;">
+            <h3 style="color:#138808; margin:0; text-transform: uppercase;">SOS Children's Villages Ethiopia</h3>
+            <h1 style="border-bottom: 2px solid #000; padding-bottom: 10px; margin-top: 10px;">CERTIFICATE OF MASTERY</h1>
+            <p style="font-size: 1.2rem;">This is to certify that</p>
+            <h2 id="cert-name" style="font-style: italic; color: #b8860b; font-size: 2.5rem; margin: 10px 0;">Student Name</h2>
+            <p style="font-size: 1.1rem;">has successfully mastered the National ICT Portal Assessment</p>
+            <h3 style="background: #2c3e50; color: white; display: inline-block; padding: 10px 20px; border-radius: 5px;">OMEGA PRO LEVEL</h3>
+            <div style="display:flex; justify-content: space-between; margin-top: 40px; font-size: 0.9rem; font-weight: bold;">
                 <div>____________________<br>System Verification</div>
-                <div>____________________<br>Betsegaw Teka (Developer)</div>
+                <div>____________________<br>Betsegaw Teka</div>
             </div>
-            <button class="btn" style="margin-top: 20px;" onclick="location.reload()">Finish</button>
+            <button class="btn" style="margin-top: 30px; width: 100%;" onclick="location.reload()">Finish Session</button>
         </div>
     </div>
 
     <script>
-        // --- DATASET MERGE ---
+        // --- AUDIO ENGINE (Web Audio API) ---
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function initAudio() {
+            if(!audioCtx) audioCtx = new AudioContext();
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
+        function playSound(type) {
+            if(!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            if(type === 'win') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+            } else if(type === 'lose') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.3);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+            } else if(type === 'click' || type === 'type') {
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.05);
+            } else if(type === 'buy') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(1200, audioCtx.currentTime + 0.1);
+                gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        // --- BACKGROUND CANVAS PARTICLES ---
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                if(this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if(this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+            draw() {
+                ctx.beginPath(); ctx.arc(this.x, this.y, 2, 0, Math.PI*2);
+                ctx.fillStyle = 'rgba(0, 210, 255, 0.5)'; ctx.fill();
+            }
+        }
+        for(let i=0; i<70; i++) particles.push(new Particle());
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update(); p.draw();
+                particles.forEach(p2 => {
+                    let dx = p.x - p2.x, dy = p.y - p2.y;
+                    let dist = Math.sqrt(dx*dx + dy*dy);
+                    if(dist < 100) {
+                        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y);
+                        ctx.strokeStyle = `rgba(0, 210, 255, ${1 - dist/100})`;
+                        ctx.lineWidth = 0.5; ctx.stroke();
+                    }
+                });
+            });
+            requestAnimationFrame(animateCanvas);
+        }
+        animateCanvas();
+
+        // --- DATASET ---
         const ictData = [
             { t: "CPU", d: "Central Processing Unit - The brain of the computer.", b: "The ___ is the brain of the computer." },
             { t: "RAM", d: "Random Access Memory - Temporary volatile storage.", b: "___ loses its data when the power is turned off." },
@@ -272,8 +396,6 @@
             { t: "Protocol", d: "Rules for data communication.", b: "HTTP is a web transfer ___." },
             { t: "Fiber Optic", d: "Cables that use light to transmit data.", b: "___ cables are faster than copper wires." },
             { t: "Linux", d: "An open-source operating system.", b: "___ is a popular OS for servers." },
-            { t: "Input Device", d: "Hardware used to enter data.", b: "A scanner is an ___." },
-            { t: "Output Device", d: "Hardware used to see/hear results.", b: "A printer is an ___." },
             { t: "Malware", d: "Any software intended to damage data.", b: "Spyware and Trojans are types of ___." }
         ];
 
@@ -283,24 +405,31 @@
             {t: "Binary Math", c: "How computers use base-2 (0 and 1) to calculate."},
             {t: "Python Basics", c: "High level language for AI and web backend."},
             {t: "Cyber Ethics", c: "Proper behavior and laws in the digital world."},
-            {t: "IoT", c: "The Internet of Things - connected smart devices."},
-            {t: "AI & ML", c: "Machines learning from data to make decisions."},
-            {t: "Ethiopia 2025 Digital", c: "National strategy for a digitized economy."}
-        ]; // Expanded by code later
+            {t: "Digital Ethiopia 2025", c: "National strategy for a digitized inclusive economy, focusing on telecom, ID, and e-commerce."},
+            {t: "Ethio Telecom & 5G", c: "The evolution of telecom infrastructure in Ethiopia and the deployment of high-speed 5G networks."},
+            {t: "AI & ML", c: "Machines learning from data to make decisions."}
+        ];
 
         // --- STATE ---
         let state = {
-            name: "Guest", lvl: 1, xp: 0, coins: 50, lives: 3,
-            mode: "", idx: 0, currentAnswer: ""
+            name: "Guest", lvl: 1, xp: 0, coins: 50, lives: 3, combo: 1,
+            mode: "", idx: 0, currentAnswer: "", wsSelection: []
         };
 
         // --- CORE LOGIC ---
         function initPlayer() {
-            let n = document.getElementById('player-input').value;
+            let n = document.getElementById('player-input').value.trim();
             if(!n) return alert("Please enter your name.");
+            initAudio(); // Initialize audio context on first user interaction
+            playSound('win');
             state.name = n;
             updateHUD();
             showScreen('scr-dash');
+        }
+
+        function triggerShake() {
+            const app = document.getElementById('app-container');
+            app.classList.remove('shake'); void app.offsetWidth; app.classList.add('shake');
         }
 
         function updateHUD() {
@@ -310,18 +439,24 @@
             document.getElementById('hud-lives').innerText = state.lives;
             document.getElementById('hud-coins').innerText = state.coins;
             document.getElementById('mkt-coins').innerText = state.coins;
+            document.getElementById('hud-combo').innerText = state.combo;
+
+            const comboPill = document.getElementById('combo-pill');
+            if(state.combo > 1) comboPill.classList.add('combo-active');
+            else comboPill.classList.remove('combo-active');
 
             let xpLimit = state.lvl * 100;
             document.getElementById('mastery-bar').style.width = (state.xp / xpLimit * 100) + "%";
 
             if(state.xp >= xpLimit) {
-                state.xp -= xpLimit;
-                state.lvl++;
-                alert("LEVEL UP! You are now Level " + state.lvl);
+                state.xp -= xpLimit; state.lvl++; state.coins += 20;
+                playSound('buy');
+                alert("⭐ LEVEL UP! You are now Level " + state.lvl + "! +20 Coins");
                 updateHUD();
             }
             if(state.lives <= 0) {
-                alert("Game Over! Restarting session...");
+                playSound('lose');
+                alert("Game Over! You ran out of lives. Restarting session...");
                 location.reload();
             }
         }
@@ -336,6 +471,7 @@
 
         // --- ACADEMY / LEXICON ---
         function openModule(type) {
+            playSound('click');
             showScreen('scr-list');
             const title = document.getElementById('list-title');
             const content = document.getElementById('list-content');
@@ -349,37 +485,41 @@
             } else {
                 title.innerText = "Technical Lexicon";
                 ictData.forEach(item => {
-                    content.innerHTML += `<div class="tutorial-item" style="border-color:var(--primary)"><h3>${item.t}</h3><p>${item.d}</p></div>`;
+                    content.innerHTML += `<div class="tutorial-item" style="border-left-color:var(--primary)"><h3>${item.t}</h3><p>${item.d}</p></div>`;
                 });
             }
         }
 
         // --- QUIZ ENGINE ---
         function startQuiz(mode) {
-            state.mode = mode;
-            state.idx = 0;
+            playSound('click');
+            state.mode = mode; state.idx = 0;
             showScreen('scr-quiz');
             loadQuizQuestion();
         }
 
         function loadQuizQuestion() {
             const q = ictData[state.idx];
-            document.getElementById('quiz-lvl-tag').innerText = `Level ${state.idx + 1}/30`;
-            document.getElementById('quiz-progress').style.width = (state.idx / 30 * 100) + "%";
+            document.getElementById('quiz-lvl-tag').innerText = `Challenge ${state.idx + 1}/${ictData.length}`;
+            document.getElementById('quiz-progress').style.width = (state.idx / ictData.length * 100) + "%";
             const area = document.getElementById('q-options');
             area.innerHTML = "";
 
             if(state.mode === 'choosing') {
                 document.getElementById('q-text').innerText = q.d;
-                let opts = [q.t, ictData[(state.idx+1)%30].t, ictData[(state.idx+2)%30].t, ictData[(state.idx+3)%30].t];
+                let opts = [q.t];
+                while(opts.length < 4) {
+                    let rand = ictData[Math.floor(Math.random() * ictData.length)].t;
+                    if(!opts.includes(rand)) opts.push(rand);
+                }
                 opts.sort(() => Math.random() - 0.5);
                 opts.forEach(o => {
-                    area.innerHTML += `<button class="btn" style="width:100%; margin-bottom:10px;" onclick="checkQuizAns('${o}')">${o}</button>`;
+                    area.innerHTML += `<button class="btn" style="width:100%; max-width:400px; margin-bottom:10px;" onclick="checkQuizAns('${o}')">${o}</button>`;
                 });
             } else if(state.mode === 'writing' || state.mode === 'fillblank') {
                 document.getElementById('q-text').innerText = (state.mode === 'writing') ? q.d : q.b;
-                area.innerHTML = `<input type="text" id="quiz-input" class="input-box" placeholder="Answer..." onkeypress="if(event.key==='Enter') checkQuizAns(this.value)">
-                                  <button class="btn" style="width:100%" onclick="checkQuizAns(document.getElementById('quiz-input').value)">Submit</button>`;
+                area.innerHTML = `<input type="text" id="quiz-input" class="input-box" style="max-width:400px;" placeholder="Type answer here..." onkeypress="if(event.key==='Enter') checkQuizAns(this.value)">
+                                  <button class="btn" style="width:100%; max-width:400px;" onclick="checkQuizAns(document.getElementById('quiz-input').value)">Submit Analysis</button>`;
                 setTimeout(() => document.getElementById('quiz-input').focus(), 100);
             } else if(state.mode === 'matching') {
                 document.getElementById('q-text').innerText = "Match the Term to its Definition";
@@ -389,14 +529,18 @@
 
         let selA = null, selB = null;
         function renderMatching() {
-            const q = ictData[state.idx];
             const area = document.getElementById('q-options');
             let html = `<div class="match-area"><div class="match-box">`;
-            let set = [ictData[state.idx], ictData[(state.idx+1)%30], ictData[(state.idx+2)%30]].sort(() => Math.random()-0.5);
-            set.forEach(item => html += `<div class="match-item" onclick="matchSelect('A','${item.t}', this)">${item.t}</div>`);
+            let set = [ictData[state.idx]];
+            while(set.length < 3) {
+                let rand = ictData[Math.floor(Math.random() * ictData.length)];
+                if(!set.includes(rand)) set.push(rand);
+            }
+            set.sort(() => Math.random()-0.5);
+            set.forEach(item => html += `<div class="match-item" onclick="matchSelect('A','${item.t}', this); playSound('click');">${item.t}</div>`);
             html += `</div><div class="match-box">`;
             let setB = [...set].sort(() => Math.random()-0.5);
-            setB.forEach(item => html += `<div class="match-item" onclick="matchSelect('B','${item.t}', this)">${item.d.substring(0,30)}...</div>`);
+            setB.forEach(item => html += `<div class="match-item" onclick="matchSelect('B','${item.t}', this); playSound('click');">${item.d.substring(0,40)}...</div>`);
             area.innerHTML = html + `</div></div>`;
         }
 
@@ -411,11 +555,16 @@
             el.classList.add('selected');
             if(selA && selB) {
                 if(selA.val === selB.val) {
+                    playSound('win');
                     selA.el.classList.add('correct'); selB.el.classList.add('correct');
+                    selA.el.classList.remove('selected'); selB.el.classList.remove('selected');
                     selA = null; selB = null;
-                    if(document.querySelectorAll('.match-item.correct').length === 6) checkQuizAns(true);
+                    if(document.querySelectorAll('.match-item.correct').length === 6) {
+                        setTimeout(() => checkQuizAns(true), 500);
+                    }
                 } else {
-                    state.lives--; updateHUD();
+                    playSound('lose'); triggerShake();
+                    state.lives--; state.combo = 1; updateHUD();
                     selA.el.classList.remove('selected'); selB.el.classList.remove('selected');
                     selA = null; selB = null;
                 }
@@ -424,19 +573,26 @@
 
         function checkQuizAns(val) {
             const q = ictData[state.idx];
-            let isCorrect = (val === true) || (val.toLowerCase().trim() === q.t.toLowerCase());
+            let isCorrect = (val === true) || (val.toString().toLowerCase().trim() === q.t.toLowerCase());
             
             const fbTitle = document.getElementById('fb-title');
             const fbText = document.getElementById('fb-text');
+            const fbCombo = document.getElementById('fb-combo-msg');
 
             if(isCorrect) {
-                state.xp += 20; state.coins += 10;
-                fbTitle.innerText = "EXCELLENT!"; fbTitle.style.color = "var(--success)";
+                playSound('win');
+                let xpGain = 20 * state.combo;
+                state.xp += xpGain; state.coins += 5; 
+                fbTitle.innerText = "ACCESS GRANTED"; fbTitle.style.color = "var(--success)";
                 fbText.innerText = q.d;
+                fbCombo.innerText = `+${xpGain} XP (Combo x${state.combo})`;
+                state.combo++;
             } else {
-                state.lives--;
-                fbTitle.innerText = "INCORRECT"; fbTitle.style.color = "var(--eth-red)";
-                fbText.innerText = "The correct answer was: " + q.t;
+                playSound('lose'); triggerShake();
+                state.lives--; state.combo = 1;
+                fbTitle.innerText = "ACCESS DENIED"; fbTitle.style.color = "var(--eth-red)";
+                fbText.innerText = `The correct core concept was: ${q.t}`;
+                fbCombo.innerText = "Combo Reset!";
             }
             updateHUD();
             openModal('modal-feedback');
@@ -444,8 +600,9 @@
 
         function nextQuizStep() {
             state.idx++;
-            if(state.idx >= 30) {
-                alert("Mastery Achievement! Level 30 Complete.");
+            if(state.idx >= ictData.length) {
+                playSound('buy');
+                alert("MASTERY COMPLETE! You have cleared this module.");
                 showScreen('scr-dash');
             } else {
                 loadQuizQuestion();
@@ -454,6 +611,7 @@
 
         // --- SKILL GAMES ---
         function startSpecial(game) {
+            playSound('click');
             state.mode = game;
             if(game === 'wordsearch') { showScreen('scr-ws'); initWordSearch(); }
             else { 
@@ -464,59 +622,162 @@
         }
 
         function initTyper() {
-            const item = ictData[Math.floor(Math.random()*30)];
+            const item = ictData[Math.floor(Math.random()*ictData.length)];
             state.currentAnswer = item.t;
-            document.getElementById('skill-hint').innerText = "TYPE THIS WORD:";
+            document.getElementById('skill-hint').innerText = "TYPE THIS PROTOCOL FAST:";
             document.getElementById('skill-display').innerText = item.t;
-            document.getElementById('skill-input').value = "";
-            document.getElementById('skill-input').focus();
+            let inp = document.getElementById('skill-input');
+            inp.value = ""; inp.focus();
         }
 
         function initPuzzle() {
-            const item = ictData[Math.floor(Math.random()*30)];
+            const item = ictData[Math.floor(Math.random()*ictData.length)];
             state.currentAnswer = item.t;
             document.getElementById('skill-hint').innerText = item.d;
-            document.getElementById('skill-display').innerText = item.t.split('').sort(() => Math.random()-0.5).join('');
-            document.getElementById('skill-input').value = "";
-            document.getElementById('skill-input').focus();
+            document.getElementById('skill-display').innerText = item.t.split('').sort(() => Math.random()-0.5).join('').toUpperCase();
+            let inp = document.getElementById('skill-input');
+            inp.value = ""; inp.focus();
         }
 
         document.getElementById('skill-input').addEventListener('input', (e) => {
+            playSound('type');
             if(e.target.value.toLowerCase() === state.currentAnswer.toLowerCase()) {
-                state.xp += 15; state.coins += 5; updateHUD();
-                if(state.mode === 'typer') initTyper(); else initPuzzle();
+                playSound('win');
+                let xpGain = 15 * state.combo;
+                state.xp += xpGain; state.coins += 5; state.combo++; updateHUD();
+                
+                // Visual feedback on the display
+                let disp = document.getElementById('skill-display');
+                disp.style.color = "var(--eth-green)";
+                setTimeout(() => {
+                    disp.style.color = "var(--text-light)";
+                    if(state.mode === 'typer') initTyper(); else initPuzzle();
+                }, 500);
             }
         });
 
-        // --- WORD SEARCH ---
+        // --- FUNCTIONAL WORD SEARCH ---
+        let wsGrid = [];
+        let wsWords = [];
+        const wsSize = 10;
+
         function initWordSearch() {
-            const size = 10;
-            const words = ictData.slice(0,10).map(i => i.t.toUpperCase()).filter(w => w.length < 9);
-            const gridEl = document.getElementById('ws-grid');
-            gridEl.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
-            gridEl.innerHTML = "";
+            wsWords = ictData.map(i => i.t.toUpperCase().replace(/[^A-Z]/g, '')).filter(w => w.length >= 3 && w.length <= 8).sort(() => 0.5 - Math.random()).slice(0, 6);
             
-            // Simplified grid for demo - fills with letters
-            for(let i=0; i<size*size; i++) {
-                gridEl.innerHTML += `<div class="ws-cell" onclick="this.classList.toggle('highlighted')">${"ABCDEFGHIJKLMNOPQRSTUVWXYZ"[Math.floor(Math.random()*26)]}</div>`;
+            wsGrid = Array(wsSize).fill(null).map(() => Array(wsSize).fill(''));
+            state.wsSelection = [];
+            
+            // Place words
+            wsWords.forEach(word => {
+                let placed = false;
+                let attempts = 0;
+                while(!placed && attempts < 100) {
+                    let dir = Math.random() > 0.5 ? 1 : 0; // 1 = horizontal, 0 = vertical
+                    let row = Math.floor(Math.random() * wsSize);
+                    let col = Math.floor(Math.random() * wsSize);
+                    if(dir === 1 && col + word.length <= wsSize) {
+                        let canPlace = true;
+                        for(let i=0; i<word.length; i++) { if(wsGrid[row][col+i] !== '' && wsGrid[row][col+i] !== word[i]) canPlace = false; }
+                        if(canPlace) { for(let i=0; i<word.length; i++) wsGrid[row][col+i] = word[i]; placed = true; }
+                    } else if (dir === 0 && row + word.length <= wsSize) {
+                        let canPlace = true;
+                        for(let i=0; i<word.length; i++) { if(wsGrid[row+i][col] !== '' && wsGrid[row+i][col] !== word[i]) canPlace = false; }
+                        if(canPlace) { for(let i=0; i<word.length; i++) wsGrid[row+i][col] = word[i]; placed = true; }
+                    }
+                    attempts++;
+                }
+            });
+
+            // Fill empty spaces
+            const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            for(let r=0; r<wsSize; r++) {
+                for(let c=0; c<wsSize; c++) {
+                    if(wsGrid[r][c] === '') wsGrid[r][c] = letters.charAt(Math.floor(Math.random() * letters.length));
+                }
             }
-            document.getElementById('ws-bank').innerHTML = words.map(w => `<span style="padding:5px 10px; background:rgba(255,255,255,0.1); border-radius:5px;">${w}</span>`).join('');
+
+            drawWordSearch();
+        }
+
+        function drawWordSearch() {
+            const gridEl = document.getElementById('ws-grid');
+            gridEl.style.gridTemplateColumns = `repeat(${wsSize}, 1fr)`;
+            gridEl.innerHTML = "";
+            for(let r=0; r<wsSize; r++) {
+                for(let c=0; c<wsSize; c++) {
+                    gridEl.innerHTML += `<div class="ws-cell" id="ws-${r}-${c}" onclick="selectWSCell(${r}, ${c})">${wsGrid[r][c]}</div>`;
+                }
+            }
+            
+            let bankHtml = wsWords.map(w => `<span id="ws-word-${w}" style="padding:8px 15px; background:rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); border-radius:8px; font-weight:bold;">${w}</span>`).join('');
+            document.getElementById('ws-bank').innerHTML = bankHtml;
+        }
+
+        function selectWSCell(r, c) {
+            playSound('type');
+            let el = document.getElementById(`ws-${r}-${c}`);
+            
+            // Toggle selection
+            let idx = state.wsSelection.findIndex(s => s.r === r && s.c === c);
+            if(idx > -1) {
+                state.wsSelection.splice(idx, 1);
+                el.classList.remove('highlighted');
+            } else {
+                state.wsSelection.push({r, c, char: wsGrid[r][c]});
+                el.classList.add('highlighted');
+            }
+
+            // Check if selection forms a word
+            let selectedWord = state.wsSelection.map(s => s.char).join('');
+            let selectedWordRev = state.wsSelection.map(s => s.char).reverse().join('');
+            
+            let foundWord = wsWords.find(w => w === selectedWord || w === selectedWordRev);
+            if(foundWord) {
+                playSound('win');
+                state.xp += 30; state.coins += 10; updateHUD();
+                
+                // Mark cells as found
+                state.wsSelection.forEach(s => {
+                    let cell = document.getElementById(`ws-${s.r}-${s.c}`);
+                    cell.classList.remove('highlighted');
+                    cell.classList.add('found');
+                });
+                
+                // Cross out in bank
+                let bankEl = document.getElementById(`ws-word-${foundWord}`);
+                bankEl.style.background = "var(--eth-green)";
+                bankEl.style.textDecoration = "line-through";
+                
+                // Remove from active list
+                wsWords = wsWords.filter(w => w !== foundWord);
+                state.wsSelection = []; // Reset selection
+
+                if(wsWords.length === 0) {
+                    setTimeout(() => {
+                        alert("Great job! You found all the hidden tech terms!");
+                        showScreen('scr-dash');
+                    }, 1000);
+                }
+            }
         }
 
         // --- SHOP & MISC ---
         function buyItem(type) {
-            if(type === 'life' && state.coins >= 25) { state.coins -= 25; state.lives++; }
-            else if(type === 'xp' && state.coins >= 40) { state.coins -= 40; state.xp += 50; }
-            else { alert("Not enough coins!"); }
+            if(type === 'life' && state.coins >= 25) { state.coins -= 25; state.lives++; playSound('buy'); }
+            else if(type === 'xp' && state.coins >= 40) { state.coins -= 40; state.xp += 50; playSound('buy'); }
+            else { playSound('lose'); triggerShake(); alert("Insufficient Coins!"); }
             updateHUD();
         }
 
         function checkCert() {
+            playSound('click');
             if(state.lvl >= 5) {
                 document.getElementById('cert-name').innerText = state.name;
+                playSound('win');
                 openModal('modal-cert');
             } else {
-                alert("ACCESS DENIED: You must reach Level 5 to unlock Certification.");
+                triggerShake();
+                alert(`ACCESS DENIED: You are Level ${state.lvl}. You must reach Level 5 to unlock the Certification.`);
             }
         }
 
