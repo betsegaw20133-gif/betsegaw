@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SOS Jimma Primary school | ኤስኦኤስ ጅማ ትምህርት ቤት</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* =========================================
+           1. PREMIUM DESIGN & DECORATION
+           ========================================= */
+        :root {
+            --primary: #1e40af;
+            --secondary: #3b82f6;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --glass: rgba(255, 255, 255, 0.95);
+        }
+
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0; padding: 0;
+            background-color: #f1f5f9;
+            color: #334155;
+            line-height: 1.7;
+        }
+        body.game-active { overflow: hidden; }
+
+        /* HEADER DECORATION */
+        header {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            position: sticky; top: 0; z-index: 1000;
+            border-bottom: 3px solid var(--primary);
+        }
+        .header-container {
+            max-width: 1300px; margin: auto;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 25px;
+            gap: 15px;
+        }
+        .logo-area { display: flex; align-items: center; gap: 15px; }
+        .logo-area img { height: 70px; width: auto; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .logo-text h1 { font-size: 1.5rem; color: var(--primary); margin: 0; font-weight: 800; line-height: 1.1; }
+        .logo-text span { font-size: 0.85rem; color: #64748b; display: block; margin-top: 4px; font-weight: 500; }
+
+        nav ul { display: flex; gap: 25px; align-items: center; list-style: none; padding: 0; margin: 0; }
+        nav a { color: #334155; font-weight: 600; transition: 0.3s; font-size: 0.95rem; text-decoration: none; position: relative; white-space: nowrap; }
+        nav a:hover { color: var(--primary); }
+        .nav-game-link {
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            color: white !important;
+            padding: 10px 22px;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(58, 123, 213, 0.4);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .nav-game-link:hover { transform: scale(1.05); }
+
+        /* HERO SECTION DECORATION */
+        .hero {
+            background: linear-gradient(rgba(30, 64, 175, 0.8), rgba(30, 64, 175, 0.8)), url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80');
+            background-size: cover; background-position: center;
+            color: white; text-align: center; padding: 120px 20px;
+            border-bottom-left-radius: 50% 20px; border-bottom-right-radius: 50% 20px;
+        }
+        .hero h2 { font-size: 3.2rem; margin-bottom: 15px; font-weight: 800; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .hero p { font-size: 1.3rem; opacity: 0.95; max-width: 800px; margin: 0 auto 40px auto; }
+        .hero-btn {
+            background: white; color: var(--primary); padding: 16px 35px;
+            border-radius: 50px; font-weight: 800; transition: 0.3s;
+            display: inline-block; cursor: pointer; border: none; font-size: 1.1rem; margin: 10px;
+            text-decoration: none; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .hero-btn:hover { transform: translateY(-5px); background: #f8fafc; }
+        .hero-btn.game-btn { background: #ff0076; color: white; box-shadow: 0 10px 25px rgba(255, 0, 118, 0.3); }
+
+        /* SECTION DECORATION */
+        .section-container { max-width: 1150px; margin: 80px auto; padding: 0 25px; }
+        .section-title { text-align: center; margin-bottom: 50px; }
+        .section-title h2 { color: var(--primary); font-size: 2.6rem; font-weight: 800; margin-bottom: 10px; }
+        .section-title p { font-size: 1.1rem; color: #64748b; font-weight: 500; }
+
+        /* HISTORY BOX */
+        .about-box {
+            background: white; padding: 50px; border-radius: 25px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.05);
+            border-left: 10px solid var(--primary);
+            text-align: justify;
+        }
+
+        /* GRADES GRID */
+        .grades-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .grade-card {
+            background: white; border-radius: 20px; padding: 35px; text-align: center;
+            transition: 0.4s; border: 1px solid #e2e8f0;
+            position: relative; overflow: hidden;
+        }
+        .grade-card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: var(--secondary); }
+        .grade-card:hover { transform: translateY(-12px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .grade-number { font-size: 2.5rem; font-weight: 900; color: var(--primary); margin-bottom: 15px; }
+        .grade-links a {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            margin-top: 15px; padding: 12px; border-radius: 12px; font-weight: 700; text-decoration: none; font-size: 0.9rem;
+        }
+        .btn-blue { background: #eff6ff; color: #1e40af; }
+        .btn-green { background: #ecfdf5; color: #059669; }
+
+        /* TIMETABLE DECORATION */
+        .timetable-card { background: white; border-radius: 25px; padding: 40px; box-shadow: 0 15px 40px rgba(0,0,0,0.05); }
+        .selection-area { margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; }
+        select {
+            padding: 15px 25px; border-radius: 15px; border: 2px solid var(--primary);
+            font-size: 1.1rem; font-weight: 600; outline: none; cursor: pointer; color: var(--primary);
+            background: white; width: 100%; max-width: 400px;
+        }
+        .timetable-container { overflow-x: auto; margin-top: 20px; border-radius: 15px; border: 1px solid #e2e8f0; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th { background: var(--primary); color: white; padding: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        td { padding: 18px; border: 1px solid #f1f5f9; text-align: center; font-weight: 500; }
+        tr:nth-child(even) { background: #f8fafc; }
+        tr:hover { background: #eff6ff; }
+
+        /* CONTACT SECTION */
+        .contact-wrapper { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; }
+        .contact-info { background: var(--primary); color: white; padding: 45px; border-radius: 25px; box-shadow: 0 10px 30px rgba(30,64,175,0.3); }
+        .info-item { margin-bottom: 30px; display: flex; align-items: flex-start; gap: 20px; }
+        .info-item i { font-size: 1.8rem; color: var(--accent); }
+
+        .contact-form-box { background: white; padding: 45px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        input, textarea { width: 100%; padding: 18px; margin-bottom: 20px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 1rem; box-sizing: border-box; outline: none; transition: 0.3s; }
+        input:focus, textarea:focus { border-color: var(--primary); }
+        button[type="submit"] { background: var(--primary); color: white; border: none; padding: 18px; border-radius: 12px; cursor: pointer; font-weight: 800; font-size: 1.1rem; width: 100%; transition: 0.3s; }
+        button[type="submit"]:hover { background: var(--dark); }
+
+        footer { background: var(--dark); color: #94a3b8; text-align: center; padding: 80px 20px; margin-top: 100px; }
+
+        /* =========================================
+           2. NEON ARCADE BRAIN GYM
+           ========================================= */
+        #gym-modal {
+            display: none; position: fixed; inset: 0; z-index: 9999;
+            background: radial-gradient(circle at center, #1e293b, #020617);
+            justify-content: center; align-items: center; font-family: 'Outfit', sans-serif;
+        }
+        .gym-container {
+            width: 100%; max-width: 550px; background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px); border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 35px; padding: 35px; position: relative; color: white;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+        }
+        .hud { display: flex; justify-content: space-between; margin-bottom: 30px; background: rgba(255,255,255,0.05); padding: 18px 30px; border-radius: 100px; border: 1px solid rgba(255,255,255,0.1); }
+        .heart-icon { color: #ff0076; filter: drop-shadow(0 0 8px #ff0076); }
+        .coin-icon { color: #fbbf24; filter: drop-shadow(0 0 8px #fbbf24); }
+
+        .gym-screen { display: none; flex-direction: column; animation: slideUp 0.4s ease; }
+        .gym-screen.active { display: flex; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .gym-grid-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .gym-card-btn {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            padding: 30px; border-radius: 25px; cursor: pointer; color: white; transition: 0.3s;
+            display: flex; flex-direction: column; align-items: center; gap: 15px; font-weight: 700;
+        }
+        .gym-card-btn:hover { background: rgba(255,255,255,0.1); transform: scale(1.05); border-color: var(--secondary); }
+        .gym-card-btn i { font-size: 3rem; }
+
+        .timer-track { width: 100%; height: 10px; background: rgba(255,255,255,0.1); border-radius: 20px; margin-bottom: 30px; overflow: hidden; }
+        .timer-fill { height: 100%; width: 100%; background: linear-gradient(90deg, #00d2ff, #3a7bd5); transition: width 0.1s linear; }
+
+        .question-display { background: rgba(0,0,0,0.4); padding: 50px; border-radius: 25px; text-align: center; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.1); }
+        .big-text { font-size: 3.5rem; font-weight: 900; margin: 0; letter-spacing: 2px; }
+
+        .gym-input-field { width: 100%; padding: 22px; border-radius: 18px; border: 2px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: white; font-size: 1.8rem; text-align: center; margin-bottom: 20px; outline: none; }
+        .submit-btn { background: linear-gradient(45deg, #00d2ff, #3a7bd5); color: white; border: none; padding: 20px; border-radius: 18px; font-weight: 900; cursor: pointer; font-size: 1.3rem; text-transform: uppercase; }
+
+        /* =========================================
+           3. NEW SECTIONS (LOCATION, GALLERY, FAQ, NEWS)
+           ========================================= */
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
+        .feature-card {
+            background: white; border-radius: 22px; padding: 25px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;
+        }
+        .feature-card i { color: var(--secondary); font-size: 1.8rem; }
+        .feature-card h3 { margin: 12px 0 8px; color: var(--primary); font-size: 1.2rem; }
+        .feature-card p { margin: 0; color: #475569; }
+
+        .map-wrap {
+            display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 30px; align-items: start;
+        }
+        .map-card {
+            background: white; border-radius: 25px; padding: 25px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;
+        }
+        .map-iframe {
+            width: 100%; height: 420px; border: 0; border-radius: 18px;
+        }
+        .badge-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+        .pill {
+            background: #eff6ff; color: #1e40af; padding: 8px 12px;
+            border-radius: 999px; font-weight: 800; font-size: 0.9rem;
+        }
+        .btn-secondary {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: #eff6ff; color: #1e40af; padding: 12px 18px;
+            border-radius: 14px; text-decoration: none; font-weight: 800;
+            border: 1px solid rgba(30,64,175,0.2);
+        }
+        .btn-secondary:hover { background: #e0f2fe; }
+
+        .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+        .gallery-item { border-radius: 20px; overflow: hidden; border: 1px solid #e2e8f0; background: white; }
+        .gallery-item img { width: 100%; height: 220px; object-fit: cover; display: block; }
+        .gallery-item .cap { padding: 12px 14px; color: #475569; font-weight: 700; }
+
+        .news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .news-card { background: white; border-radius: 22px; padding: 20px; border: 1px solid #e2e8f0; box-shadow: 0 15px 40px rgba(0,0,0,0.05); }
+        .news-card h3 { margin: 12px 0 10px; color: var(--primary); font-size: 1.15rem; }
+        .news-card .meta { color: #64748b; font-weight: 700; font-size: 0.95rem; }
+        .news-card p { margin: 0; color: #475569; }
+
+        .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        details {
+            background: white; border-radius: 18px; padding: 16px 18px;
+            border: 1px solid #e2e8f0; box-shadow: 0 15px 40px rgba(0,0,0,0.03);
+        }
+        summary { cursor: pointer; font-weight: 900; color: var(--primary); font-size: 1.05rem; }
+        details p { margin: 10px 0 0; color: #475569; }
+
+        /* Responsive */
+        @media (max-width: 1100px) {
+            .map-wrap { grid-template-columns: 1fr; }
+            .grid-3 { grid-template-columns: 1fr; }
+            .news-grid { grid-template-columns: 1fr; }
+            .gallery-grid { grid-template-columns: 1fr; }
+            .faq-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 800px) {
+            .contact-wrapper { grid-template-columns: 1fr; }
+            .hero h2 { font-size: 2.2rem; }
+            nav ul { display: none; }
+            .gallery-item img { height: 200px; }
+            .map-iframe { height: 320px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="header-container">
+            <div class="logo-area">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBnha5yr1-WJPNyTLxS1IX_aFxntO1R13UT8Fu0hBkgQ&s" alt="SOS Logo">
+                <div class="logo-text">
+                    <h1>SOS Jimma Primary School</h1>
+                    <span>ኤስኦኤስ ጅማ ትምህርት ቤት | Hermann Gmeiner School</span>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">Our History</a></li>
+                    <li><a href="#grades">Classes</a></li>
+                    <li><a href="#timetable">Timetable</a></li>
+                    <li><a href="#location">Location</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="javascript:void(0)" class="nav-game-link" onclick="openGame()"><i class="fas fa-gamepad"></i> Brain Gym</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero" id="home">
+        <h2>A Loving Home for Every Child</h2>
+        <p>Providing quality education and care in Jimma, Ethiopia since 2012. We cultivate excellence and character in every student we serve.</p>
+        <p><em>የልህቀት ማዕከል | ለህይወት እናስተምራለን | Giddu-gala Barnootaa | jireenyaaf barsifna</em></p>
+        <div>
+            <a href="#grades" class="hero-btn">View Classes (ክፍሎች)</a>
+            <a href="javascript:void(0)" onclick="openGame()" class="hero-btn game-btn">Play Brain Gym</a>
+        </div>
+    </section>
+
+    <!-- HISTORY SECTION -->
+    <section id="about" class="section-container">
+        <div class="section-title">
+            <h2>Our History</h2>
+            <p>About Hermann Gmeiner & Our Global Mission</p>
+        </div>
+        <div class="about-box">
+            <p><strong>Hermann Gmeiner</strong> was the founder of the SOS Children's Village movement. He dedicated his life to providing a nurturing environment for children in need, ensuring they receive education, love, and care. Hermann Gmeiner, an Austrian medical student and World War II veteran, founded SOS Children's Villages in 1949 in Imst, Austria, after witnessing the misery of war orphans living in cold, crowded institutional orphanages. Believing that "every big thing comes from small beginnings," Gmeiner rejected the idea of traditional asylums and instead created a model based on a loving family structure. He funded the first village through the "Rice Grain" campaign, asking for very small donations from many people. His vision was built on four pillars: every child receives a caring parent (an SOS mother), biological siblings are kept together, the family lives in their own house, and these houses form a supportive village community.</p>
+            <br>
+            <p><strong>SOS Jimma</strong> creates a family-like atmosphere where children can grow and thrive. Our school aims to provide quality education while fostering social and emotional development for students from KG 1 to Grade 12. As the movement succeeded in Europe, it expanded globally in the 1960s to Asia, Latin America, and Africa to help children affected by poverty and conflict. Gmeiner realized that a loving home was not enough to break the cycle of poverty, so he established SOS Hermann Gmeiner Schools and vocational training centers. Crucially, these schools were designed to educate both the children from the SOS village and children from the local neighborhood, ensuring that orphans were integrated into society rather than isolated. Today, Gmeiner’s legacy spans over 135 countries, providing family-based care and education to millions of children.</p>
+        </div>
+    </section>
+
+    <!-- GRADES SECTION -->
+    <section id="grades" class="section-container">
+        <div class="section-title">
+            <h2>Our Primary Classes</h2>
+            <p>Telegram Channels & Parent Connection Groups</p>
+        </div>
+        <div class="grades-grid">
+            <!-- Grade 1 -->
+            <div class="grade-card">
+                <div class="grade-number">Grade 1</div>
+                <p>Total: 75 Students</p>
+                <div class="grade-links">
+                    <a href="https://t.me/+gr6zys9V8JEyMGJk" class="btn-blue"><i class="fab fa-telegram"></i> Channel</a>
+                    <a href="https://t.me/sosjimma_g1parents" class="btn-green"><i class="fas fa-users"></i> Parents</a>
+                </div>
+            </div>
+            <!-- Grade 2 -->
+            <div class="grade-card">
+                <div class="grade-number">Grade 2</div>
+                <p>Total: 68 Students</p>
+                <div class="grade-links">
+                    <a href="https://t.me/+dF6uITgd-2UzNjJk" class="btn-blue"><i class="fab fa-telegram"></i> Channel</a>
+                    <a href="https://t.me/sosjimma_g2parents" class="btn-green"><i class="fas fa-users"></i> Parents</a>
+                </div>
+            </div>
+            <!-- Grade 3 -->
+            <div class="grade-card">
+                <div class="grade-number">Grade 3</div>
+                <p>Total: 80 Students</p>
+                <div class="grade-links">
+                    <a href="https://t.me/+gr6zys9V8JEyMGJk" class="btn-blue"><i class="fab fa-telegram"></i> Channel</a>
+                    <a href="https://t.me/sosjimma_g3parents" class="btn-green"><i class="fas fa-users"></i> Parents</a>
+                </div>
+            </div>
+            <!-- Grade 4 -->
+            <div class="grade-card">
+                <div class="grade-number">Grade 4</div>
+                <p>Total: 72 Students</p>
+                <div class="grade-links">
+                    <a href="https://t.me/sosjimmakg1" class="btn-blue"><i class="fab fa-telegram"></i> Channel</a>
+                    <a href="https://t.me/sosjimma_g4parents" class="btn-green"><i class="fas fa-users"></i> Parents</a>
+                </div>
+            </div>
+            <!-- Grade 5 -->
+            <div class="grade-card">
+                <div class="grade-number">Grade 5</div>
+                <p>Total: 65 Students</p>
+                <div class="grade-links">
+                    <a href="https://t.me/sosjimmakg2" class="btn-blue"><i class="fab fa-telegram"></i> Channel</a>
+                    <a href="https://t.me/sosjimma_g5parents" class="btn-green"><i class="fas fa-users"></i> Parents</a>
+                </div>
+            </div>
+            <!-- Grade 6 -->
+            <div class="grade-card">
+                <div class="grade-number">Grade 6</div>
+                <p>Total: 70 Students</p>
+                <div class="grade-links">
+                    <a href="https://t.me/sosjimmakg3" class="btn-blue"><i class="fab fa-telegram"></i> Channel</a>
+                    <a href="https://t.me/sosjimma_g6parents" class="btn-green"><i class="fas fa-users"></i> Parents</a>
+                </div>
+            </div>
+            <!-- Grade 7 -->
+            <div class="grade-card">
+                <div class="grade-number">Grade 7</div>
+                <p>Total: 60 Students</p>
+                <div class="grade-links">
+                    <a href="https://t.me/mihresosg1" class="btn-blue"><i class="fab fa-telegram"></i> Channel</a>
+                    <a href="https://t.me/sosjimma_g7parents" class="btn-green"><i class="fas fa-users"></i> Parents</a>
+                </div>
+            </div>
+            <!-- Grade 8 -->
+            <div class="grade-card">
+                <div class="grade-number">Grade 8</div>
+                <p>Total: 55 Students</p>
+                <div class="grade-links">
+                    <a href="https://t.me/+Mn8Vc7JEP8FlMGJk" class="btn-blue"><i class="fab fa-telegram"></i> Channel</a>
+                    <a href="https://t.me/sosjimma_g8parents" class="btn-green"><i class="fas fa-users"></i> Parents</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TIMETABLE SECTION -->
+    <section id="timetable" class="section-container">
+        <div class="timetable-card">
+            <div class="section-title">
+                <h2>Full Academic Timetable</h2>
+                <p>Select your section to view the weekly schedule</p>
+            </div>
+            <div class="selection-area">
+                <label style="margin-bottom: 10px; font-weight: 700;">Select Grade & Section:</label>
+                <select id="sectionPicker">
+                    <!-- Options filled by JS -->
+                </select>
+                <p style="margin: 10px 0 0; color:#64748b; font-weight:700;">Tip: Scroll horizontally on mobile/tablet to see all periods.</p>
+            </div>
+            <div id="timetableDisplay" class="timetable-container">
+                <!-- Table generated by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: LOCATION + MAP -->
+    <section id="location" class="section-container">
+        <div class="section-title">
+            <h2>Location & Map</h2>
+            <p>Find SOS Jimma Primary School on the map</p>
+        </div>
+
+        <div class="map-wrap">
+            <div class="map-card">
+                <h3 style="margin:0 0 12px; color:var(--primary);">Google Map</h3>
+
+                <!-- Replace the embed with the correct SOS Jimma location if you have the pin/address -->
+                <iframe
+                    class="map-iframe"
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    src="https://www.google.com/maps?q=Jimma%2C%20Ethiopia&output=embed">
+                </iframe>
+
+                <div class="badge-row">
+                    <span class="pill"><i class="fa-solid fa-location-dot"></i>&nbsp;Jimma, Oromia</span>
+                    <span class="pill"><i class="fa-solid fa-school"></i>&nbsp;Primary School</span>
+                    <span class="pill"><i class="fa-solid fa-people-group"></i>&nbsp;Family-based education</span>
+                </div>
+            </div>
+
+            <div class="map-card">
+                <h3 style="margin:0 0 12px; color:var(--primary);">Contact for Visiting</h3>
+
+                <p style="margin:0 0 16px; color:#475569; font-weight:700;">
+                    Add the exact address/landmark here (or share it with me and I’ll update the code).
+                </p>
+
+                <div class="feature-card" style="box-shadow:none; border:1px solid #e2e8f0;">
+                    <i class="fas fa-map-location-dot"></i>
+                    <h3>School Address</h3>
+                    <p>
+                        SOS Jimma Primary School, Jimma, Ethiopia (placeholder).
+                        <br><span style="color:#64748b; font-weight:800;">Update with your real street name/landmark.</span>
+                    </p>
+                </div>
+
+                <div style="margin-top:18px; display:flex; flex-direction:column; gap:12px;">
+                    <a class="btn-secondary" href="tel:+251000000000">
+                        <i class="fas fa-phone"></i> Call Office (placeholder)
+                    </a>
+                    <a class="btn-secondary" href="mailto:info@sosjimma.example">
+                        <i class="fas fa-envelope"></i> Email (placeholder)
+                    </a>
+                    <a class="btn-secondary" href="#contact">
+                        <i class="fas fa-paper-plane"></i> Send a Message
+                    </a>
+                </div>
+
+                <hr style="opacity:0.2; margin:18px 0;">
+                <h3 style="margin:0 0 10px; color:var(--primary);">How to get there</h3>
+                <p style="margin:0; color:#475569; font-weight:700;">
+                    Add directions: “From Jimma town, take ___, then ____ landmark…”
+                    <br><span style="color:#64748b; font-weight:800;">(I can improve this if you provide the route.)</span>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: GALLERY -->
+    <section class="section-container">
+        <div class="section-title">
+            <h2>School Gallery</h2>
+            <p>Moments of learning, care, and community</p>
+        </div>
+
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80" alt="Classroom">
+                <div class="cap">Bright classrooms</div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80" alt="Students">
+                <div class="cap">Learning together</div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1516627145490-1d1d8b3b59f4?auto=format&fit=crop&q=80" alt="Teachers">
+                <div class="cap">Dedicated teachers</div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80" alt="Playground">
+                <div class="cap">Play & teamwork</div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1588072432836-7e3f5d2e9f7f?auto=format&fit=crop&q=80" alt="Books">
+                <div class="cap">Reading culture</div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?auto=format&fit=crop&q=80" alt="Community">
+                <div class="cap">Community support</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: NEWS / ANNOUNCEMENTS -->
+    <section class="section-container">
+        <div class="section-title">
+            <h2>News & Announcements</h2>
+            <p>Latest updates from SOS Jimma Primary School</p>
+        </div>
+
+        <div class="news-grid">
+            <div class="news-card">
+                <div class="meta"><i class="fa-regular fa-calendar"></i> Announcement</div>
+                <h3>Open Week: Parent Engagement</h3>
+                <p>Parents are invited to visit classrooms and meet teachers. (Edit text anytime.)</p>
+            </div>
+            <div class="news-card">
+                <div class="meta"><i class="fa-regular fa-calendar"></i> Event</div>
+                <h3>Sports & Talent Day</h3>
+                <p>Students participate in athletics, music, and storytelling. (Edit details.)</p>
+            </div>
+            <div class="news-card">
+                <div class="meta"><i class="fa-regular fa-calendar"></i> Update</div>
+                <h3>New Academic Materials</h3>
+                <p>We continue improving resources for stronger learning outcomes.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: FAQ -->
+    <section id="faq" class="section-container">
+        <div class="section-title">
+            <h2>Frequently Asked Questions</h2>
+            <p>Answers for parents and guardians</p>
+        </div>
+
+        <div class="faq-grid">
+            <details>
+                <summary>How can a child join SOS Jimma Primary School?</summary>
+                <p>
+                    Contact the administration through the form or official channels. We will guide you through the steps.
+                </p>
+            </details>
+            <details>
+                <summary>Do you support students from KG to Grade 12?</summary>
+                <p>
+                    Our broader mission supports children across education levels. Please contact us for the latest admissions availability.
+                </p>
+            </details>
+            <details>
+                <summary>Are class updates shared with parents?</summary>
+                <p>
+                    Yes—through Telegram parent groups for each grade and ongoing communication with the school office.
+                </p>
+            </details>
+            <details>
+                <summary>How do I submit a message to the school?</summary>
+                <p>
+                    Use the “Send a Message” form in the Contact section. You can also message our official Telegram channels.
+                </p>
+            </details>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="section-container">
+        <div class="section-title">
+            <h2>Get In Touch</h2>
+            <p>Contact our Administration and Support Offices</p>
+        </div>
+        <div class="contact-wrapper">
+            <div class="contact-info">
+                <h3>Contact Details</h3>
+                <div class="info-item">
+                    <i class="fas fa-user-tie"></i>
+                    <div><strong>Managing Principal:</strong><br>0471114881</div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-school"></i>
+                    <div><strong>Primary School Principal:</strong><br>0478119704</div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-dollar-sign"></i>
+                    <div><strong>Admin & Finance:</strong><br>+251258156196</div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-headset"></i>
+                    <div><strong>Secretary (ቢሮ):</strong><br>0472214445</div>
+                </div>
+                <hr style="opacity: 0.2; margin: 30px 0;">
+                <p><strong>Official Channels:</strong></p>
+                <a href="https://t.me/sosjp" style="color: #fbbf24; text-decoration: none; font-weight: 700;">SOS Jimma Primary School Channel</a><br><br>
+                <a href="https://t.me/your_sos_cpa_channel" style="color: #fbbf24; text-decoration: none; font-weight: 700;">SOS CPA Channel</a>
+            </div>
+
+            <div class="contact-form-box">
+                <h3>Send a Message</h3>
+                <form onsubmit="return handleContactSubmit(event)">
+                    <input type="text" id="contactName" placeholder="Full Name (ስም)" required>
+                    <input type="email" id="contactEmail" placeholder="Email (ኢሜይል)" required>
+                    <textarea id="contactMessage" rows="5" placeholder="How can we help you today? (መልእክት)" required></textarea>
+                    <button type="submit">Submit Message</button>
+                    <p id="contactStatus" style="margin:10px 0 0; font-weight:800; color:#64748b;"></p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 SOS Hermann Gmeiner Primary School Jimma. | አስተያየት: ለህይወት እናስተምራለን</p>
+        <p>Giddu-gala Barnootaa | We Educate for Life</p>
+    </footer>
+
+    <!-- BRAIN GYM MODAL -->
+    <div id="gym-modal">
+        <div class="gym-container">
+            <button onclick="closeGame()" style="position: absolute; top: 20px; right: 20px; background: none; border: 1px solid white; color: white; border-radius: 50%; width: 40px; height: 40px; cursor: pointer;">X</button>
+
+            <div class="hud">
+                <div><i class="fas fa-heart heart-icon"></i> <span id="ui-lives">3</span></div>
+                <div><i class="fas fa-coins coin-icon"></i> <span id="ui-coins">0</span></div>
+            </div>
+
+            <div id="screen-home" class="gym-screen active">
+                <h1 style="text-align:center; margin: 0 0 10px 0; font-size: 2.5rem; letter-spacing: 2px;">BRAIN GYM</h1>
+                <p style="text-align:center; opacity: 0.6; margin-bottom: 40px;">THE ULTIMATE BRAIN CHALLENGE</p>
+                <div class="gym-grid-menu">
+                    <button class="gym-card-btn" onclick="gym.start('math')"><i class="fas fa-calculator" style="color:#00d2ff"></i> Math</button>
+                    <button class="gym-card-btn" onclick="gym.start('english')"><i class="fas fa-language" style="color:#10b981"></i> English</button>
+                    <button class="gym-card-btn" onclick="gym.start('memory')"><i class="fas fa-brain" style="color:#fbbf24"></i> Memory</button>
+                    <button class="gym-card-btn" onclick="gym.toggleShop()"><i class="fas fa-shopping-cart" style="color:#ff0076"></i> Shop</button>
+                </div>
+
+                <div style="margin-top: 20px; opacity: 0.75; font-weight: 800; text-align:center;">
+                    Tip: Press <span style="color:#fff;">Enter</span> to submit answers.
+                </div>
+            </div>
+
+            <div id="screen-play" class="gym-screen">
+                <div class="timer-track"><div id="gym-timer-bar" class="timer-fill"></div></div>
+                <div class="question-display">
+                    <p id="gym-q-label" style="opacity: 0.5; margin: 0; font-size: 0.9rem;">CHALLENGE</p>
+                    <h2 id="gym-q-text" class="big-text">?</h2>
+                </div>
+                <input type="text" id="gym-answer-input" class="gym-input-field" placeholder="???">
+                <button class="submit-btn" onclick="gym.checkAnswer()">Submit</button>
+                <div style="margin-top:12px; opacity:0.7; font-weight:800; text-align:center;">
+                    Earn coins by answering fast and correctly.
+                </div>
+            </div>
+
+            <div id="screen-memory" class="gym-screen">
+                <div class="gym-grid-menu" id="mem-board" style="grid-template-columns: repeat(4, 1fr);"></div>
+                <button class="submit-btn" style="margin-top: 30px;" onclick="gym.goHome()">Exit Game</button>
+            </div>
+
+            <div id="screen-shop" class="gym-screen">
+                <h2 style="text-align:center;">Arcade Shop</h2>
+                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; gap:10px;">
+                    <span>Extra Life (+1 ❤️)</span>
+                    <button class="submit-btn" style="padding: 10px 20px; font-size: 1rem;" onclick="gym.buy('life', 50)">50 🪙</button>
+                </div>
+                <button class="submit-btn" style="margin-top: auto;" onclick="gym.goHome()">Back</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* =========================================
+           1. FULL TIMETABLE DATA (1A - 8B)
+           ========================================= */
+        const timetableData = {
+            "1A": { "Monday": ["A/orom", "Amh", "Eng", "HPE", "Env.sci", "Scie.En", "Maths"], "Tuesday": ["A/orom", "HPE", "Geda", "Env.sci", "Eng", "Art", "Maths"], "Wednesday": ["Maths", "Geda", "Spoken", "Scie.En", "A/orom", "Moral", "Eng"], "Thursday": ["Env.sci", "A/orom", "Amh", "Moral", "Eng", "Spoken", "Maths"], "Friday": ["Art", "Eng", "A/orom", "Maths.", "Maths", "Env.sci"] },
+            "1B": { "Monday": ["Env.sci", "Maths", "Amh", "Maths.", "Eng", "Art", "Spoken"], "Tuesday": ["Maths", "Eng", "A/orom", "Art", "Amh", "Moral", "Env.sci"], "Wednesday": ["Spoken", "Env.sci", "Eng", "Amh", "Maths", "Moral", "HPE"], "Thursday": ["A/orom", "Maths", "Env.sci", "Scie.En", "Art", "Amh", "Eng"], "Friday": ["HPE", "Amh", "Maths", "Moral", "Env.sci", "Eng"] },
+            "1C": { "Monday": ["HPE", "Eng", "Env.sci", "Art", "Amh", "Moral", "Maths"], "Tuesday": ["Env.sci", "Maths", "Moral", "Spoken", "A/orom", "Eng", "Amh"], "Wednesday": ["Amh", "Art", "HPE", "Spoken", "Eng", "Env.sci", "Amh"], "Thursday": ["Amh", "Scie.En", "Eng", "A/orom", "Maths", "Env.sci", "Art"], "Friday": ["Maths", "Moral", "Eng", "Env.sci", "Maths.", "Amh"] },
+            "1D": { "Monday": ["Eng", "Env.sci", "Amh", "Maths", "Spoken", "A/orom", "Moral"], "Tuesday": ["Moral", "Env.sci", "A/orom", "Geda", "Maths", "Scie.En", "Eng"], "Wednesday": ["Env.sci", "Amh", "Maths.", "A/orom", "Geda", "Eng", "Maths"], "Thursday": ["Eng", "Env.sci", "Art", "HPE", "Maths", "Spoken", "A/orom"], "Friday": ["Eng", "Env.sci", "Art", "HPE", "A/orom", "Maths"] },
+            "2A": { "Monday": ["A/orom", "HPE", "Maths", "Scie.En", "Maths.", "Amh", "Eng"], "Tuesday": ["Eng", "Art", "Maths", "Env.sci", "HPE", "Moral", "A/orom"], "Wednesday": ["Spoken", "Eng", "Env.sci", "Moral", "Maths", "A/orom", "Env.sci"], "Thursday": ["Eng", "Spoken", "Amh", "Maths", "Env.sci", "A/orom", "Geda"], "Friday": ["Maths", "Env.sci", "A/orom", "Art", "Geda", "Eng"] },
+            "2B": { "Monday": ["Eng", "Env.sci", "Geda", "Art", "Moral", "Maths", "A/orom"], "Tuesday": ["Maths", "Spoken", "Scie.En", "Maths.", "A/orom", "Env.sci", "Eng"], "Wednesday": ["A/orom", "Moral", "Amh", "Maths", "Spoken", "Env.sci", "Eng"], "Thursday": ["Geda", "Amh", "Maths", "Env.sci", "HPE", "Eng", "A/orom"], "Friday": ["Art", "Eng", "Maths", "A/orom", "HPE", "Env.sci"] },
+            "2C": { "Monday": ["Env.sci", "Art", "Amh", "HPE", "Eng", "Maths", "Moral"], "Tuesday": ["Spoken", "Eng", "Maths", "Amh", "Maths", "Env.sci", "Art"], "Wednesday": ["Spoken", "Moral", "Maths", "Eng", "Env.sci", "A/orom", "Amh"], "Thursday": ["Art", "Env.sci", "Eng", "Maths", "HPE", "Amh", "Moral"], "Friday": ["Env.sci", "Scie.En", "Eng", "A/orom", "Amh", "Maths"] },
+            "2D": { "Monday": ["Maths", "Amh", "Eng", "Maths", "Env.sci", "A/orom", "Art"], "Tuesday": ["HPE", "Maths", "Eng", "Moral", "Amh", "Spoken", "Env.sci"], "Wednesday": ["Env.sci", "Spoken", "Eng", "HPE", "Art", "Amh", "Maths"], "Thursday": ["Moral", "Maths.", "Env.sci", "Eng", "A/orom", "Scie.En", "Amh"], "Friday": ["Moral", "Art", "Env.sci", "Eng", "Maths", "Amh"] },
+            "3A": { "Monday": ["Geda", "Moral", "Spoken", "Maths", "A/orom", "Env.sci", "Eng"], "Tuesday": ["Amh", "Moral", "A/orom", "Eng", "Env.sci", "Maths", "Maths"], "Wednesday": ["Eng", "HPE", "Maths", "Spoken", "A/orom", "Env.sci", "Art"], "Thursday": ["Maths", "HPE", "Geda", "Env.sci", "A/orom", "ICT", "Eng"], "Friday": ["A/orom", "Art", "Amh", "Maths", "Eng", "Scie.En"] },
+            "3B": { "Monday": ["Spoken", "HPE", "Maths", "Amh", "Eng", "Env.sci", "A/orom"], "Tuesday": ["Maths", "Amh", "Moral", "Env.sci", "Art", "Eng", "Spoken"], "Wednesday": ["A/orom", "Scie.En", "Env.sci", "Amh", "Maths", "Eng", "Moral"], "Thursday": ["Maths.", "HPE", "Env.sci", "Moral", "Amh", "Eng", "Maths"], "Friday": ["Eng", "ICT", "Maths", "Amh", "Env.sci", "Art"] },
+            "3C": { "Monday": ["Amh", "Moral", "HPE", "Env.sci", "Maths", "Spoken", "Eng"], "Tuesday": ["Moral", "Env.sci", "Eng", "ICT", "Scie.En", "Amh", "Maths"], "Wednesday": ["Maths", "Eng", "Art", "Maths", "Env.sci", "Amh", "A/orom"], "Thursday": ["Amh", "Eng", "Env.sci", "Spoken", "Art", "Maths", "A/orom"], "Friday": ["Maths", "Amh", "HPE", "Eng", "Moral", "Env.sci"] },
+            "4A": { "Monday": ["ICT", "Env.sci", "A/orom", "Eng", "HPE", "Moral", "Maths"], "Tuesday": ["Eng", "Env.sci", "Maths", "Art", "A/orom", "Spoken", "Amh"], "Wednesday": ["Art", "Eng", "A/orom", "Env.sci", "HPE", "Moral", "Maths"], "Thursday": ["Scie.En", "Eng", "Maths.", "Spoken", "A/orom", "Geda", "Maths"], "Friday": ["A/orom", "Amh", "Geda", "Eng", "Env.sci", "Maths"] },
+            "4B": { "Monday": ["Eng", "HPE", "A/orom", "Amh", "Env.sci", "Spoken", "Maths"], "Tuesday": ["Moral", "Amh", "Spoken", "Env.sci", "Eng", "Art", "Maths"], "Wednesday": ["Maths", "Moral", "Env.sci", "Art", "Env.sci", "Eng", "Amh"], "Thursday": ["Maths", "ICT", "Amh", "Scie.En", "Eng", "A/orom", "Maths."], "Friday": ["Maths", "Moral", "Eng", "Env.sci", "HPE", "Amh"] },
+            "4C": { "Monday": ["A/orom", "Amh", "Eng", "Moral", "Maths", "Art", "Env.sci"], "Tuesday": ["Amh", "Env.sci", "Maths", "HPE", "Moral", "A/orom", "Eng"], "Wednesday": ["Scie.En", "HPE", "Amh", "ICT", "Eng", "Maths", "Maths."], "Thursday": ["Art", "Spoken", "Env.sci", "Amh", "Maths", "Moral", "Eng"], "Friday": ["Env.sci", "Env.sci", "Amh", "Spoken", "Maths", "Eng"] },
+            "5A": { "Monday": ["Env.sci", "A/orom", "Maths", "Eng", "Amh", "Moral", "Geda"], "Tuesday": ["Geda", "Eng", "Env.sci", "Maths", "A/orom", "Spoken", "HPE"], "Wednesday": ["Env.sci", "Maths", "Art", "Eng", "Maths", "A/orom", " HPE "], "Thursday": ["Amh", "A/orom", "Env.sci", "Maths", "Moral", "Art", "Eng"], "Friday": ["Maths", "Eng", "Scie.En", "ICT", "Spoken", "A/orom"] },
+            "5B": { "Monday": ["Eng", "Env.sci", "Maths", "Amh", "HPE", "ICT", "Art"], "Tuesday": ["Maths", "A/orom", "Art", "Maths.", "Amh", "Eng", "Env.sci"], "Wednesday": ["Art", "Eng", "Maths", " Moral ", "Spoken", "Env.sci", "Amh"], "Thursday": ["HPE", "Maths", "Moral", "Amh", "Scie.En", "Eng", "A/orom"], "Friday": ["Eng", "Amh", "Maths", "Spoken", "Moral", "Env.sci"] },
+            "5C": { "Monday": ["Maths", "Art", "Eng", "Scie.En", "A/orom", "Maths.", "Amh"], "Tuesday": ["Eng", "Amh", "HPE", "A/orom", "Env.sci", "Maths", "Spoken"], "Wednesday": ["Eng", "ICT", "HPE", "Maths", "Moral", "Amh", "Env.sci"], "Thursday": ["Eng", "Art", "Maths", "Spoken", "Moral", "Amh", "Env.sci"], "Friday": ["Amh", "Art", "Eng", "Maths", "Env.sci", "Moral"] },
+            "6A": { "Monday": ["Maths", "Env.sci", "A/orom", "ICT", "Maths.", "Eng", "Art"], "Tuesday": ["Maths", "A/orom", "Eng", "Env.sci", "Amh", "Geda", "Moral"], "Wednesday": ["Maths", "Eng", "HPE", "Env.sci", "Spoken", "Geda", "A/orom"], "Thursday": ["A/orom", "Amh", "Spoken", "Art", "Scie.En", "Maths", "Eng"], "Friday": ["HPE", "Maths", "Env.sci", "Eng", "Moral", "A/orom"] },
+            "6B": { "Monday": ["Eng", "A/orom", "Maths", "Moral", "Env.sci", "Amh", "Art"], "Tuesday": ["Env.sci", "HPE", "Amh", "Moral", "Eng", "Maths", "Spoken"], "Wednesday": ["Maths", "HPE", "Env.sci", "Eng", "Art", "Spoken", "Amh"], "Thursday": ["Env.sci", "A/orom", "Maths", "ICT", "Eng", "Maths", "Amh"], "Friday": ["Scie.En", "Eng", "Art", "Maths", "Amh", "Moral"] },
+            "7A": { "Monday": ["Maths", "Geda", "S.sci", "Cit.Ship", "ICT", "Amh", "Spoken"], "Tuesday": ["Genera", "ICT", "Vocatio", "Maths", "Geda", "S.sci", "Eng"], "Wednesday": ["Art", "S.sci", "Maths", "Genera", "Cit.Ship", "Eng", "A/orom"], "Thursday": ["Maths", "Eng", "HPE", "Amh", "A/orom", "Scie.En", "Genera"], "Friday": ["A/orom", "Vocati", "Eng", "Genera", "Art", "Maths"] },
+            "7B": { "Monday": ["Maths", "Cit.Ship", "S.sci", "Genera", "Art", "Eng", "A/orom"], "Tuesday": ["Genera", "Maths.", "Eng", "Amh", "HPE", "S.sci", "Cit.Ship"], "Wednesday": ["Scie.En", "Art", "ICT", "Eng", "Maths", "Amh", "Vocatio"], "Thursday": ["ICT", "S.sci", "Vocatio", "Cit.Ship", "Genera", "Maths", "Spoken"], "Friday": ["Maths", "A/orom", "S.sci", "Amh", "Eng", "Genera"] },
+            "7C": { "Monday": ["Amh", "Spoken", "Genera", "Art", "Maths", "S.sci", "Cit.Ship"], "Tuesday": ["Maths.", "HPE", "Cit.Ship", "Eng", "S.sci", "Genera", "Vocati"], "Wednesday": ["Maths", "Eng", "S.sci", "Genera", "ICT", "Cit.Ship", "Amh"], "Thursday": ["Maths", "A/orom", "Eng", "Scie.En", "ICT", "Vocati", "Amh"], "Friday": ["Genera", "Art", "A/orom", "Maths", "S.sci", "Eng"] },
+            "8A": { "Monday": ["Cit.Ship", "Maths.", "Genera", "A/orom", "Eng", "Geda", "ICT"], "Tuesday": ["Eng", "A/orom", "ICT", "Maths", "S.sci", "Spoken", "Genera"], "Wednesday": ["Scie.En", "Genera", "Maths", "Art", "Amh", "Art", "A/orom"], "Thursday": ["Vocati", "Genera", "Cit.Ship", "Geda", "Maths", "Eng", "S.sci"], "Friday": ["Amh", "Maths", "HPE", "Vocatio", "S.sci", "Eng"] },
+            "8B": { "Monday": ["Vocati", "S.sci", "Maths.", "Eng", "Scie.En", "Cit.Ship", "Amh"], "Tuesday": ["S.sci", "Amh", "Genera", "Cit.Ship", "Eng", "Maths", "A/orom"], "Wednesday": ["Art", "Maths", "Eng", "A/orom", "S.sci", "ICT", "Genera"], "Thursday": ["Genera", "Maths", "S.sci", "Vocati", "Amh", "Eng", "Cit.Ship"], "Friday": ["Spoken", "HPE", "Genera", "Art", "Maths", "ICT"] }
+        };
+
+        const picker = document.getElementById('sectionPicker');
+        const tableBox = document.getElementById('timetableDisplay');
+
+        function initSite() {
+            for (let key in timetableData) {
+                let opt = document.createElement('option');
+                opt.value = key; opt.innerText = "Section " + key;
+                picker.appendChild(opt);
+            }
+            // set default to first section
+            if (!picker.value) picker.value = Object.keys(timetableData)[0];
+            renderTimetable();
+        }
+
+        function renderTimetable() {
+            const data = timetableData[picker.value];
+            let html = `<table><thead><tr><th>Day</th>`;
+            for (let i = 1; i <= 7; i++) html += `<th>${i}</th>`;
+            html += `</tr></thead><tbody>`;
+
+            const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+            days.forEach(day => {
+                html += `<tr><td style="background:#f1f5f9; font-weight:700;">${day}</td>`;
+                const subs = data[day] || [];
+                for (let i = 0; i < 7; i++) {
+                    html += `<td>${subs[i] || '-'}</td>`;
+                }
+                html += `</tr>`;
+            });
+
+            html += `</tbody></table>`;
+            tableBox.innerHTML = html;
+        }
+
+        picker.onchange = renderTimetable;
+        window.onload = initSite;
+
+        /* =========================================
+           Contact form enhancement (no backend)
+           ========================================= */
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('contactName').value.trim();
+            const email = document.getElementById('contactEmail').value.trim();
+            const msg = document.getElementById('contactMessage').value.trim();
+            const status = document.getElementById('contactStatus');
+
+            if (!name || !email || !msg) {
+                status.style.color = "var(--danger)";
+                status.innerText = "Please fill all fields.";
+                return false;
+            }
+
+            // This is frontend-only. Replace with real API later.
+            status.style.color = "var(--success)";
+            status.innerText = "Thanks! Your message has been prepared. (Add backend to send emails/DB.)";
+            e.target.reset();
+            return false;
+        }
+
+        /* =========================================
+           2. BRAIN GYM LOGIC (kept)
+           ========================================= */
+        function openGame() {
+            document.getElementById('gym-modal').style.display = 'flex';
+            document.body.classList.add('game-active');
+            gym.updateUI();
+        }
+
+        function closeGame() {
+            document.getElementById('gym-modal').style.display = 'none';
+            document.body.classList.remove('game-active');
+            if (gym.timerId) clearInterval(gym.timerId);
+        }
+
+        const gym = {
+            lives: 3, coins: 0, mode: '', answer: '', timerId: null, timeLeft: 0,
+
+            start: function(mode) {
+                this.mode = mode;
+                if(mode === 'memory') {
+                    this.showScreen('screen-memory');
+                    this.initMemory();
+                } else {
+                    this.showScreen('screen-play');
+                    this.nextTask();
+                }
+                this.updateUI();
+            },
+
+            showScreen: function(id) {
+                document.querySelectorAll('.gym-screen').forEach(s => s.classList.remove('active'));
+                document.getElementById(id).classList.add('active');
+            },
+
+            nextTask: function() {
+                if(this.lives <= 0) return this.reset();
+                document.getElementById('gym-answer-input').value = '';
+                document.getElementById('gym-answer-input').focus();
+
+                if(this.mode === 'math') {
+                    let n1 = Math.floor(Math.random()*20) + 5;
+                    let n2 = Math.floor(Math.random()*15) + 2;
+                    this.answer = String(n1 + n2);
+                    document.getElementById('gym-q-text').innerText = `${n1} + ${n2}`;
+                } else {
+                    const eng = [
+                        {q:"Antonym of HARD", a:"SOFT"},
+                        {q:"Plural of CHILD", a:"CHILDREN"},
+                        {q:"Capital of ETHIOPIA", a:"ADDIS ABABA"}
+                    ];
+                    let p = eng[Math.floor(Math.random()*eng.length)];
+                    this.answer = p.a;
+                    document.getElementById('gym-q-text').innerText = p.q;
+                }
+                this.startTimer(15);
+            },
+
+            checkAnswer: function() {
+                let val = document.getElementById('gym-answer-input').value.toUpperCase().trim();
+                if(val === this.answer) {
+                    this.coins += 15;
+                    this.nextTask();
+                } else {
+                    this.lives--;
+                    this.updateUI();
+                    if(this.lives <= 0) this.reset();
+                    else this.nextTask();
+                }
+                this.updateUI();
+            },
+
+            startTimer: function(sec) {
+                if(this.timerId) clearInterval(this.timerId);
+                let bar = document.getElementById('gym-timer-bar');
+                let width = 100;
+                this.timerId = setInterval(() => {
+                    width -= (100 / (sec * 10));
+                    bar.style.width = width + "%";
+                    if(width <= 0) {
+                        clearInterval(this.timerId);
+                        this.timerId = null;
+                        this.lives--;
+                        this.updateUI();
+                        this.nextTask();
+                    }
+                }, 100);
+            },
+
+            initMemory: function() {
+                const icons = ['🍎','🍎','🚀','🚀','⚡','⚡','⚽','⚽','💎','💎','🌈','🌈']
+                    .sort(() => 0.5 - Math.random());
+
+                const board = document.getElementById('mem-board');
+                board.innerHTML = '';
+                let flipped = [];
+
+                icons.forEach(icon => {
+                    let card = document.createElement('div');
+                    card.className = 'gym-card-btn';
+                    card.style.fontSize = "2rem";
+                    card.style.minHeight = "86px";
+                    card.onclick = () => {
+                        if(card.innerText || flipped.length >= 2) return;
+
+                        card.innerText = icon;
+                        card.style.background = "white";
+                        flipped.push(card);
+
+                        if(flipped.length === 2) {
+                            if(flipped[0].innerText === flipped[1].innerText) {
+                                this.coins += 25;
+                                flipped = [];
+                                this.updateUI();
+                            } else {
+                                setTimeout(() => {
+                                    flipped.forEach(c => {
+                                        c.innerText = '';
+                                        c.style.background = "rgba(255,255,255,0.05)";
+                                    });
+                                    flipped = [];
+                                }, 600);
+                            }
+                        }
+                    };
+                    board.appendChild(card);
+                });
+            },
+
+            toggleShop: function() { this.showScreen('screen-shop'); },
+            buy: function(item, cost) {
+                if(this.coins >= cost) {
+                    this.coins -= cost;
+                    if(item === 'life') this.lives++;
+                    this.updateUI();
+                } else {
+                    alert("Not enough coins!");
+                }
+            },
+
+            updateUI: function() {
+                document.getElementById('ui-lives').innerText = this.lives;
+                document.getElementById('ui-coins').innerText = this.coins;
+            },
+
+            goHome: function() {
+                if(this.timerId) clearInterval(this.timerId);
+                this.timerId = null;
+                this.showScreen('screen-home');
+                this.updateUI();
+            },
+
+            reset: function() {
+                alert("Game Over! Total Coins: " + this.coins);
+                this.lives = 3; this.coins = 0;
+                this.updateUI();
+                this.goHome();
+            }
+        };
+
+        // Input listener
+        document.getElementById('gym-answer-input')
+            .addEventListener('keypress', (e) => { if(e.key === 'Enter') gym.checkAnswer(); });
+    </script>
+</body>
+</html>
