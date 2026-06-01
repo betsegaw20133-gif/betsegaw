@@ -36,6 +36,17 @@
         }
         body.game-active { overflow: hidden; }
 
+        /* Accessibility */
+        .skip-link{
+            position:absolute; left:-9999px; top:10px;
+            background:#fff; color:var(--primary);
+            padding:10px 14px; border-radius:12px;
+            z-index:999999;
+            font-weight:900;
+            box-shadow:0 12px 30px rgba(0,0,0,0.12);
+        }
+        .skip-link:focus{ left:10px; }
+
         /* HEADER DECORATION */
         header {
             background: var(--glass);
@@ -50,14 +61,16 @@
             padding: 12px 25px;
             gap: 15px;
         }
-        .logo-area { display: flex; align-items: center; gap: 15px; }
-        .logo-area img { height: 70px; width: auto; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .logo-area { display: flex; align-items: center; gap: 15px; min-width: 0; }
+        .logo-area img { height: 70px; width: auto; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); flex: 0 0 auto; }
+        .logo-text { min-width: 0; }
         .logo-text h1 { font-size: 1.5rem; color: var(--primary); margin: 0; font-weight: 800; line-height: 1.1; }
-        .logo-text span { font-size: 0.85rem; color: #64748b; display: block; margin-top: 4px; font-weight: 500; }
+        .logo-text span { font-size: 0.85rem; color: #64748b; display: block; margin-top: 4px; font-weight: 500; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
 
         nav ul { display: flex; gap: 25px; align-items: center; list-style: none; padding: 0; margin: 0; }
         nav a { color: #334155; font-weight: 600; transition: 0.3s; font-size: 0.95rem; text-decoration: none; position: relative; white-space: nowrap; }
         nav a:hover { color: var(--primary); }
+
         .nav-game-link {
             background: linear-gradient(135deg, #00d2ff, #3a7bd5);
             color: white !important;
@@ -68,26 +81,65 @@
         }
         .nav-game-link:hover { transform: scale(1.05); }
 
+        /* Mobile menu button */
+        .menu-btn{
+            display:none;
+            background:transparent;
+            border:1px solid rgba(30,64,175,0.25);
+            border-radius:12px;
+            padding:10px 12px;
+            color:var(--primary);
+            cursor:pointer;
+            font-weight:900;
+        }
+        .mobile-nav{
+            display:none;
+            padding: 0 25px 14px;
+        }
+        .mobile-nav.open{
+            display:block;
+        }
+        .mobile-nav a{
+            display:block;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.75);
+            margin-top: 10px;
+            border:1px solid rgba(30,64,175,0.12);
+            font-weight:900;
+            color:var(--primary);
+        }
+
         /* HERO SECTION DECORATION */
         .hero {
             background: linear-gradient(rgba(30, 64, 175, 0.8), rgba(30, 64, 175, 0.8)), url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80');
             background-size: cover; background-position: center;
             color: white; text-align: center; padding: 120px 20px;
             border-bottom-left-radius: 50% 20px; border-bottom-right-radius: 50% 20px;
+            position: relative;
+            overflow:hidden;
         }
-        .hero h2 { font-size: 3.2rem; margin-bottom: 15px; font-weight: 800; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .hero p { font-size: 1.3rem; opacity: 0.95; max-width: 800px; margin: 0 auto 40px auto; }
+        .hero::after{
+            content:"";
+            position:absolute; inset:-60px;
+            background: radial-gradient(circle at 20% 20%, rgba(245,158,11,0.25), transparent 55%),
+                        radial-gradient(circle at 70% 30%, rgba(59,130,246,0.22), transparent 55%);
+            pointer-events:none;
+        }
+        .hero h2 { font-size: 3.2rem; margin-bottom: 15px; font-weight: 800; text-shadow: 0 4px 10px rgba(0,0,0,0.3); position: relative; }
+        .hero p { font-size: 1.3rem; opacity: 0.95; max-width: 800px; margin: 0 auto 18px auto; position: relative; }
         .hero-btn {
             background: white; color: var(--primary); padding: 16px 35px;
             border-radius: 50px; font-weight: 800; transition: 0.3s;
             display: inline-block; cursor: pointer; border: none; font-size: 1.1rem; margin: 10px;
             text-decoration: none; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            position: relative;
         }
         .hero-btn:hover { transform: translateY(-5px); background: #f8fafc; }
         .hero-btn.game-btn { background: #ff0076; color: white; box-shadow: 0 10px 25px rgba(255, 0, 118, 0.3); }
 
         /* SECTION DECORATION */
-        .section-container { max-width: 1150px; margin: 80px auto; padding: 0 25px; }
+        .section-container { max-width: 1150px; margin: 80px auto; padding: 0 25px; scroll-margin-top: 100px; }
         .section-title { text-align: center; margin-bottom: 50px; }
         .section-title h2 { color: var(--primary); font-size: 2.6rem; font-weight: 800; margin-bottom: 10px; }
         .section-title p { font-size: 1.1rem; color: #64748b; font-weight: 500; }
@@ -114,8 +166,8 @@
             display: flex; align-items: center; justify-content: center; gap: 10px;
             margin-top: 15px; padding: 12px; border-radius: 12px; font-weight: 700; text-decoration: none; font-size: 0.9rem;
         }
-        .btn-blue { background: #eff6ff; color: #1e40af; }
-        .btn-green { background: #ecfdf5; color: #059669; }
+        .btn-blue { background: #eff6ff; color: #1e40af; border: 1px solid rgba(30,64,175,0.08); }
+        .btn-green { background: #ecfdf5; color: #059669; border: 1px solid rgba(5,150,105,0.08); }
 
         /* TIMETABLE DECORATION */
         .timetable-card { background: white; border-radius: 25px; padding: 40px; box-shadow: 0 15px 40px rgba(0,0,0,0.05); }
@@ -137,12 +189,24 @@
         .contact-info { background: var(--primary); color: white; padding: 45px; border-radius: 25px; box-shadow: 0 10px 30px rgba(30,64,175,0.3); }
         .info-item { margin-bottom: 30px; display: flex; align-items: flex-start; gap: 20px; }
         .info-item i { font-size: 1.8rem; color: var(--accent); }
-
         .contact-form-box { background: white; padding: 45px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
         input, textarea { width: 100%; padding: 18px; margin-bottom: 20px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 1rem; box-sizing: border-box; outline: none; transition: 0.3s; }
         input:focus, textarea:focus { border-color: var(--primary); }
         button[type="submit"] { background: var(--primary); color: white; border: none; padding: 18px; border-radius: 12px; cursor: pointer; font-weight: 800; font-size: 1.1rem; width: 100%; transition: 0.3s; }
         button[type="submit"]:hover { background: var(--dark); }
+        .status-hint{
+            font-weight:800; color:#64748b;
+            display:flex; align-items:center; gap:10px;
+        }
+        .spinner{
+            width:18px; height:18px;
+            border:3px solid rgba(255,255,255,0.35);
+            border-top-color:#fff;
+            border-radius:50%;
+            display:inline-block;
+            animation: spin 0.9s linear infinite;
+        }
+        @keyframes spin{ to{ transform: rotate(360deg); } }
 
         footer { background: var(--dark); color: #94a3b8; text-align: center; padding: 80px 20px; margin-top: 100px; }
 
@@ -153,38 +217,99 @@
             display: none; position: fixed; inset: 0; z-index: 9999;
             background: radial-gradient(circle at center, #1e293b, #020617);
             justify-content: center; align-items: center; font-family: 'Outfit', sans-serif;
+            padding: 16px;
         }
         .gym-container {
-            width: 100%; max-width: 550px; background: rgba(255, 255, 255, 0.03);
+            width: 100%; max-width: 640px; background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(20px); border: 2px solid rgba(255, 255, 255, 0.1);
             border-radius: 35px; padding: 35px; position: relative; color: white;
             box-shadow: 0 0 50px rgba(0,0,0,0.8);
         }
-        .hud { display: flex; justify-content: space-between; margin-bottom: 30px; background: rgba(255,255,255,0.05); padding: 18px 30px; border-radius: 100px; border: 1px solid rgba(255,255,255,0.1); }
+        .hud { display: flex; justify-content: space-between; margin-bottom: 18px; background: rgba(255,255,255,0.05); padding: 16px 22px; border-radius: 100px; border: 1px solid rgba(255,255,255,0.1); gap: 10px; }
         .heart-icon { color: #ff0076; filter: drop-shadow(0 0 8px #ff0076); }
         .coin-icon { color: #fbbf24; filter: drop-shadow(0 0 8px #fbbf24); }
+
+        .hud-right{
+            display:flex; align-items:center; gap:14px; flex-wrap: wrap; justify-content: flex-end;
+        }
+
+        .gym-top-controls{
+            display:flex; justify-content: space-between; align-items:center; gap: 12px;
+            margin-bottom: 18px;
+        }
+        .gym-pill{
+            background: rgba(255,255,255,0.06);
+            border:1px solid rgba(255,255,255,0.12);
+            border-radius: 999px;
+            padding: 10px 14px;
+            font-weight: 900;
+            color: rgba(255,255,255,0.92);
+            display:inline-flex; align-items:center; gap:10px;
+            user-select:none;
+        }
+        .gym-switch{
+            display:flex; align-items:center; gap:12px;
+            background: rgba(255,255,255,0.06);
+            border:1px solid rgba(255,255,255,0.12);
+            padding:10px 14px;
+            border-radius: 999px;
+        }
+        .gym-switch label{
+            font-weight: 900; color: rgba(255,255,255,0.9);
+            font-size: 0.95rem;
+        }
+        .gym-switch input{
+            width: 44px; height: 24px;
+            appearance:none;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 999px;
+            position: relative;
+            cursor:pointer;
+            outline:none;
+        }
+        .gym-switch input::after{
+            content:"";
+            position:absolute; top:2px; left:2px;
+            width: 18px; height: 18px; border-radius: 50%;
+            background: rgba(255,255,255,0.9);
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+        .gym-switch input:checked{
+            background: rgba(16,185,129,0.25);
+            border-color: rgba(16,185,129,0.5);
+        }
+        .gym-switch input:checked::after{
+            transform: translateX(20px);
+            background: #34d399;
+        }
 
         .gym-screen { display: none; flex-direction: column; animation: slideUp 0.4s ease; }
         .gym-screen.active { display: flex; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        .gym-grid-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .gym-grid-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .gym-card-btn {
             background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-            padding: 30px; border-radius: 25px; cursor: pointer; color: white; transition: 0.3s;
-            display: flex; flex-direction: column; align-items: center; gap: 15px; font-weight: 700;
+            padding: 26px; border-radius: 25px; cursor: pointer; color: white; transition: 0.3s;
+            display: flex; flex-direction: column; align-items: center; gap: 12px; font-weight: 800;
+            text-align:center;
+            user-select:none;
         }
-        .gym-card-btn:hover { background: rgba(255,255,255,0.1); transform: scale(1.05); border-color: var(--secondary); }
+        .gym-card-btn:hover { background: rgba(255,255,255,0.1); transform: scale(1.03); border-color: rgba(59,130,246,0.7); }
         .gym-card-btn i { font-size: 3rem; }
 
-        .timer-track { width: 100%; height: 10px; background: rgba(255,255,255,0.1); border-radius: 20px; margin-bottom: 30px; overflow: hidden; }
+        .timer-track { width: 100%; height: 10px; background: rgba(255,255,255,0.1); border-radius: 20px; margin-bottom: 18px; overflow: hidden; }
         .timer-fill { height: 100%; width: 100%; background: linear-gradient(90deg, #00d2ff, #3a7bd5); transition: width 0.1s linear; }
 
-        .question-display { background: rgba(0,0,0,0.4); padding: 50px; border-radius: 25px; text-align: center; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.1); }
+        .question-display { background: rgba(0,0,0,0.4); padding: 44px; border-radius: 25px; text-align: center; margin-bottom: 18px; border: 1px solid rgba(255,255,255,0.1); }
         .big-text { font-size: 3.5rem; font-weight: 900; margin: 0; letter-spacing: 2px; }
 
-        .gym-input-field { width: 100%; padding: 22px; border-radius: 18px; border: 2px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: white; font-size: 1.8rem; text-align: center; margin-bottom: 20px; outline: none; }
-        .submit-btn { background: linear-gradient(45deg, #00d2ff, #3a7bd5); color: white; border: none; padding: 20px; border-radius: 18px; font-weight: 900; cursor: pointer; font-size: 1.3rem; text-transform: uppercase; }
+        .gym-input-field { width: 100%; padding: 22px; border-radius: 18px; border: 2px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: white; font-size: 1.7rem; text-align: center; margin-bottom: 14px; outline: none; }
+        .gym-input-field::placeholder{ color: rgba(255,255,255,0.55); }
+        .submit-btn { background: linear-gradient(45deg, #00d2ff, #3a7bd5); color: white; border: none; padding: 18px; border-radius: 18px; font-weight: 900; cursor: pointer; font-size: 1.2rem; text-transform: uppercase; }
+        .submit-btn.secondary { background: rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.18); text-transform:none; font-size:1rem; }
+        .submit-btn:disabled{ opacity:0.6; cursor:not-allowed; }
 
         /* =========================================
            3. NEW SECTIONS (LOCATION, GALLERY, FAQ, NEWS)
@@ -211,34 +336,159 @@
         .badge-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
         .pill {
             background: #eff6ff; color: #1e40af; padding: 8px 12px;
-            border-radius: 999px; font-weight: 800; font-size: 0.9rem;
+            border-radius: 999px; font-weight: 900; font-size: 0.9rem; display:inline-flex; align-items:center; gap:8px;
         }
         .btn-secondary {
             display: inline-flex; align-items: center; gap: 10px;
             background: #eff6ff; color: #1e40af; padding: 12px 18px;
-            border-radius: 14px; text-decoration: none; font-weight: 800;
+            border-radius: 14px; text-decoration: none; font-weight: 900;
             border: 1px solid rgba(30,64,175,0.2);
         }
         .btn-secondary:hover { background: #e0f2fe; }
-
         .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-        .gallery-item { border-radius: 20px; overflow: hidden; border: 1px solid #e2e8f0; background: white; }
+        .gallery-item { border-radius: 20px; overflow: hidden; border: 1px solid #e2e8f0; background: white; cursor:pointer; }
         .gallery-item img { width: 100%; height: 220px; object-fit: cover; display: block; }
-        .gallery-item .cap { padding: 12px 14px; color: #475569; font-weight: 700; }
+        .gallery-item .cap { padding: 12px 14px; color: #475569; font-weight: 900; }
+        .gallery-item:hover{ transform: translateY(-6px); transition:0.25s; }
+        .lightbox{
+            display:none;
+            position:fixed; inset:0; z-index:999999;
+            background: rgba(0,0,0,0.72);
+            align-items:center; justify-content:center;
+            padding: 18px;
+        }
+        .lightbox.open{ display:flex; }
+        .lightbox .box{
+            width:100%; max-width: 880px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 24px;
+            overflow:hidden;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+        }
+        .lightbox .topbar{
+            display:flex; justify-content:space-between; align-items:center;
+            padding: 14px 16px; gap: 12px;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            background: #ffffff;
+        }
+        .lightbox .topbar b{ color: var(--primary); font-weight: 1000; }
+        .lightbox .topbar button{
+            background: #111827; color:#fff;
+            border:none; border-radius: 14px;
+            padding: 10px 14px; cursor:pointer; font-weight: 1000;
+        }
+        .lightbox img{
+            width:100%; height: 540px; object-fit: cover; display:block;
+        }
+        .lightbox .caption{
+            padding: 14px 16px;
+            color:#334155; font-weight: 900;
+        }
 
         .news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
         .news-card { background: white; border-radius: 22px; padding: 20px; border: 1px solid #e2e8f0; box-shadow: 0 15px 40px rgba(0,0,0,0.05); }
         .news-card h3 { margin: 12px 0 10px; color: var(--primary); font-size: 1.15rem; }
-        .news-card .meta { color: #64748b; font-weight: 700; font-size: 0.95rem; }
+        .news-card .meta { color: #64748b; font-weight: 900; font-size: 0.95rem; display:flex; align-items:center; gap:10px; }
         .news-card p { margin: 0; color: #475569; }
+        .news-card .actions{
+            margin-top: 14px;
+            display:flex; gap: 10px; flex-wrap: wrap;
+        }
+        .btn-small{
+            border-radius: 14px; border:1px solid rgba(30,64,175,0.18);
+            padding: 10px 14px; font-weight: 1000;
+            background:#eff6ff; color: #1e40af;
+            text-decoration:none; cursor:pointer;
+        }
+        .btn-small:hover{ background:#e0f2fe; }
 
         .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         details {
             background: white; border-radius: 18px; padding: 16px 18px;
             border: 1px solid #e2e8f0; box-shadow: 0 15px 40px rgba(0,0,0,0.03);
         }
-        summary { cursor: pointer; font-weight: 900; color: var(--primary); font-size: 1.05rem; }
+        summary { cursor: pointer; font-weight: 1000; color: var(--primary); font-size: 1.05rem; }
         details p { margin: 10px 0 0; color: #475569; }
+
+        /* Additional upgraded sections */
+        .hero-strip{
+            max-width: 1150px; margin: -55px auto 0;
+            padding: 0 25px;
+            position: relative; z-index: 2;
+        }
+        .hero-strip .strip-grid{
+            display:grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+        .mini-stat{
+            background: rgba(255,255,255,0.92);
+            border: 1px solid rgba(30,64,175,0.12);
+            border-radius: 18px;
+            padding: 16px 14px;
+            box-shadow: 0 18px 45px rgba(0,0,0,0.08);
+            display:flex; flex-direction:column; gap: 6px;
+        }
+        .mini-stat i{ color: var(--secondary); font-size: 1.4rem; }
+        .mini-stat b{ color: var(--primary); font-weight: 1000; font-size: 1.05rem; }
+        .mini-stat span{ color:#475569; font-weight: 800; font-size: 0.95rem; }
+
+        .cta-row{
+            display:flex; gap: 12px; justify-content:center; flex-wrap: wrap;
+        }
+
+        .events-grid{
+            display:grid; grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items:start;
+        }
+        .event-card{
+            background:white; border:1px solid #e2e8f0;
+            border-radius: 22px; padding: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.05);
+        }
+        .event-card h3{ margin: 0 0 8px; color: var(--primary); font-size: 1.15rem; }
+        .event-meta{
+            display:flex; gap:10px; flex-wrap:wrap; margin-bottom: 10px;
+            color:#64748b; font-weight: 900;
+        }
+        .chip{
+            background:#eff6ff; color:#1e40af;
+            border:1px solid rgba(30,64,175,0.18);
+            padding: 8px 10px; border-radius:999px;
+            font-weight: 1000; font-size: 0.9rem;
+        }
+        .event-desc{ color:#475569; margin:0 0 14px; font-weight: 800; }
+        .rsvp-form{
+            display:grid; gap: 12px;
+        }
+        .rsvp-form input{
+            margin:0;
+            border-radius: 14px;
+        }
+        .rsvp-form button{
+            padding: 14px 16px;
+            border-radius: 14px;
+            font-weight: 1000;
+        }
+
+        /* Floating WhatsApp */
+        .fab{
+            position: fixed;
+            right: 16px; bottom: 16px;
+            z-index: 10000;
+            display:flex; flex-direction:column; gap: 10px;
+        }
+        .fab a{
+            text-decoration:none;
+            width: 54px; height: 54px;
+            border-radius: 18px;
+            display:flex; align-items:center; justify-content:center;
+            box-shadow: 0 18px 45px rgba(0,0,0,0.25);
+            border:1px solid rgba(255,255,255,0.2);
+        }
+        .fab a.wa{ background:#22c55e; color:#fff; }
+        .fab a.tg{ background:#3b82f6; color:#fff; }
 
         /* Responsive */
         @media (max-width: 1100px) {
@@ -247,17 +497,33 @@
             .news-grid { grid-template-columns: 1fr; }
             .gallery-grid { grid-template-columns: 1fr; }
             .faq-grid { grid-template-columns: 1fr; }
+            .hero-strip .strip-grid{ grid-template-columns: repeat(2, 1fr); }
+            .events-grid{ grid-template-columns: 1fr; }
         }
         @media (max-width: 800px) {
             .contact-wrapper { grid-template-columns: 1fr; }
             .hero h2 { font-size: 2.2rem; }
             nav ul { display: none; }
+            .menu-btn{ display:inline-flex; align-items:center; gap:10px; }
+            .logo-text span{ display:none; }
+            .hero-strip .strip-grid{ grid-template-columns: 1fr; }
             .gallery-item img { height: 200px; }
             .map-iframe { height: 320px; }
+            .mobile-nav a{ font-size: 0.98rem; }
+            .lightbox img{ height: 360px; }
+        }
+
+        /* Focus */
+        :focus-visible{
+            outline: 3px solid rgba(59,130,246,0.45);
+            outline-offset: 3px;
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
+
+    <a class="skip-link" href="#home">Skip to content</a>
 
     <!-- HEADER -->
     <header>
@@ -269,7 +535,12 @@
                     <span>ኤስኦኤስ ጅማ ትምህርት ቤት | Hermann Gmeiner School</span>
                 </div>
             </div>
-            <nav>
+
+            <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mobileNav">
+                <i class="fas fa-bars"></i> Menu
+            </button>
+
+            <nav aria-label="Main navigation">
                 <ul>
                     <li><a href="#home">Home</a></li>
                     <li><a href="#about">Our History</a></li>
@@ -277,22 +548,60 @@
                     <li><a href="#timetable">Timetable</a></li>
                     <li><a href="#location">Location</a></li>
                     <li><a href="#faq">FAQ</a></li>
-                    <li><a href="javascript:void(0)" class="nav-game-link" onclick="openGame()"><i class="fas fa-gamepad"></i> Brain Gym</a></li>
+                    <li><a href="javascript:void(0)" class="nav-game-link" onclick="openGame()" role="button" aria-label="Open Brain Gym game">
+                        <i class="fas fa-gamepad"></i> Brain Gym
+                    </a></li>
                 </ul>
             </nav>
+        </div>
+
+        <div id="mobileNav" class="mobile-nav" role="navigation" aria-label="Mobile navigation">
+            <a href="#home">Home</a>
+            <a href="#about">Our History</a>
+            <a href="#grades">Classes</a>
+            <a href="#timetable">Timetable</a>
+            <a href="#location">Location</a>
+            <a href="#faq">FAQ</a>
+            <a href="javascript:void(0)" onclick="openGame()" role="button"><i class="fas fa-gamepad"></i>&nbsp;Brain Gym</a>
         </div>
     </header>
 
     <!-- HERO SECTION -->
-    <section class="hero" id="home">
+    <section class="hero" id="home" tabindex="-1">
         <h2>A Loving Home for Every Child</h2>
         <p>Providing quality education and care in Jimma, Ethiopia since 2012. We cultivate excellence and character in every student we serve.</p>
         <p><em>የልህቀት ማዕከል | ለህይወት እናስተምራለን | Giddu-gala Barnootaa | jireenyaaf barsifna</em></p>
-        <div>
+        <div class="cta-row" aria-label="Primary actions">
             <a href="#grades" class="hero-btn">View Classes (ክፍሎች)</a>
             <a href="javascript:void(0)" onclick="openGame()" class="hero-btn game-btn">Play Brain Gym</a>
         </div>
     </section>
+
+    <!-- HERO STRIP STATS -->
+    <div class="hero-strip" aria-label="School highlights">
+        <div class="strip-grid">
+            <div class="mini-stat">
+                <i class="fas fa-graduation-cap"></i>
+                <b>Quality Learning</b>
+                <span>Primary education with care</span>
+            </div>
+            <div class="mini-stat">
+                <i class="fas fa-people-arrows"></i>
+                <b>Family-Based Support</b>
+                <span>Love & guidance for every child</span>
+            </div>
+            <div class="mini-stat">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <b>Dedicated Teachers</b>
+                <span>Strong academic & character focus</span>
+            </div>
+            <div class="mini-stat">
+                <i class="fas fa-map"></i>
+                <b>Jimma, Ethiopia</b>
+                <span>Community-connected school</span>
+            </div>
+        </div>
+    </div>
 
     <!-- HISTORY SECTION -->
     <section id="about" class="section-container">
@@ -304,6 +613,43 @@
             <p><strong>Hermann Gmeiner</strong> was the founder of the SOS Children's Village movement. He dedicated his life to providing a nurturing environment for children in need, ensuring they receive education, love, and care. Hermann Gmeiner, an Austrian medical student and World War II veteran, founded SOS Children's Villages in 1949 in Imst, Austria, after witnessing the misery of war orphans living in cold, crowded institutional orphanages. Believing that "every big thing comes from small beginnings," Gmeiner rejected the idea of traditional asylums and instead created a model based on a loving family structure. He funded the first village through the "Rice Grain" campaign, asking for very small donations from many people. His vision was built on four pillars: every child receives a caring parent (an SOS mother), biological siblings are kept together, the family lives in their own house, and these houses form a supportive village community.</p>
             <br>
             <p><strong>SOS Jimma</strong> creates a family-like atmosphere where children can grow and thrive. Our school aims to provide quality education while fostering social and emotional development for students from KG 1 to Grade 12. As the movement succeeded in Europe, it expanded globally in the 1960s to Asia, Latin America, and Africa to help children affected by poverty and conflict. Gmeiner realized that a loving home was not enough to break the cycle of poverty, so he established SOS Hermann Gmeiner Schools and vocational training centers. Crucially, these schools were designed to educate both the children from the SOS village and children from the local neighborhood, ensuring that orphans were integrated into society rather than isolated. Today, Gmeiner’s legacy spans over 135 countries, providing family-based care and education to millions of children.</p>
+        </div>
+    </section>
+
+    <!-- QUICK LINKS (added) -->
+    <section class="section-container" aria-label="Quick links">
+        <div class="section-title">
+            <h2>Quick Links</h2>
+            <p>Access important pages fast</p>
+        </div>
+
+        <div class="grid-3" style="max-width: 1100px; margin: 0 auto;">
+            <div class="feature-card">
+                <i class="fas fa-school"></i>
+                <h3>Classes (Telegram)</h3>
+                <p>Find grade channels & parent groups.</p>
+                <div style="margin-top:14px;">
+                    <a class="btn-secondary" href="#grades"><i class="fas fa-arrow-right"></i> Open Classes</a>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <i class="fas fa-table"></i>
+                <h3>Timetable</h3>
+                <p>Weekly schedules by section.</p>
+                <div style="margin-top:14px;">
+                    <a class="btn-secondary" href="#timetable"><i class="fas fa-arrow-right"></i> View Timetable</a>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <i class="fas fa-location-dot"></i>
+                <h3>Location & Map</h3>
+                <p>Find SOS Jimma on the map.</p>
+                <div style="margin-top:14px;">
+                    <a class="btn-secondary" href="#location"><i class="fas fa-arrow-right"></i> Open Location</a>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -397,13 +743,26 @@
                 <p>Select your section to view the weekly schedule</p>
             </div>
             <div class="selection-area">
-                <label style="margin-bottom: 10px; font-weight: 700;">Select Grade & Section:</label>
-                <select id="sectionPicker">
+                <label style="margin-bottom: 10px; font-weight: 900;">Select Grade & Section:</label>
+                <select id="sectionPicker" aria-label="Select timetable section">
                     <!-- Options filled by JS -->
                 </select>
-                <p style="margin: 10px 0 0; color:#64748b; font-weight:700;">Tip: Scroll horizontally on mobile/tablet to see all periods.</p>
+
+                <p style="margin: 10px 0 0; color:#64748b; font-weight:900;">
+                    Tip: Scroll horizontally on mobile/tablet to see all periods.
+                </p>
+
+                <div style="margin-top: 14px; width:100%; max-width: 520px; display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
+                    <button class="btn-secondary" type="button" onclick="downloadTimetableAsText()" aria-label="Download timetable as text">
+                        <i class="fas fa-download"></i> Download (Text)
+                    </button>
+                    <button class="btn-secondary" type="button" onclick="printTimetable()" aria-label="Print timetable">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                </div>
             </div>
-            <div id="timetableDisplay" class="timetable-container">
+
+            <div id="timetableDisplay" class="timetable-container" aria-live="polite">
                 <!-- Table generated by JS -->
             </div>
         </div>
@@ -420,12 +779,12 @@
             <div class="map-card">
                 <h3 style="margin:0 0 12px; color:var(--primary);">Google Map</h3>
 
-                <!-- Replace the embed with the correct SOS Jimma location if you have the pin/address -->
                 <iframe
                     class="map-iframe"
                     loading="lazy"
                     referrerpolicy="no-referrer-when-downgrade"
-                    src="https://www.google.com/maps?q=Jimma%2C%20Ethiopia&output=embed">
+                    src="https://www.google.com/maps?q=Jimma%2C%20Ethiopia&output=embed"
+                    title="Map embed for SOS Jimma Primary School">
                 </iframe>
 
                 <div class="badge-row">
@@ -433,12 +792,21 @@
                     <span class="pill"><i class="fa-solid fa-school"></i>&nbsp;Primary School</span>
                     <span class="pill"><i class="fa-solid fa-people-group"></i>&nbsp;Family-based education</span>
                 </div>
+
+                <div style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap;">
+                    <a class="btn-secondary" href="https://www.google.com/maps?q=Jimma,+Ethiopia" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-up-right-from-square"></i> Open in Google Maps
+                    </a>
+                    <a class="btn-secondary" href="#contact">
+                        <i class="fas fa-envelope"></i> Contact Office
+                    </a>
+                </div>
             </div>
 
             <div class="map-card">
                 <h3 style="margin:0 0 12px; color:var(--primary);">Contact for Visiting</h3>
 
-                <p style="margin:0 0 16px; color:#475569; font-weight:700;">
+                <p style="margin:0 0 16px; color:#475569; font-weight:900;">
                     Add the exact address/landmark here (or share it with me and I’ll update the code).
                 </p>
 
@@ -447,7 +815,7 @@
                     <h3>School Address</h3>
                     <p>
                         SOS Jimma Primary School, Jimma, Ethiopia (placeholder).
-                        <br><span style="color:#64748b; font-weight:800;">Update with your real street name/landmark.</span>
+                        <br><span style="color:#64748b; font-weight:900;">Update with your real street name/landmark.</span>
                     </p>
                 </div>
 
@@ -464,72 +832,164 @@
                 </div>
 
                 <hr style="opacity:0.2; margin:18px 0;">
+
                 <h3 style="margin:0 0 10px; color:var(--primary);">How to get there</h3>
-                <p style="margin:0; color:#475569; font-weight:700;">
+                <p style="margin:0; color:#475569; font-weight:900;">
                     Add directions: “From Jimma town, take ___, then ____ landmark…”
-                    <br><span style="color:#64748b; font-weight:800;">(I can improve this if you provide the route.)</span>
+                    <br><span style="color:#64748b; font-weight:900;">(I can improve this if you provide the route.)</span>
                 </p>
             </div>
         </div>
     </section>
 
-    <!-- NEW: GALLERY -->
-    <section class="section-container">
+    <!-- NEW: GALLERY (with lightbox) -->
+    <section class="section-container" aria-label="School gallery">
         <div class="section-title">
             <h2>School Gallery</h2>
             <p>Moments of learning, care, and community</p>
         </div>
 
-        <div class="gallery-grid">
-            <div class="gallery-item">
+        <div class="gallery-grid" id="galleryGrid">
+            <div class="gallery-item" data-full="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80" data-cap="Bright classrooms" role="button" tabindex="0" aria-label="Open image: Bright classrooms">
                 <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80" alt="Classroom">
                 <div class="cap">Bright classrooms</div>
             </div>
-            <div class="gallery-item">
+            <div class="gallery-item" data-full="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80" data-cap="Learning together" role="button" tabindex="0" aria-label="Open image: Learning together">
                 <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80" alt="Students">
                 <div class="cap">Learning together</div>
             </div>
-            <div class="gallery-item">
+            <div class="gallery-item" data-full="https://images.unsplash.com/photo-1516627145490-1d1d8b3b59f4?auto=format&fit=crop&q=80" data-cap="Dedicated teachers" role="button" tabindex="0" aria-label="Open image: Dedicated teachers">
                 <img src="https://images.unsplash.com/photo-1516627145490-1d1d8b3b59f4?auto=format&fit=crop&q=80" alt="Teachers">
                 <div class="cap">Dedicated teachers</div>
             </div>
-            <div class="gallery-item">
+            <div class="gallery-item" data-full="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80" data-cap="Play & teamwork" role="button" tabindex="0" aria-label="Open image: Play & teamwork">
                 <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80" alt="Playground">
                 <div class="cap">Play & teamwork</div>
             </div>
-            <div class="gallery-item">
+            <div class="gallery-item" data-full="https://images.unsplash.com/photo-1588072432836-7e3f5d2e9f7f?auto=format&fit=crop&q=80" data-cap="Reading culture" role="button" tabindex="0" aria-label="Open image: Reading culture">
                 <img src="https://images.unsplash.com/photo-1588072432836-7e3f5d2e9f7f?auto=format&fit=crop&q=80" alt="Books">
                 <div class="cap">Reading culture</div>
             </div>
-            <div class="gallery-item">
+            <div class="gallery-item" data-full="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?auto=format&fit=crop&q=80" data-cap="Community support" role="button" tabindex="0" aria-label="Open image: Community support">
                 <img src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?auto=format&fit=crop&q=80" alt="Community">
                 <div class="cap">Community support</div>
             </div>
         </div>
+
+        <div class="lightbox" id="lightbox" aria-hidden="true">
+            <div class="box" role="dialog" aria-modal="true" aria-label="Image preview">
+                <div class="topbar">
+                    <b id="lightboxTitle">Preview</b>
+                    <button type="button" id="lightboxClose"><i class="fas fa-xmark"></i> Close</button>
+                </div>
+                <img id="lightboxImg" alt="Preview image">
+                <div class="caption" id="lightboxCaption"></div>
+            </div>
+        </div>
     </section>
 
-    <!-- NEW: NEWS / ANNOUNCEMENTS -->
-    <section class="section-container">
+    <!-- NEW: NEWS / ANNOUNCEMENTS (with modal) -->
+    <section class="section-container" aria-label="News and announcements">
         <div class="section-title">
             <h2>News & Announcements</h2>
             <p>Latest updates from SOS Jimma Primary School</p>
         </div>
 
-        <div class="news-grid">
+        <div class="news-grid" id="newsGrid">
             <div class="news-card">
                 <div class="meta"><i class="fa-regular fa-calendar"></i> Announcement</div>
                 <h3>Open Week: Parent Engagement</h3>
                 <p>Parents are invited to visit classrooms and meet teachers. (Edit text anytime.)</p>
+                <div class="actions">
+                    <button class="btn-small" type="button" onclick="openNewsModal('Open Week: Parent Engagement', 'Parents are invited to visit classrooms and meet teachers. (Edit this content anytime in the code.)', 'Announcement')">
+                        <i class="fas fa-book-open"></i> Read
+                    </button>
+                </div>
             </div>
+
             <div class="news-card">
                 <div class="meta"><i class="fa-regular fa-calendar"></i> Event</div>
                 <h3>Sports & Talent Day</h3>
                 <p>Students participate in athletics, music, and storytelling. (Edit details.)</p>
+                <div class="actions">
+                    <button class="btn-small" type="button" onclick="openNewsModal('Sports & Talent Day', 'Students participate in athletics, music, and storytelling. (Add more details like venue/time.)', 'Event')">
+                        <i class="fas fa-book-open"></i> Read
+                    </button>
+                </div>
             </div>
+
             <div class="news-card">
                 <div class="meta"><i class="fa-regular fa-calendar"></i> Update</div>
                 <h3>New Academic Materials</h3>
                 <p>We continue improving resources for stronger learning outcomes.</p>
+                <div class="actions">
+                    <button class="btn-small" type="button" onclick="openNewsModal('New Academic Materials', 'We continue improving resources for stronger learning outcomes. (You can add budgets, photos, and outcomes.)', 'Update')">
+                        <i class="fas fa-book-open"></i> Read
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEWS MODAL -->
+    <div id="newsModal" class="lightbox" aria-hidden="true">
+        <div class="box" role="dialog" aria-modal="true" aria-label="News detail">
+            <div class="topbar">
+                <b id="newsModalTitle">News</b>
+                <button type="button" onclick="closeNewsModal()"><i class="fas fa-xmark"></i> Close</button>
+            </div>
+            <div style="padding:16px 16px 22px; color:#334155;">
+                <div id="newsModalMeta" class="status-hint" style="margin-bottom:10px;">
+                    <i class="fas fa-circle-info" style="color:var(--secondary)"></i>
+                    <span id="newsModalType"></span>
+                </div>
+                <p id="newsModalBody" style="font-weight:900; color:#475569; margin:0; line-height:1.8;"></p>
+
+                <div style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap;">
+                    <a class="btn-secondary" href="#contact"><i class="fas fa-paper-plane"></i> Ask the School</a>
+                    <button class="btn-small" type="button" onclick="closeNewsModal()"><i class="fas fa-check"></i> Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: EVENTS + RSVP (added) -->
+    <section class="section-container" aria-label="Events">
+        <div class="section-title">
+            <h2>Upcoming Events</h2>
+            <p>Plan ahead and join the school activities</p>
+        </div>
+
+        <div class="events-grid">
+            <div class="event-card">
+                <h3>Parent-Teacher Discussion</h3>
+                <div class="event-meta">
+                    <span class="chip"><i class="fas fa-calendar-days"></i>&nbsp;June (TBD)</span>
+                    <span class="chip"><i class="fas fa-clock"></i>&nbsp;2:00 PM</span>
+                    <span class="chip"><i class="fas fa-location-dot"></i>&nbsp;Main Hall</span>
+                </div>
+                <p class="event-desc">Meet teachers, review student progress, and discuss goals for the next term.</p>
+                <button class="btn-small" type="button" onclick="scrollToId('contact')"><i class="fas fa-bell"></i> RSVP via Contact</button>
+            </div>
+
+            <div class="event-card">
+                <h3>Community Learning Day</h3>
+                <div class="event-meta">
+                    <span class="chip"><i class="fas fa-calendar-days"></i>&nbsp;July (TBD)</span>
+                    <span class="chip"><i class="fas fa-clock"></i>&nbsp;9:00 AM</span>
+                    <span class="chip"><i class="fas fa-location-dot"></i>&nbsp;School Grounds</span>
+                </div>
+                <p class="event-desc">Students and parents participate in reading, storytelling, and practical learning activities.</p>
+
+                <div class="rsvp-form" style="margin-top: 10px;">
+                    <input id="rsvpName" type="text" placeholder="Your Full Name" aria-label="RSVP name">
+                    <input id="rsvpPhone" type="text" placeholder="Phone / WhatsApp" aria-label="RSVP phone">
+                    <input id="rsvpEvent" type="text" placeholder="Event (e.g., Learning Day)" value="Community Learning Day" aria-label="RSVP event" readonly style="cursor:not-allowed; opacity:0.95;">
+                    <button class="submit-btn" type="button" onclick="handleRSVP()">
+                        <i class="fas fa-paper-plane"></i> Submit RSVP (Frontend)
+                    </button>
+                    <p id="rsvpStatus" style="margin:0; color:#64748b; font-weight:900;"></p>
+                </div>
             </div>
         </div>
     </section>
@@ -566,6 +1026,18 @@
                     Use the “Send a Message” form in the Contact section. You can also message our official Telegram channels.
                 </p>
             </details>
+            <details>
+                <summary>What are school hours?</summary>
+                <p>
+                    Update this section with your exact school opening and closing times (e.g., 8:00 AM – 2:00 PM).
+                </p>
+            </details>
+            <details>
+                <summary>Is transportation provided?</summary>
+                <p>
+                    Update this section based on school policy. You can contact the office for available options.
+                </p>
+            </details>
         </div>
     </section>
 
@@ -575,9 +1047,10 @@
             <h2>Get In Touch</h2>
             <p>Contact our Administration and Support Offices</p>
         </div>
+
         <div class="contact-wrapper">
             <div class="contact-info">
-                <h3>Contact Details</h3>
+                <h3 style="margin-top:0;">Contact Details</h3>
                 <div class="info-item">
                     <i class="fas fa-user-tie"></i>
                     <div><strong>Managing Principal:</strong><br>0471114881</div>
@@ -594,21 +1067,48 @@
                     <i class="fas fa-headset"></i>
                     <div><strong>Secretary (ቢሮ):</strong><br>0472214445</div>
                 </div>
+
                 <hr style="opacity: 0.2; margin: 30px 0;">
-                <p><strong>Official Channels:</strong></p>
-                <a href="https://t.me/sosjp" style="color: #fbbf24; text-decoration: none; font-weight: 700;">SOS Jimma Primary School Channel</a><br><br>
-                <a href="https://t.me/your_sos_cpa_channel" style="color: #fbbf24; text-decoration: none; font-weight: 700;">SOS CPA Channel</a>
+
+                <p style="font-weight:900; color:#fbbf24; margin:0 0 10px;"><strong>Official Channels:</strong></p>
+                <a href="https://t.me/sosjp" style="color: #fbbf24; text-decoration: none; font-weight: 900;">SOS Jimma Primary School Channel</a><br><br>
+                <a href="https://t.me/your_sos_cpa_channel" style="color: #fbbf24; text-decoration: none; font-weight: 900;">SOS CPA Channel</a>
+
+                <div style="margin-top: 18px; display:flex; gap: 12px; flex-wrap:wrap;">
+                    <a class="btn-secondary" href="javascript:void(0)" onclick="copyText('+251258156196', 'Copied finance number')" style="background: rgba(255,255,255,0.12); color:#fff; border-color: rgba(255,255,255,0.18);">
+                        <i class="fas fa-copy"></i> Copy Finance
+                    </a>
+                    <a class="btn-secondary" href="javascript:void(0)" onclick="copyText('0472214445', 'Copied secretary number')" style="background: rgba(255,255,255,0.12); color:#fff; border-color: rgba(255,255,255,0.18);">
+                        <i class="fas fa-copy"></i> Copy Secretary
+                    </a>
+                </div>
             </div>
 
             <div class="contact-form-box">
                 <h3>Send a Message</h3>
-                <form onsubmit="return handleContactSubmit(event)">
+                <p class="status-hint" style="margin-top:-6px;">
+                    <i class="fas fa-shield-heart" style="color:var(--accent)"></i>
+                    <span>Frontend form (no backend). You can later connect it to email/DB.</span>
+                </p>
+
+                <form onsubmit="return handleContactSubmit(event)" aria-label="Contact form" style="margin-top: 14px;">
                     <input type="text" id="contactName" placeholder="Full Name (ስም)" required>
                     <input type="email" id="contactEmail" placeholder="Email (ኢሜይል)" required>
                     <textarea id="contactMessage" rows="5" placeholder="How can we help you today? (መልእክት)" required></textarea>
-                    <button type="submit">Submit Message</button>
-                    <p id="contactStatus" style="margin:10px 0 0; font-weight:800; color:#64748b;"></p>
+
+                    <button type="submit" id="contactSubmitBtn">
+                        <span id="contactSubmitText">Submit Message</span>
+                    </button>
+
+                    <p id="contactStatus" style="margin:10px 0 0; font-weight:900; color:#64748b;"></p>
                 </form>
+
+                <div style="margin-top:18px; padding: 14px 14px; border:1px dashed rgba(30,64,175,0.25); border-radius: 18px; background: #f8fafc;">
+                    <b style="color:var(--primary); font-weight:1000;">Tip:</b>
+                    <div style="color:#475569; font-weight:900;">
+                        After you submit, I will show a “prepared message” confirmation. To actually send emails, we need a backend endpoint.
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -618,27 +1118,76 @@
         <p>Giddu-gala Barnootaa | We Educate for Life</p>
     </footer>
 
+    <!-- Floating Social Buttons -->
+    <div class="fab" aria-label="Quick contact">
+        <a class="wa" href="https://wa.me/251000000000" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp (placeholder)">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+        <a class="tg" href="https://t.me/sosjp" target="_blank" rel="noopener noreferrer" aria-label="Telegram SOS (placeholder)">
+            <i class="fab fa-telegram-plane"></i>
+        </a>
+    </div>
+
     <!-- BRAIN GYM MODAL -->
-    <div id="gym-modal">
+    <div id="gym-modal" role="dialog" aria-modal="true" aria-label="Brain Gym game">
         <div class="gym-container">
-            <button onclick="closeGame()" style="position: absolute; top: 20px; right: 20px; background: none; border: 1px solid white; color: white; border-radius: 50%; width: 40px; height: 40px; cursor: pointer;">X</button>
+            <button onclick="closeGame()" style="position: absolute; top: 20px; right: 20px; background: none; border: 1px solid rgba(255,255,255,0.6); color: white; border-radius: 50%; width: 44px; height: 44px; cursor: pointer; font-weight: 1000;">X</button>
+
+            <div class="gym-top-controls">
+                <div class="gym-pill" title="Difficulty affects speed and question complexity">
+                    <i class="fas fa-signal" style="color:#00d2ff"></i>
+                    <span>Difficulty: <span id="gym-difficulty-label">Normal</span></span>
+                </div>
+
+                <div class="gym-switch" title="Turn sound on/off">
+                    <label for="gymSoundToggle">Sound</label>
+                    <input id="gymSoundToggle" type="checkbox" checked aria-label="Sound toggle">
+                </div>
+            </div>
 
             <div class="hud">
                 <div><i class="fas fa-heart heart-icon"></i> <span id="ui-lives">3</span></div>
-                <div><i class="fas fa-coins coin-icon"></i> <span id="ui-coins">0</span></div>
+                <div class="hud-right">
+                    <div><i class="fas fa-coins coin-icon"></i> <span id="ui-coins">0</span></div>
+                    <div style="opacity:0.95; font-weight: 1000;"><i class="fas fa-bolt" style="color:#fff"></i>&nbsp;Mode: <span id="ui-mode-label">—</span></div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 14px; display:flex; gap: 10px; flex-wrap:wrap; align-items:center; justify-content:center;">
+                <button class="submit-btn secondary" type="button" onclick="gym.setDifficulty('Easy')" aria-label="Set difficulty Easy">
+                    <i class="fas fa-leaf" style="color:#34d399"></i> Easy
+                </button>
+                <button class="submit-btn secondary" type="button" onclick="gym.setDifficulty('Normal')" aria-label="Set difficulty Normal">
+                    <i class="fas fa-bolt" style="color:#3b82f6"></i> Normal
+                </button>
+                <button class="submit-btn secondary" type="button" onclick="gym.setDifficulty('Hard')" aria-label="Set difficulty Hard">
+                    <i class="fas fa-skull" style="color:#fbbf24"></i> Hard
+                </button>
+                <button class="submit-btn secondary" type="button" id="gymPauseBtn" onclick="gym.togglePause()" aria-label="Pause game" style="margin-left:auto;">
+                    <i class="fas fa-pause"></i> Pause
+                </button>
             </div>
 
             <div id="screen-home" class="gym-screen active">
-                <h1 style="text-align:center; margin: 0 0 10px 0; font-size: 2.5rem; letter-spacing: 2px;">BRAIN GYM</h1>
-                <p style="text-align:center; opacity: 0.6; margin-bottom: 40px;">THE ULTIMATE BRAIN CHALLENGE</p>
+                <h1 style="text-align:center; margin: 0 0 10px 0; font-size: 2.4rem; letter-spacing: 2px;">BRAIN GYM</h1>
+                <p style="text-align:center; opacity: 0.6; margin-bottom: 30px; font-weight: 800;">THE ULTIMATE BRAIN CHALLENGE</p>
+
                 <div class="gym-grid-menu">
-                    <button class="gym-card-btn" onclick="gym.start('math')"><i class="fas fa-calculator" style="color:#00d2ff"></i> Math</button>
-                    <button class="gym-card-btn" onclick="gym.start('english')"><i class="fas fa-language" style="color:#10b981"></i> English</button>
-                    <button class="gym-card-btn" onclick="gym.start('memory')"><i class="fas fa-brain" style="color:#fbbf24"></i> Memory</button>
-                    <button class="gym-card-btn" onclick="gym.toggleShop()"><i class="fas fa-shopping-cart" style="color:#ff0076"></i> Shop</button>
+                    <button class="gym-card-btn" onclick="gym.start('math')" aria-label="Start Math challenge">
+                        <i class="fas fa-calculator" style="color:#00d2ff"></i> Math
+                    </button>
+                    <button class="gym-card-btn" onclick="gym.start('english')" aria-label="Start English challenge">
+                        <i class="fas fa-language" style="color:#10b981"></i> English
+                    </button>
+                    <button class="gym-card-btn" onclick="gym.start('memory')" aria-label="Start Memory challenge">
+                        <i class="fas fa-brain" style="color:#fbbf24"></i> Memory
+                    </button>
+                    <button class="gym-card-btn" onclick="gym.toggleShop()" aria-label="Open Shop">
+                        <i class="fas fa-shopping-cart" style="color:#ff0076"></i> Shop
+                    </button>
                 </div>
 
-                <div style="margin-top: 20px; opacity: 0.75; font-weight: 800; text-align:center;">
+                <div style="margin-top: 22px; opacity:0.8; font-weight: 900; text-align:center;">
                     Tip: Press <span style="color:#fff;">Enter</span> to submit answers.
                 </div>
             </div>
@@ -646,11 +1195,13 @@
             <div id="screen-play" class="gym-screen">
                 <div class="timer-track"><div id="gym-timer-bar" class="timer-fill"></div></div>
                 <div class="question-display">
-                    <p id="gym-q-label" style="opacity: 0.5; margin: 0; font-size: 0.9rem;">CHALLENGE</p>
+                    <p id="gym-q-label" style="opacity: 0.5; margin: 0; font-size: 0.95rem; font-weight: 900;">CHALLENGE</p>
                     <h2 id="gym-q-text" class="big-text">?</h2>
                 </div>
-                <input type="text" id="gym-answer-input" class="gym-input-field" placeholder="???">
-                <button class="submit-btn" onclick="gym.checkAnswer()">Submit</button>
+
+                <input type="text" id="gym-answer-input" class="gym-input-field" placeholder="Type answer..." autocomplete="off">
+                <button class="submit-btn" onclick="gym.checkAnswer()" id="gymSubmitBtn">Submit</button>
+
                 <div style="margin-top:12px; opacity:0.7; font-weight:800; text-align:center;">
                     Earn coins by answering fast and correctly.
                 </div>
@@ -658,21 +1209,60 @@
 
             <div id="screen-memory" class="gym-screen">
                 <div class="gym-grid-menu" id="mem-board" style="grid-template-columns: repeat(4, 1fr);"></div>
-                <button class="submit-btn" style="margin-top: 30px;" onclick="gym.goHome()">Exit Game</button>
+                <button class="submit-btn secondary" style="margin-top: 18px;" onclick="gym.goHome()">
+                    Exit Game
+                </button>
             </div>
 
             <div id="screen-shop" class="gym-screen">
-                <h2 style="text-align:center;">Arcade Shop</h2>
-                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; gap:10px;">
-                    <span>Extra Life (+1 ❤️)</span>
-                    <button class="submit-btn" style="padding: 10px 20px; font-size: 1rem;" onclick="gym.buy('life', 50)">50 🪙</button>
+                <h2 style="text-align:center; margin-top: 0;">Arcade Shop</h2>
+                <p style="text-align:center; opacity:0.7; font-weight:900; margin-top:-6px; margin-bottom: 18px;">
+                    Spend coins to upgrade your run.
+                </p>
+
+                <div style="background: rgba(255,255,255,0.05); padding: 18px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; gap:10px; flex-wrap: wrap;">
+                    <span style="font-weight:1000;">Extra Life (+1 ❤️)</span>
+                    <button class="submit-btn secondary" style="padding: 10px 16px; font-size: 1rem;" onclick="gym.buy('life', 50)">
+                        50 🪙
+                    </button>
                 </div>
-                <button class="submit-btn" style="margin-top: auto;" onclick="gym.goHome()">Back</button>
+
+                <div style="background: rgba(255,255,255,0.05); padding: 18px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; gap:10px; flex-wrap: wrap; margin-top: 12px;">
+                    <span style="font-weight:1000;">Freeze Time (+5s)</span>
+                    <button class="submit-btn secondary" style="padding: 10px 16px; font-size: 1rem;" onclick="gym.buy('freeze', 60)">
+                        60 🪙
+                    </button>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.05); padding: 18px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; gap:10px; flex-wrap: wrap; margin-top: 12px;">
+                    <span style="font-weight:1000;">Reveal One Hint</span>
+                    <button class="submit-btn secondary" style="padding: 10px 16px; font-size: 1rem;" onclick="gym.buy('hint', 40)">
+                        40 🪙
+                    </button>
+                </div>
+
+                <button class="submit-btn" style="margin-top: 18px;" onclick="gym.goHome()">Back</button>
             </div>
+
         </div>
     </div>
 
     <script>
+        /* =========================================
+           0. Small helpers
+           ========================================= */
+        function scrollToId(id){
+            document.querySelector(id)?.scrollIntoView({behavior:'smooth', block:'start'});
+        }
+
+        function copyText(text, okMsg){
+            navigator.clipboard?.writeText(String(text)).then(()=>{
+                alert(okMsg + " ✅");
+            }).catch(()=>{
+                alert("Copy failed. Please copy manually.");
+            });
+        }
+
         /* =========================================
            1. FULL TIMETABLE DATA (1A - 8B)
            ========================================= */
@@ -725,7 +1315,7 @@
 
             const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
             days.forEach(day => {
-                html += `<tr><td style="background:#f1f5f9; font-weight:700;">${day}</td>`;
+                html += `<tr><td style="background:#f1f5f9; font-weight:1000;">${day}</td>`;
                 const subs = data[day] || [];
                 for (let i = 0; i < 7; i++) {
                     html += `<td>${subs[i] || '-'}</td>`;
@@ -738,10 +1328,63 @@
         }
 
         picker.onchange = renderTimetable;
+
+        function getTimetableText(){
+            const section = picker.value;
+            const data = timetableData[section];
+            const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+            let lines = [];
+            lines.push("SOS Jimma Primary School - Timetable");
+            lines.push("Section: " + section);
+            lines.push("--------------------------------------");
+            days.forEach(day=>{
+                lines.push(day + ":");
+                const subs = data[day] || [];
+                for(let i=0;i<7;i++){
+                    lines.push("  Period " + (i+1) + ": " + (subs[i] || "-"));
+                }
+                lines.push("");
+            });
+            return lines.join("\n");
+        }
+
+        function downloadTimetableAsText(){
+            const text = getTimetableText();
+            const blob = new Blob([text], {type:'text/plain;charset=utf-8'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = "SOS-Jimma-Timetable-" + picker.value + ".txt";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        }
+
+        function printTimetable(){
+            const original = document.body.innerHTML;
+            const timetableHTML = `
+                <html>
+                <head>
+                    <title>Print Timetable</title>
+                </head>
+                <body>
+                    <h2 style="font-family:sans-serif; color:#1e40af; text-align:center;">SOS Jimma Primary School - Timetable</h2>
+                    <p style="font-family:sans-serif; text-align:center; font-weight:900;">Section: ${picker.value}</p>
+                    <div>${tableBox.innerHTML}</div>
+                    <script>window.onload = () => window.print();<\/script>
+                </body>
+                </html>
+            `;
+            document.body.innerHTML = timetableHTML;
+            window.print();
+            document.body.innerHTML = original;
+        }
+
         window.onload = initSite;
 
         /* =========================================
-           Contact form enhancement (no backend)
+           2. Contact form enhancement (no backend)
            ========================================= */
         function handleContactSubmit(e) {
             e.preventDefault();
@@ -750,39 +1393,210 @@
             const msg = document.getElementById('contactMessage').value.trim();
             const status = document.getElementById('contactStatus');
 
+            const submitBtn = document.getElementById('contactSubmitBtn');
+            const submitText = document.getElementById('contactSubmitText');
+
+            status.style.color = "#64748b";
+            status.textContent = "";
+
+            // Basic validation
             if (!name || !email || !msg) {
                 status.style.color = "var(--danger)";
                 status.innerText = "Please fill all fields.";
                 return false;
             }
+            if (!/^\S+@\S+\.\S+$/.test(email)) {
+                status.style.color = "var(--danger)";
+                status.innerText = "Please enter a valid email address.";
+                return false;
+            }
 
-            // This is frontend-only. Replace with real API later.
-            status.style.color = "var(--success)";
-            status.innerText = "Thanks! Your message has been prepared. (Add backend to send emails/DB.)";
-            e.target.reset();
+            // Frontend-only "prepare" behavior
+            submitBtn.disabled = true;
+            submitText.textContent = "Preparing...";
+
+            const prepared = {
+                name,
+                email,
+                message: msg,
+                time: new Date().toLocaleString()
+            };
+
+            setTimeout(() => {
+                submitBtn.disabled = false;
+                submitText.textContent = "Submit Message";
+
+                status.style.color = "var(--success)";
+                status.innerHTML = "<i class='fas fa-check-circle'></i> Thanks! Your message has been prepared. (Frontend demo)";
+                // helpful confirmation
+                console.log("Prepared contact message:", prepared);
+
+                alert(
+                    "Your message is prepared (frontend only).\n\nName: " + prepared.name +
+                    "\nEmail: " + prepared.email +
+                    "\nTime: " + prepared.time +
+                    "\n\nNow you can connect this form to a backend to send real emails/DB."
+                );
+
+                e.target.reset();
+            }, 900);
+
             return false;
         }
 
         /* =========================================
-           2. BRAIN GYM LOGIC (kept)
+           3. Gallery lightbox
+           ========================================= */
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+        const lightboxCaption = document.getElementById('lightboxCaption');
+        const lightboxTitle = document.getElementById('lightboxTitle');
+        const lightboxClose = document.getElementById('lightboxClose');
+
+        function openLightbox(full, cap){
+            lightboxImg.src = full;
+            lightboxCaption.textContent = cap || '';
+            lightboxTitle.textContent = 'Photo Preview';
+            lightbox.classList.add('open');
+            lightbox.setAttribute('aria-hidden', 'false');
+            lightboxClose.focus();
+        }
+        function closeLightbox(){
+            lightbox.classList.remove('open');
+            lightbox.setAttribute('aria-hidden', 'true');
+        }
+        document.querySelectorAll('.gallery-item').forEach(item=>{
+            item.addEventListener('click', ()=>{
+                openLightbox(item.getAttribute('data-full'), item.getAttribute('data-cap'));
+            });
+            item.addEventListener('keydown', (ev)=>{
+                if(ev.key === 'Enter' || ev.key === ' '){
+                    ev.preventDefault();
+                    openLightbox(item.getAttribute('data-full'), item.getAttribute('data-cap'));
+                }
+            });
+        });
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', (ev)=>{
+            if(ev.target === lightbox) closeLightbox();
+        });
+        document.addEventListener('keydown', (ev)=>{
+            if(ev.key === 'Escape') closeLightbox();
+        });
+
+        /* =========================================
+           4. News modal
+           ========================================= */
+        const newsModal = document.getElementById('newsModal');
+        const newsModalTitle = document.getElementById('newsModalTitle');
+        const newsModalType = document.getElementById('newsModalType');
+        const newsModalBody = document.getElementById('newsModalBody');
+
+        function openNewsModal(title, body, type){
+            newsModalTitle.textContent = title;
+            newsModalType.textContent = type || 'News';
+            newsModalBody.textContent = body;
+            newsModal.classList.add('open');
+            newsModal.setAttribute('aria-hidden', 'false');
+        }
+        function closeNewsModal(){
+            newsModal.classList.remove('open');
+            newsModal.setAttribute('aria-hidden', 'true');
+        }
+        newsModal.addEventListener('click', (ev)=>{
+            if(ev.target === newsModal) closeNewsModal();
+        });
+        document.addEventListener('keydown', (ev)=>{
+            if(ev.key === 'Escape') closeNewsModal();
+        });
+
+        /* =========================================
+           5. Events RSVP (frontend only)
+           ========================================= */
+        function handleRSVP(){
+            const name = (document.getElementById('rsvpName').value || '').trim();
+            const phone = (document.getElementById('rsvpPhone').value || '').trim();
+            const eventName = (document.getElementById('rsvpEvent').value || '').trim();
+            const status = document.getElementById('rsvpStatus');
+
+            if(!name || !phone){
+                status.style.color = "var(--danger)";
+                status.textContent = "Please enter your name and phone/WhatsApp.";
+                return;
+            }
+            status.style.color = "var(--success)";
+            status.textContent = "RSVP prepared! Thank you. (Frontend demo)";
+            console.log("RSVP:", {name, phone, eventName, time: new Date().toLocaleString()});
+            alert("RSVP prepared (frontend only).\n\nName: " + name + "\nPhone: " + phone + "\nEvent: " + eventName);
+            document.getElementById('rsvpName').value = "";
+            document.getElementById('rsvpPhone').value = "";
+        }
+
+        /* =========================================
+           6. Mobile nav toggle
+           ========================================= */
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileNav = document.getElementById('mobileNav');
+        if(menuBtn && mobileNav){
+            menuBtn.addEventListener('click', ()=>{
+                const isOpen = mobileNav.classList.toggle('open');
+                menuBtn.setAttribute('aria-expanded', String(isOpen));
+            });
+            mobileNav.querySelectorAll('a').forEach(a=>{
+                a.addEventListener('click', ()=>{
+                    mobileNav.classList.remove('open');
+                    menuBtn.setAttribute('aria-expanded', 'false');
+                });
+            });
+        }
+
+        /* =========================================
+           7. BRAIN GYM LOGIC (upgraded)
            ========================================= */
         function openGame() {
             document.getElementById('gym-modal').style.display = 'flex';
             document.body.classList.add('game-active');
             gym.updateUI();
+            gym.updateDifficultyLabel();
+            gym.updateModeLabel();
+            gym.resumeIfPaused();
+            gym.focusAnswer();
         }
 
         function closeGame() {
             document.getElementById('gym-modal').style.display = 'none';
             document.body.classList.remove('game-active');
             if (gym.timerId) clearInterval(gym.timerId);
+            gym.timerId = null;
+            gym.paused = false;
+            gym.isGameOver = false;
+            gym.currentScreen = 'home';
+            gym.showScreen('screen-home');
         }
 
         const gym = {
-            lives: 3, coins: 0, mode: '', answer: '', timerId: null, timeLeft: 0,
+            lives: 3,
+            coins: 0,
+            mode: '',
+            answer: '',
+            timerId: null,
+            baseSec: 15,
+            timeLeft: 0,
+            paused: false,
+            difficulty: 'Normal',
+            currentScreen: 'home',
+            hintAvailable: 0,
+            freezeAvailable: 0,
+
+            soundEnabled: true,
 
             start: function(mode) {
                 this.mode = mode;
+                this.paused = false;
+                this.isGameOver = false;
+                this.hintAvailable = 0;
+                this.freezeAvailable = 0;
+
                 if(mode === 'memory') {
                     this.showScreen('screen-memory');
                     this.initMemory();
@@ -791,42 +1605,211 @@
                     this.nextTask();
                 }
                 this.updateUI();
+                this.updateModeLabel();
+                this.focusAnswer();
             },
 
-            showScreen: function(id) {
+            resumeIfPaused: function(){
+                this.paused = false;
+                const pauseBtn = document.getElementById('gymPauseBtn');
+                if(pauseBtn){
+                    pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
+                    pauseBtn.setAttribute('aria-label','Pause game');
+                }
+            },
+
+            focusAnswer: function(){
+                setTimeout(()=>{
+                    const inp = document.getElementById('gym-answer-input');
+                    inp && inp.focus && inp.focus();
+                }, 50);
+            },
+
+            setDifficulty: function(d){
+                this.difficulty = d;
+                this.updateDifficultyLabel();
+
+                // Update UI speed feel immediately if playing:
+                // We'll apply on next task/start.
+                if(d === 'Easy') this.baseSec = 20;
+                else if(d === 'Hard') this.baseSec = 10;
+                else this.baseSec = 15;
+            },
+
+            updateDifficultyLabel: function(){
+                const label = document.getElementById('gym-difficulty-label');
+                if(label) label.textContent = this.difficulty;
+                const pauseBtn = document.getElementById('gymPauseBtn');
+                if(pauseBtn) pauseBtn.style.opacity = '1';
+            },
+
+            updateModeLabel: function(){
+                const m = document.getElementById('ui-mode-label');
+                if(m){
+                    const map = {math:'Math', english:'English', memory:'Memory', shop:'Shop'};
+                    m.textContent = map[this.mode] || this.mode || '—';
+                }
+            },
+
+            togglePause: function(){
+                if(this.mode === 'memory'){
+                    alert("Pause is supported mainly for Math/English challenge screen.");
+                    return;
+                }
+                if(this.currentScreen !== 'play') return;
+
+                this.paused = !this.paused;
+                const pauseBtn = document.getElementById('gymPauseBtn');
+                if(pauseBtn){
+                    pauseBtn.innerHTML = this.paused
+                        ? '<i class="fas fa-play"></i> Resume'
+                        : '<i class="fas fa-pause"></i> Pause';
+                }
+
+                if(this.paused){
+                    if(this.timerId) clearInterval(this.timerId);
+                    this.timerId = null;
+                } else {
+                    // resume timer with remaining timeLeft
+                    this.startTimer(this.timeLeft > 0 ? this.timeLeft : (this.baseSec));
+                }
+            },
+
+            showScreen: function(id){
                 document.querySelectorAll('.gym-screen').forEach(s => s.classList.remove('active'));
                 document.getElementById(id).classList.add('active');
+                this.currentScreen =
+                    id === 'screen-play' ? 'play' :
+                    id === 'screen-home' ? 'home' :
+                    id === 'screen-memory' ? 'memory' : 'shop';
             },
 
             nextTask: function() {
                 if(this.lives <= 0) return this.reset();
+                if(this.paused) return;
+
                 document.getElementById('gym-answer-input').value = '';
                 document.getElementById('gym-answer-input').focus();
 
+                // Difficulty affects question complexity
                 if(this.mode === 'math') {
-                    let n1 = Math.floor(Math.random()*20) + 5;
-                    let n2 = Math.floor(Math.random()*15) + 2;
+                    let range1 = this.difficulty === 'Easy' ? 12 : this.difficulty === 'Hard' ? 35 : 25;
+                    let range2 = this.difficulty === 'Easy' ? 10 : this.difficulty === 'Hard' ? 28 : 18;
+
+                    let n1 = Math.floor(Math.random()*range1) + 3;
+                    let n2 = Math.floor(Math.random()*range2) + 2;
+
                     this.answer = String(n1 + n2);
                     document.getElementById('gym-q-text').innerText = `${n1} + ${n2}`;
-                } else {
-                    const eng = [
+
+                    // If hint purchased, show a hint (first digit)
+                    if(this.hintAvailable > 0){
+                        const hint = this.answer.slice(0,1);
+                        document.getElementById('gym-q-label').innerHTML = `CHALLENGE · Hint: starts with <b>${hint}</b>`;
+                        this.hintAvailable--;
+                    } else {
+                        document.getElementById('gym-q-label').textContent = 'CHALLENGE';
+                    }
+                } else if(this.mode === 'english') {
+                    const engEasy = [
                         {q:"Antonym of HARD", a:"SOFT"},
                         {q:"Plural of CHILD", a:"CHILDREN"},
                         {q:"Capital of ETHIOPIA", a:"ADDIS ABABA"}
                     ];
-                    let p = eng[Math.floor(Math.random()*eng.length)];
-                    this.answer = p.a;
+                    const engHard = [
+                        {q:"Antonym of GROW (verb)", a:"SHRINK/REDUCE"},
+                        {q:"Opposite of BRIGHT", a:"DULL/DIM"},
+                        {q:"Plural of CITY", a:"CITIES"},
+                        {q:"Capital of KENYA", a:"NAIROBI"},
+                        {q:"Synonym of START", a:"BEGIN"}
+                    ];
+                    const engNormal = [
+                        {q:"Antonym of HARD", a:"SOFT"},
+                        {q:"Plural of CHILD", a:"CHILDREN"},
+                        {q:"Capital of ETHIOPIA", a:"ADDIS ABABA"},
+                        {q:"Opposite of FAST", a:"SLOW"},
+                        {q:"Plural of BOOK", a:"BOOKS"}
+                    ];
+
+                    let bank = engNormal;
+                    if(this.difficulty === 'Easy') bank = engEasy;
+                    if(this.difficulty === 'Hard') bank = engHard;
+
+                    let p = bank[Math.floor(Math.random()*bank.length)];
+                    // Accept multiple answers separated by '/'
+                    this.answer = p.a.toUpperCase();
+
                     document.getElementById('gym-q-text').innerText = p.q;
+
+                    if(this.hintAvailable > 0){
+                        // Show first letter of first possible answer
+                        const first = this.answer.split('/')[0].trim();
+                        document.getElementById('gym-q-label').innerHTML = `CHALLENGE · Hint: first letter <b>${first[0]}</b>`;
+                        this.hintAvailable--;
+                    } else {
+                        document.getElementById('gym-q-label').textContent = 'CHALLENGE';
+                    }
                 }
-                this.startTimer(15);
+
+                // timer length depends on difficulty
+                const sec = this.baseSec;
+                this.startTimer(sec);
+            },
+
+            normalizeEnglishAnswer: function(input){
+                return (input || '').toUpperCase().trim().replace(/\s+/g,' ');
+            },
+
+            startTimer: function(sec) {
+                if(this.timerId) clearInterval(this.timerId);
+                let bar = document.getElementById('gym-timer-bar');
+                let width = 100;
+
+                this.timeLeft = sec;
+
+                this.timerId = setInterval(() => {
+                    if(this.paused) return;
+                    this.timeLeft -= 1;
+
+                    // width based on remaining time
+                    width = (this.timeLeft / sec) * 100;
+                    bar.style.width = Math.max(width, 0) + "%";
+
+                    if(this.timeLeft <= 0) {
+                        clearInterval(this.timerId);
+                        this.timerId = null;
+                        this.lives--;
+                        this.updateUI();
+                        if(this.lives <= 0) this.reset();
+                        else this.nextTask();
+                    }
+                }, 1000);
             },
 
             checkAnswer: function() {
-                let val = document.getElementById('gym-answer-input').value.toUpperCase().trim();
-                if(val === this.answer) {
-                    this.coins += 15;
+                if(this.paused) return;
+                if(this.lives <= 0) return this.reset();
+
+                let input = document.getElementById('gym-answer-input').value;
+                let val = (input || '').toUpperCase().trim().replace(/\s+/g,' ');
+
+                let isCorrect = false;
+
+                if(this.mode === 'math'){
+                    isCorrect = (val === this.answer);
+                } else if(this.mode === 'english'){
+                    // this.answer may contain "/" accepted variants
+                    const answers = this.answer.split('/').map(x=>x.trim());
+                    isCorrect = answers.includes(val) || answers.some(a=>a.includes(val)) || answers.some(a=>val.includes(a));
+                }
+
+                if(isCorrect) {
+                    const bonus = this.difficulty === 'Hard' ? 25 : this.difficulty === 'Easy' ? 10 : 15;
+                    this.coins += (this.timeLeft > 7 ? 15 : 10) + bonus/5; // small extra feel
+                    this.playSfx('correct');
                     this.nextTask();
                 } else {
+                    this.playSfx('wrong');
                     this.lives--;
                     this.updateUI();
                     if(this.lives <= 0) this.reset();
@@ -835,37 +1818,69 @@
                 this.updateUI();
             },
 
-            startTimer: function(sec) {
-                if(this.timerId) clearInterval(this.timerId);
-                let bar = document.getElementById('gym-timer-bar');
-                let width = 100;
-                this.timerId = setInterval(() => {
-                    width -= (100 / (sec * 10));
-                    bar.style.width = width + "%";
-                    if(width <= 0) {
-                        clearInterval(this.timerId);
-                        this.timerId = null;
-                        this.lives--;
-                        this.updateUI();
-                        this.nextTask();
+            playSfx: function(kind){
+                try{
+                    if(!this.soundEnabled) return;
+                    // simple beep using WebAudio (no external assets)
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                    if(!AudioCtx) return;
+                    const ctx = new AudioCtx();
+                    const o = ctx.createOscillator();
+                    const g = ctx.createGain();
+                    o.connect(g);
+                    g.connect(ctx.destination);
+
+                    const now = ctx.currentTime;
+                    if(kind === 'correct'){
+                        o.type = 'triangle';
+                        o.frequency.setValueAtTime(740, now);
+                        g.gain.setValueAtTime(0.0001, now);
+                        g.gain.exponentialRampToValueAtTime(0.08, now+0.01);
+                        g.gain.exponentialRampToValueAtTime(0.0001, now+0.12);
+                        o.start(now);
+                        o.stop(now+0.13);
+                    }else{
+                        o.type = 'sawtooth';
+                        o.frequency.setValueAtTime(220, now);
+                        g.gain.setValueAtTime(0.0001, now);
+                        g.gain.exponentialRampToValueAtTime(0.08, now+0.01);
+                        g.gain.exponentialRampToValueAtTime(0.0001, now+0.12);
+                        o.start(now);
+                        o.stop(now+0.13);
                     }
-                }, 100);
+                    setTimeout(()=>{ ctx.close && ctx.close(); }, 250);
+                }catch(err){
+                    // ignore
+                }
             },
 
             initMemory: function() {
-                const icons = ['🍎','🍎','🚀','🚀','⚡','⚡','⚽','⚽','💎','💎','🌈','🌈']
-                    .sort(() => 0.5 - Math.random());
-
                 const board = document.getElementById('mem-board');
                 board.innerHTML = '';
+
+                // Difficulty affects memory grid size
+                const pairs = this.difficulty === 'Easy' ? 6 : this.difficulty === 'Hard' ? 10 : 8; // pairs
+                const iconsPool = ['🍎','🍎','🚀','🚀','⚡','⚡','⚽','⚽','💎','💎','🌈','🌈','🎵','🎵','📚','📚','🏆','🏆','🧠','🧠','🎯','🎯','🍀','🍀'];
+
+                const icons = iconsPool.slice(0, pairs*2).sort(() => 0.5 - Math.random());
+
+                // Adjust grid columns for many cards
+                const cols = this.difficulty === 'Hard' ? 5 : 4;
+                board.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+
                 let flipped = [];
+                let lock = false;
 
                 icons.forEach(icon => {
                     let card = document.createElement('div');
                     card.className = 'gym-card-btn';
-                    card.style.fontSize = "2rem";
-                    card.style.minHeight = "86px";
+                    card.style.fontSize = "2.1rem";
+                    card.style.minHeight = "78px";
+                    card.style.background = "rgba(255,255,255,0.05)";
+                    card.style.borderColor = "rgba(255,255,255,0.1)";
+
                     card.onclick = () => {
+                        if(lock) return;
                         if(card.innerText || flipped.length >= 2) return;
 
                         card.innerText = icon;
@@ -873,59 +1888,132 @@
                         flipped.push(card);
 
                         if(flipped.length === 2) {
+                            lock = true;
+
                             if(flipped[0].innerText === flipped[1].innerText) {
-                                this.coins += 25;
-                                flipped = [];
-                                this.updateUI();
+                                this.coins += 18;
+                                this.playSfx('correct');
+                                setTimeout(()=>{
+                                    flipped.forEach(c=>{
+                                        c.style.opacity = '0.7';
+                                        c.style.pointerEvents = 'none';
+                                    });
+                                    flipped = [];
+                                    lock = false;
+
+                                    // Win condition: no face-down cards left
+                                    const remaining = Array.from(board.children).some(c=>!c.innerText || c.innerText==='');
+                                    if(!remaining){
+                                        alert("Memory complete! Coins: " + this.coins);
+                                        this.goHome();
+                                    }
+                                    this.updateUI();
+                                }, 450);
                             } else {
-                                setTimeout(() => {
+                                this.playSfx('wrong');
+                                setTimeout(()=>{
                                     flipped.forEach(c => {
                                         c.innerText = '';
                                         c.style.background = "rgba(255,255,255,0.05)";
                                     });
                                     flipped = [];
-                                }, 600);
+                                    lock = false;
+                                }, 700);
                             }
                         }
                     };
+
                     board.appendChild(card);
                 });
             },
 
-            toggleShop: function() { this.showScreen('screen-shop'); },
+            toggleShop: function() {
+                this.showScreen('screen-shop');
+                this.updateUI();
+            },
+
             buy: function(item, cost) {
-                if(this.coins >= cost) {
-                    this.coins -= cost;
-                    if(item === 'life') this.lives++;
-                    this.updateUI();
-                } else {
+                if(this.coins < cost){
                     alert("Not enough coins!");
+                    return;
                 }
+                this.coins -= cost;
+
+                if(item === 'life') this.lives++;
+                if(item === 'freeze') this.freezeAvailable++;
+                if(item === 'hint') this.hintAvailable++;
+
+                // If freeze is bought during play, extend current timer
+                if(item === 'freeze' && this.currentScreen === 'play'){
+                    this.timeLeft = Math.min(this.baseSec + 5, this.timeLeft + 5);
+                    this.startTimer(this.timeLeft);
+                }
+
+                this.playSfx('correct');
+                this.updateUI();
             },
 
             updateUI: function() {
                 document.getElementById('ui-lives').innerText = this.lives;
                 document.getElementById('ui-coins').innerText = this.coins;
+                this.updateModeLabel();
             },
 
             goHome: function() {
                 if(this.timerId) clearInterval(this.timerId);
                 this.timerId = null;
+                this.paused = false;
                 this.showScreen('screen-home');
                 this.updateUI();
             },
 
             reset: function() {
                 alert("Game Over! Total Coins: " + this.coins);
-                this.lives = 3; this.coins = 0;
+                this.lives = 3;
+                this.coins = 0;
+                this.hintAvailable = 0;
+                this.freezeAvailable = 0;
                 this.updateUI();
                 this.goHome();
             }
         };
 
-        // Input listener
+        /* Sound toggle */
+        const gymSoundToggle = document.getElementById('gymSoundToggle');
+        if(gymSoundToggle){
+            gymSoundToggle.addEventListener('change', (e)=>{
+                gym.soundEnabled = !!e.target.checked;
+                try{ gymSoundToggle.blur(); }catch(_){}
+            });
+        }
+
+        /* Pause/resume button in modal should show correct icon */
+        document.getElementById('gymPauseBtn')?.addEventListener('keydown', (e)=>{
+            if(e.key === 'Enter') e.target.click();
+        });
+
+        /* Input listener for Enter key */
         document.getElementById('gym-answer-input')
-            .addEventListener('keypress', (e) => { if(e.key === 'Enter') gym.checkAnswer(); });
+            .addEventListener('keypress', (e) => {
+                if(e.key === 'Enter') gym.checkAnswer();
+            });
+
+        /* Close modal on click outside container (nice UX) */
+        document.getElementById('gym-modal').addEventListener('click', (ev)=>{
+            if(ev.target && ev.target.id === 'gym-modal') closeGame();
+        });
+
+        /* Ensure game modal can be closed with Escape */
+        document.addEventListener('keydown', (e)=>{
+            if(e.key === 'Escape'){
+                const modal = document.getElementById('gym-modal');
+                if(modal && modal.style.display === 'flex') closeGame();
+            }
+        });
+
+        /* Set default difficulty timers */
+        gym.setDifficulty('Normal');
+        gym.updateDifficultyLabel();
     </script>
 </body>
 </html>
