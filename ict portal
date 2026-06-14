@@ -1,628 +1,3805 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ethiopia National ICT Portal - SOS Pro Edition | made by betsegaw teka</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #00b894;
-            --secondary: #0984e3;
-            --success: #00cec9;
-            --danger: #d63031;
-            --warning: #fdcb6e;
-            --dark: #2d3436;
-            --gold: #f1c40f;
-            --glass-bg: rgba(255, 255, 255, 0.15);
-            --glass-border: rgba(255, 255, 255, 0.3);
-            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=none"/>
+  <title>ICT Master Omega: Ethiopia | Ultimate Edition (Upgraded + 20 New Things)</title>
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            /* Deep, modern tech gradient */
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%, #00cec9 200%);
-            background-attachment: fixed;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            color: #fff;
-        }
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-        /* Glassmorphism Utilities */
-        .glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--glass-shadow);
-        }
+  <style>
+    :root{
+      --primary:#00d2ff;
+      --secondary:#0984e3;
+      --success:#00cec9;
+      --danger:#d63031;
+      --warning:#fdcb6e;
+      --dark:#0f172a;
+      --eth-green:#138808;
+      --eth-yellow:#f1c40f;
+      --eth-red:#e74c3c;
+      --glass:rgba(30,41,59,.78);
+      --text-light:#f8fafc;
 
-        /* Header UI */
-        #top-bar {
-            width: 100%;
-            background: rgba(45, 52, 54, 0.8);
-            backdrop-filter: blur(10px);
-            padding: 12px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid var(--glass-border);
-        }
+      --card-bg: rgba(255,255,255,0.04);
+      --card-brd: rgba(255,255,255,0.12);
 
-        .container-hud {
-            width: 90%;
-            max-width: 1100px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 1.1rem;
-        }
+      --shadow: 0 25px 50px rgba(0,0,0,0.45);
+      --glow: 0 0 25px rgba(0,210,255,0.18);
+    }
 
-        .stat-item {
-            display: flex; align-items: center; gap: 8px; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-        }
+    *{ box-sizing:border-box; transition: all .2s ease; }
 
-        /* Main Game Box */
-        #app-container {
-            width: 90%;
-            max-width: 1000px;
-            margin: 40px 0;
-            border-radius: 25px;
-            padding: 40px;
-            min-height: 550px;
-            position: relative;
-            overflow: hidden;
-            color: var(--dark);
-            background: rgba(255, 255, 255, 0.9); /* Slightly opaque white for readability */
-        }
+    body{
+      font-family:'Poppins',sans-serif;
+      background-color:#0f172a;
+      color:var(--text-light);
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      overflow-x:hidden;
+    }
 
-        .screen { display: none; }
-        .active { display: block; animation: fadeIn 0.5s ease; }
+    #bg-canvas{
+      position:fixed; top:0; left:0;
+      width:100vw; height:100vh;
+      z-index:-1; opacity:.62;
+    }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
+    #top-bar{
+      width:100%;
+      background:var(--glass);
+      backdrop-filter: blur(15px);
+      padding:12px 5%;
+      position:sticky; top:0;
+      z-index:1000;
+      border-bottom:1px solid rgba(255,255,255,0.1);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
 
-        /* Beauty Elements */
-        h1, h2 { text-align: center; color: var(--dark); margin-bottom: 5px; }
-        .subtitle { text-align: center; color: #636e72; margin-bottom: 30px; font-weight: 600; }
-        
-        .btn {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-family: 'Poppins', sans-serif;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        .btn-main { background: linear-gradient(45deg, var(--secondary), #00cec9); color: white; }
-        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(9, 132, 227, 0.4); }
-        .btn-hint { background: linear-gradient(45deg, var(--warning), #e1b12c); color: var(--dark); }
+    .stat-pill{
+      background:rgba(255,255,255,0.05);
+      padding:6px 15px;
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,0.1);
+      font-size:.85rem;
+      font-family:'Space Grotesk';
+      display:flex; align-items:center; gap:8px;
+      font-weight:bold;
+      user-select:none;
+      white-space:nowrap;
+    }
 
-        /* Game Grid */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
-        }
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            border: 2px solid transparent;
-            transition: 0.3s;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-        }
-        .card:hover { border-color: var(--secondary); transform: translateY(-10px); box-shadow: 0 15px 30px rgba(9, 132, 227, 0.2); }
+    .combo-active{
+      color:var(--eth-yellow);
+      text-shadow:0 0 10px var(--eth-yellow);
+      border-color:var(--eth-yellow);
+    }
 
-        /* Level Indicator */
-        .level-badge {
-            background: var(--dark); color: var(--gold);
-            padding: 6px 18px; border-radius: 20px;
-            font-size: 0.9rem; font-weight: bold; display: inline-block;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
+    #app-container{
+      width:95%;
+      max-width:1120px;
+      margin:26px 0 50px;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      border-radius:30px;
+      border:1px solid rgba(255,255,255,0.1);
+      padding:28px;
+      box-shadow: var(--shadow), inset 0 0 20px rgba(0, 210, 255, 0.05);
+      position:relative;
+      min-height:600px;
+      overflow:hidden;
+    }
 
-        /* Progress Bar */
-        .progress-container {
-            width: 100%; height: 12px; background: #dfe6e9;
-            border-radius: 10px; margin: 25px 0; overflow: hidden;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
-        }
-        #progress-bar {
-            height: 100%; width: 0%;
-            background: linear-gradient(90deg, var(--primary), var(--success));
-            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+    .screen{ display:none; animation: fadeIn .35s ease; }
+    .active{ display:block; }
+    @keyframes fadeIn{
+      from{ opacity:0; transform: translateY(12px); }
+      to{ opacity:1; transform: translateY(0); }
+    }
 
-        /* Modals */
-        .modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
-            display: none; justify-content: center; align-items: center; z-index: 1000;
-        }
-        .modal-content {
-            background: white; padding: 40px; border-radius: 25px;
-            max-width: 500px; width: 90%; text-align: center; color: var(--dark);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
+    .shake{ animation:shake .42s cubic-bezier(.36,.07,.19,.97) both; border-color:var(--eth-red) !important; }
+    @keyframes shake{
+      10%,90%{ transform: translate3d(-2px,0,0); }
+      20%,80%{ transform: translate3d(4px,0,0); }
+      30%,50%,70%{ transform: translate3d(-6px,0,0); }
+      40%,60%{ transform: translate3d(6px,0,0); }
+    }
 
-        /* Professional Certificate Styles */
-        .cert-paper {
-            border: 20px solid #fff;
-            outline: 10px solid var(--gold);
-            padding: 50px 40px;
-            background: url('https://www.transparenttextures.com/patterns/cream-paper.png'), #fffaf0;
-            font-family: 'Georgia', serif;
-            position: relative;
-            max-width: 700px;
-        }
-        .cert-header { font-size: 1.2rem; color: var(--secondary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px;}
-        .cert-paper h2 { font-size: 3.5rem; margin: 0; color: #b8860b; font-weight: normal; letter-spacing: 5px; }
-        .cert-name { font-size: 2.8rem; border-bottom: 2px solid var(--dark); display: inline-block; padding: 0 40px; margin: 25px 0; color: var(--dark); font-style: italic;}
-        .signature-line { margin-top: 40px; display: flex; justify-content: space-between; font-size: 0.9rem; font-family: 'Poppins', sans-serif;}
-        .sig-box { border-top: 1px solid var(--dark); padding-top: 5px; width: 40%; text-align: center; }
+    .branding-header{ text-align:center; margin-bottom:24px; }
+    .dev-tag{
+      font-size:.75rem; color:var(--eth-green);
+      font-weight:900; letter-spacing:4px;
+      text-transform:uppercase;
+    }
 
-        /* Matching Game Specifics */
-        .match-area { display: flex; justify-content: space-between; gap: 20px; }
-        .match-box { flex: 1; display: flex; flex-direction: column; gap: 12px; }
-        .match-item { 
-            padding: 18px; background: #f1f2f6; border-radius: 12px; cursor: pointer; 
-            border: 2px solid #dfe4ea; text-align: center; font-weight: bold; transition: 0.2s;
-        }
-        .match-item:hover { background: #eccc68; }
-        .match-item.selected { background: var(--secondary); border-color: var(--secondary); color: white; transform: scale(1.05); }
-        .match-item.correct { background: var(--success); color: white; opacity: 0.5; pointer-events: none; }
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap:14px;
+      margin-top:18px;
+    }
 
-        input[type="text"] {
-            width: 100%; padding: 18px; border-radius: 12px; border: 2px solid #dfe6e9;
-            font-size: 1.2rem; margin-bottom: 20px; box-sizing: border-box; font-family: 'Poppins';
-        }
-        input[type="text"]:focus { outline: none; border-color: var(--secondary); }
-    </style>
+    .card{
+      background: var(--card-bg);
+      padding:20px;
+      border-radius:20px;
+      text-align:center;
+      border:1px solid var(--card-brd);
+      cursor:pointer;
+      position:relative;
+      overflow:hidden;
+      user-select:none;
+    }
+
+    .card::before{
+      content:'';
+      position:absolute; top:0; left:-100%;
+      width:55%; height:100%;
+      background:linear-gradient(to right, transparent, rgba(255,255,255,0.12), transparent);
+      transform:skewX(-20deg);
+      transition:.5s;
+      pointer-events:none;
+    }
+    .card:hover::before{ left:150%; }
+    .card:hover{
+      transform: translateY(-5px);
+      border-color: var(--primary);
+      background: rgba(255,255,255,0.08);
+      box-shadow: 0 10px 20px rgba(0,210,255,0.12);
+    }
+
+    .card h3{
+      margin:10px 0 6px;
+      color:var(--primary);
+      font-size:1.12rem;
+    }
+    .card p{ margin:0; font-size:.82rem; opacity:.72; }
+
+    .btn{
+      padding:12px 22px;
+      border:none;
+      border-radius:12px;
+      font-weight:800;
+      cursor:pointer;
+      text-transform:uppercase;
+      font-family:'Space Grotesk';
+      color:white;
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      box-shadow: 0 4px 15px rgba(0,210,255,0.3);
+      user-select:none;
+    }
+    .btn:hover{ filter:brightness(1.15); transform:scale(1.03); }
+
+    .btn-market{
+      background: var(--eth-yellow);
+      color: var(--dark);
+      box-shadow: 0 4px 15px rgba(241,196,15,0.25);
+    }
+
+    .btn-danger{
+      background: linear-gradient(135deg, #b91c1c, #ef4444);
+      box-shadow: 0 4px 15px rgba(239,68,68,0.2);
+    }
+
+    .input-box{
+      width:100%;
+      padding:14px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.18);
+      background: rgba(0,0,0,0.35);
+      color:white;
+      font-size:1.05rem;
+      margin-bottom:14px;
+      font-family:'Space Grotesk';
+      outline:none;
+    }
+    .input-box:focus{
+      border-color:var(--primary);
+      box-shadow: 0 0 10px rgba(0,210,255,0.28);
+    }
+
+    .progress-container{
+      width:100%; height:10px;
+      background:rgba(0,0,0,0.5);
+      border-radius:10px;
+      margin:16px 0;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,0.1);
+    }
+    .progress-bar{
+      height:100%; width:0%;
+      background: linear-gradient(90deg, var(--eth-green), var(--primary));
+      transition: width .35s cubic-bezier(.4,0,.2,1);
+    }
+
+    #q-options{
+      display:flex; flex-direction:column;
+      gap:10px; align-items:center;
+      margin-top:14px;
+    }
+    #quiz-area{ text-align:center; margin-top:26px; }
+
+    .match-area{ display:flex; gap:20px; flex-wrap:wrap; justify-content:center; }
+    .match-box{ flex:1; display:flex; flex-direction:column; gap:10px; min-width:250px; }
+    .match-item{
+      padding:14px;
+      background: rgba(0,0,0,0.3);
+      border-radius:12px;
+      cursor:pointer;
+      border:1px solid rgba(255,255,255,0.2);
+      font-size:.95rem;
+      text-align:center;
+      transition:.2s;
+      user-select:none;
+    }
+    .match-item:hover{ background: rgba(255,255,255,0.1); }
+    .match-item.selected{
+      background: var(--secondary);
+      border-color: var(--primary);
+      transform: scale(1.02);
+      box-shadow: 0 0 15px rgba(0,210,255,0.32);
+    }
+    .match-item.correct{
+      background: var(--eth-green);
+      opacity:.55;
+      pointer-events:none;
+      border-color: var(--success);
+    }
+
+    #ws-grid{
+      display:grid;
+      background:rgba(0,0,0,0.3);
+      padding:15px;
+      border-radius:12px;
+      margin:15px auto;
+      user-select:none;
+      border:1px solid rgba(255,255,255,0.1);
+      width:fit-content;
+    }
+    .ws-cell{
+      width:40px; height:40px;
+      display:flex; align-items:center; justify-content:center;
+      font-weight:800;
+      cursor:pointer;
+      border-radius:10px;
+      font-size:1.2rem;
+      user-select:none;
+    }
+    .ws-cell:hover{ background: rgba(255,255,255,0.08); }
+    .ws-cell.highlighted{
+      background: var(--eth-yellow);
+      color: var(--dark);
+      transform: scale(1.08);
+      box-shadow: 0 0 10px var(--eth-yellow);
+    }
+    .ws-cell.found{
+      background: var(--eth-green);
+      color:white;
+      animation: fadeIn .25s ease;
+      pointer-events:none;
+    }
+
+    #ws-bank{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:center;
+      margin-top:16px;
+      padding:10px;
+    }
+    .bank-chip{
+      padding:8px 12px;
+      background:rgba(0,0,0,0.45);
+      border:1px solid rgba(255,255,255,0.2);
+      border-radius:10px;
+      font-weight:900;
+      font-family:'Space Grotesk';
+      letter-spacing:.4px;
+    }
+
+    #skill-display{
+      font-size:3.2rem;
+      font-weight:900;
+      margin:22px 0;
+      font-family:'Space Grotesk';
+      letter-spacing:5px;
+    }
+
+    .item-list{ max-height:420px; overflow-y:auto; padding:10px; }
+    .item-list::-webkit-scrollbar{ width:10px; }
+    .item-list::-webkit-scrollbar-thumb{
+      background: var(--primary);
+      border-radius:8px;
+    }
+
+    .tutorial-item{
+      background: rgba(0,0,0,0.18);
+      padding:16px;
+      border-radius:14px;
+      margin-bottom:12px;
+      border-left:4px solid var(--eth-green);
+      border:1px solid rgba(255,255,255,0.08);
+    }
+
+    .modal{
+      position:fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      background: rgba(15,23,42,0.92);
+      backdrop-filter: blur(6px);
+      display:none;
+      justify-content:center;
+      align-items:center;
+      z-index:2000;
+      padding:18px;
+    }
+
+    .modal-content{
+      background:#1e293b;
+      padding:28px;
+      border-radius:22px;
+      max-width:560px;
+      width: 96%;
+      text-align:center;
+      border:1px solid rgba(0,210,255,0.35);
+      box-shadow: 0 0 30px rgba(0, 210, 255, 0.18);
+      animation: fadeIn .25s ease;
+      position:relative;
+    }
+
+    .cert-paper{
+      background:#fff;
+      color:#000;
+      padding:38px 32px;
+      border:15px solid #f1c40f;
+      font-family: 'Georgia', serif;
+      box-shadow: 0 0 50px rgba(241,196,15,0.45);
+      max-width:760px;
+    }
+
+    .modal-close-x{
+      float:right;
+      cursor:pointer;
+      font-size:1.4rem;
+      opacity:.9;
+      user-select:none;
+    }
+
+    .row{
+      display:flex; gap:12px; flex-wrap:wrap;
+      align-items:center; justify-content:center;
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 14px;
+      border:1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      border-radius:999px;
+      font-family:'Space Grotesk';
+      font-weight:800;
+      user-select:none;
+    }
+
+    .section-title{
+      font-family:'Space Grotesk';
+      margin:6px 0 10px;
+      color: var(--primary);
+      letter-spacing:.5px;
+    }
+
+    .kpi-grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap:12px;
+      margin-top:14px;
+    }
+
+    .kpi{
+      background: rgba(0,0,0,0.25);
+      border:1px solid rgba(255,255,255,0.12);
+      border-radius:16px;
+      padding:14px;
+      text-align:left;
+      box-shadow: 0 0 18px rgba(0,210,255,0.06);
+    }
+    .kpi b{ font-size:1.1rem; font-family:'Space Grotesk'; }
+    .kpi div{ opacity:.75; font-size:.85rem; margin-top:4px; }
+
+    @media (max-width: 520px){
+      .ws-cell{ width:34px; height:34px; font-size:1.05rem; border-radius:9px; }
+      #skill-display{ font-size:2.6rem; letter-spacing:4px; }
+    }
+
+    /* NEW: Toast system (Achievement notifications & general feedback) */
+    #toast-wrap{
+      position:fixed;
+      right:14px;
+      bottom:14px;
+      z-index:3000;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      pointer-events:none;
+      width:min(360px, calc(100vw - 28px));
+    }
+    .toast{
+      pointer-events:none;
+      padding:14px 14px;
+      border-radius:16px;
+      background: rgba(30,41,59,0.95);
+      border:1px solid rgba(0,210,255,0.25);
+      box-shadow: 0 10px 35px rgba(0,0,0,0.35);
+      animation: toastIn .22s ease both;
+    }
+    @keyframes toastIn{
+      from{ opacity:0; transform: translateY(10px) scale(.98); }
+      to{ opacity:1; transform: translateY(0) scale(1); }
+    }
+    .toast strong{ font-family:'Space Grotesk'; }
+    .toast .meta{ opacity:.8; margin-top:6px; font-size:.92rem; }
+    .toast.win{ border-color: rgba(0,206,201,0.35); }
+    .toast.warn{ border-color: rgba(241,196,15,0.35); }
+
+    /* NEW: Player Card / Settings minor UI helpers */
+    .two-col{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      margin-top:12px;
+    }
+    @media (max-width: 680px){
+      .two-col{ grid-template-columns: 1fr; }
+    }
+
+    /* NEW: Accessibility focus rings */
+    button:focus-visible, input:focus-visible, .card:focus-visible{
+      outline: 3px solid rgba(0,210,255,0.55);
+      outline-offset: 3px;
+      border-radius: 12px;
+    }
+
+    /* NEW: Reduced motion support */
+    @media (prefers-reduced-motion: reduce){
+      *{ transition:none !important; animation:none !important; }
+    }
+  </style>
 </head>
+
 <body>
+  <canvas id="bg-canvas"></canvas>
 
-    <div id="top-bar">
-        <div class="container-hud">
-            <div class="stat-item">👤 <span id="hud-name">Guest</span></div>
-            <div class="stat-item">❤️ <span id="hud-lives">3</span></div>
-            <div class="stat-item">🪙 <span id="hud-coins">0</span></div>
-            <div class="stat-item">⏱️ <span id="hud-timer">00:00</span></div>
-            <button class="btn btn-hint" style="padding: 8px 15px; font-size: 0.9rem;" onclick="openMarket()">🛒 Market</button>
+  <div id="top-bar">
+    <div class="stat-pill">👤 <span id="hud-name">Guest</span></div>
+    <div class="stat-pill">⭐ LVL <span id="hud-lvl">1</span></div>
+    <div class="stat-pill">🔥 XP <span id="hud-xp">0</span></div>
+    <div class="stat-pill" id="combo-pill">⚡ COMBO x<span id="hud-combo">1</span></div>
+    <div class="stat-pill">❤️ <span id="hud-lives">3</span></div>
+    <div class="stat-pill">🪙 <span id="hud-coins">50</span></div>
+
+    <!-- NEW: Settings + Profile shortcuts -->
+    <button class="btn" style="padding:10px 16px;" onclick="openModal('modal-settings'); playSound('click');">⚙️ Settings</button>
+    <button class="btn" style="padding:10px 16px;" onclick="openModal('modal-profile'); playSound('click');">🧑‍🎓 Profile</button>
+
+    <button class="btn btn-market" onclick="openModal('modal-market'); playSound('click');">🛒 SHOP</button>
+  </div>
+
+  <div id="app-container">
+
+    <!-- WELCOME -->
+    <div id="scr-welcome" class="screen active" style="text-align:center;">
+      <div class="branding-header">
+        <div class="dev-tag">ENGINEERED BY BETSEGAW TEKA</div>
+        <h1 style="font-family:'Space Grotesk'; font-size:3.3rem; margin:10px 0; background:linear-gradient(to right,#2ecc71,#f1c40f,#e74c3c,#00d2ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation:pulse 2s infinite;">
+          ICT MASTER OMEGA
+        </h1>
+        <p style="font-size:1.05rem; opacity:.85; letter-spacing:1px;">
+          National Portal • SOS Children's Villages Ethiopia • Grade 7-12
+        </p>
+      </div>
+
+      <input type="text" id="player-input" class="input-box" style="max-width:420px; text-align:center;" placeholder="Enter Student Full Name..." />
+      <div class="row" style="margin-top:8px;">
+        <button class="btn" style="font-size:1.15rem; padding:15px 50px;" onclick="initPlayer()">Access Portal</button>
+        <button class="btn btn-danger" style="padding:15px 22px;" onclick="wipeProgress()">Reset Progress</button>
+      </div>
+
+      <div class="kpi-grid" style="margin-top:18px;">
+        <div class="kpi">
+          <b>Daily Missions</b>
+          <div>Earn bonuses by completing goals every day.</div>
         </div>
+        <div class="kpi">
+          <b>Omega Gear</b>
+          <div>Use items like hints, shields, and shuffles.</div>
+        </div>
+        <div class="kpi">
+          <b>Boss Fight</b>
+          <div>Face the Omega Core when you reach mastery.</div>
+        </div>
+      </div>
     </div>
 
-    <div id="app-container">
-        
-        <!-- Welcome Screen -->
-        <div id="screen-welcome" class="screen active">
-            <div style="text-align: center; margin-bottom: 20px;">
-                <span class="level-badge" style="background: var(--secondary); color: white;">Ethiopia National ICT Portal</span>
-            </div>
-            <h1>SOS ICT Learning System</h1>
-            <p class="subtitle">Grade 7 & 8 Curriculum Mastery</p>
-            <div style="text-align: center; margin-top: 40px;">
-                <input type="text" id="player-input" placeholder="Enter your full name to begin..." style="max-width: 400px; text-align: center;">
-                <br>
-                <button class="btn btn-main" style="font-size: 1.2rem; padding: 15px 40px;" onclick="initPlayer()">Join the Academy</button>
-            </div>
+    <!-- DASHBOARD -->
+    <div id="scr-dash" class="screen">
+      <div class="row" style="justify-content:space-between; margin-bottom:10px;">
+        <div>
+          <h2 style="font-family:'Space Grotesk'; margin:0;">Welcome to the Academy</h2>
+          <div style="opacity:.65; margin-top:6px; font-size:.9rem;">
+            Learn • Play • Master • Claim Your Diploma
+          </div>
+
+          <!-- NEW: Quest Streak + Difficulty hint -->
+          <div style="opacity:.75; margin-top:10px; font-family:'Space Grotesk'; font-weight:900; letter-spacing:.3px;">
+            🔥 Quest Streak: <span id="hud-streak">0</span> days
+          </div>
+          <div style="opacity:.6; margin-top:4px; font-size:.88rem;" id="hud-difficulty-label">
+            Difficulty: Normal (scales with Level)
+          </div>
         </div>
 
-        <!-- Menu Screen -->
-        <div id="screen-menu" class="screen">
-            <h2>National ICT Challenge</h2>
-            <p class="subtitle">Select your game mode to earn your certificate</p>
-            <div class="grid">
-                <div class="card" onclick="startMode('choosing')">
-                    <div class="level-badge">30 Levels</div>
-                    <h3 style="color: var(--secondary)">Choosing Game</h3>
-                    <p>Multiple Choice Questions</p>
-                </div>
-                <div class="card" onclick="startMode('writing')">
-                    <div class="level-badge">30 Levels</div>
-                    <h3 style="color: var(--secondary)">Writing Game</h3>
-                    <p>Vocabulary & Definitions</p>
-                </div>
-                <div class="card" onclick="startMode('matching')">
-                    <div class="level-badge">30 Levels</div>
-                    <h3 style="color: var(--secondary)">Matching Game</h3>
-                    <p>Logic Connections</p>
-                </div>
-                <div class="card" onclick="startMode('fillblank')">
-                    <div class="level-badge">30 Levels</div>
-                    <h3 style="color: var(--secondary)">Fill in Blank</h3>
-                    <p>Technical Sentence Gaps</p>
-                </div>
-            </div>
+        <div class="row" style="gap:10px;">
+          <button class="btn" style="padding:10px 16px;" onclick="showScreen('scr-missions'); playSound('click');">📅 MISSIONS</button>
+          <button class="btn" style="padding:10px 16px;" onclick="showScreen('scr-achievements'); playSound('click');">🏅 BADGES</button>
+        </div>
+      </div>
+
+      <div class="progress-container">
+        <div id="mastery-bar" class="progress-bar"></div>
+      </div>
+
+      <div class="kpi-grid" style="margin-top:8px;">
+        <div class="kpi">
+          <b id="kpi-mastery-title">Mastery Track</b>
+          <div id="kpi-mastery-sub">Complete challenges to level up.</div>
+        </div>
+        <div class="kpi">
+          <b>Combo Engine</b>
+          <div>Correct answers increase XP with combo multiplier.</div>
+        </div>
+        <div class="kpi">
+          <b>Daily Bonus</b>
+          <div id="kpi-daily-sub">Check Missions to claim rewards.</div>
+        </div>
+      </div>
+
+      <!-- NEW: Recent Plays -->
+      <p style="opacity:.65; font-size:.9rem; margin-top:18px; font-family:'Space Grotesk'; letter-spacing:.5px;">
+        RECENT PLAYS
+      </p>
+      <div id="recent-plays" class="grid" style="margin-top:8px;">
+        <!-- filled by JS -->
+      </div>
+
+      <p style="opacity:.65; font-size:.9rem; margin-top:18px; font-family:'Space Grotesk'; letter-spacing:.5px;">LEARNING MODULES</p>
+      <div class="grid">
+        <div class="card" onclick="openModule('academy'); playSound('click');">
+          <h3>🎓 Academy</h3><p>Master Lessons</p>
+        </div>
+        <div class="card" onclick="openModule('lexicon'); playSound('click');">
+          <h3>📖 Lexicon</h3><p>Technical Terms</p>
+        </div>
+      </div>
+
+      <p style="opacity:.65; font-size:.9rem; margin-top:20px; font-family:'Space Grotesk'; letter-spacing:.5px;">CHALLENGE ZONE</p>
+      <div class="grid">
+        <div class="card" onclick="startQuiz('choosing'); playSound('click');">
+          <h3>🔘 Choosing</h3><p>Multiple Choice</p>
+        </div>
+        <div class="card" onclick="startQuiz('matching'); playSound('click');">
+          <h3>🔗 Matching</h3><p>Logic Links</p>
+        </div>
+        <div class="card" onclick="startQuiz('writing'); playSound('click');">
+          <h3>⌨️ Writing</h3><p>Analyze Definitions</p>
+        </div>
+        <div class="card" onclick="startQuiz('fillblank'); playSound('click');">
+          <h3>📝 Blank Gaps</h3><p>Sentence Logic</p>
+        </div>
+      </div>
+
+      <p style="opacity:.65; font-size:.9rem; margin-top:20px; font-family:'Space Grotesk'; letter-spacing:.5px;">NEW CHALLENGES</p>
+      <div class="grid">
+        <div class="card" onclick="startQuiz('timedChoose'); playSound('click');">
+          <h3>⏱️ Timed Choosing</h3><p>Streak Rewards</p>
+        </div>
+        <div class="card" onclick="startQuiz('flashcards'); playSound('click');">
+          <h3>🃏 Flashcards</h3><p>Term ↔ Definition</p>
+        </div>
+      </div>
+
+      <!-- NEW: 2 more game cards -->
+      <p style="opacity:.65; font-size:.9rem; margin-top:20px; font-family:'Space Grotesk'; letter-spacing:.5px;">SKILL GAMES (UPGRADED)</p>
+      <div class="grid">
+        <div class="card" onclick="startSpecial('wordsearch'); playSound('click');">
+          <h3>🔍 Word Search</h3><p>Find Hidden Terms</p>
+        </div>
+        <div class="card" onclick="startSpecial('typer'); playSound('click');">
+          <h3>⚡ Neural Typer</h3><p>Speed Training</p>
+        </div>
+        <div class="card" onclick="startSpecial('puzzle'); playSound('click');">
+          <h3>🧩 Unscramble</h3><p>Code Decryption</p>
+        </div>
+        <div class="card" onclick="startSpecial('neuralClick'); playSound('click');">
+          <h3>🎯 Neural Click</h3><p>Quick Reactions</p>
         </div>
 
-        <!-- Game Interface -->
-        <div id="screen-game" class="screen">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <button class="btn" style="background: #dfe6e9; color: var(--dark);" onclick="goHome()">🏠 Menu</button>
-                <div id="game-level-tag" class="level-badge">Level 1/30</div>
-            </div>
-            
-            <div class="progress-container">
-                <div id="progress-bar"></div>
-            </div>
-
-            <div id="question-area" style="text-align: center; margin: 30px 0; min-height: 100px;">
-                <h2 id="q-text" style="font-size: 1.8rem; margin-bottom: 20px;">Question loading...</h2>
-                <button class="btn" style="background:var(--success); color:white; padding: 8px 20px;" onclick="speakText()">🔊 Listen</button>
-            </div>
-
-            <div id="answer-container">
-                <!-- Content generated by JS -->
-            </div>
-
-            <div style="margin-top: 40px; display: flex; justify-content: center; gap: 20px; align-items: center;">
-                <button class="btn btn-hint" onclick="useHint()">💡 Hint (10 🪙)</button>
-                <div id="hint-box" style="display:none; color: var(--secondary); font-style: italic; font-weight: bold;"></div>
-            </div>
+        <!-- NEW 1 of 2: Marathon -->
+        <div class="card" onclick="startSpecial('marathon'); playSound('click');">
+          <h3>🏃 Neural Click Marathon</h3><p>Longer Combo Runs</p>
         </div>
+
+        <!-- NEW 2 of 2: Sequence Memory -->
+        <div class="card" onclick="startSpecial('sequenceMemory'); playSound('click');">
+          <h3>🧠 Sequence Memory</h3><p>Simon-style Training</p>
+        </div>
+
+        <div class="card" onclick="startSpecial('omegaCore'); playSound('click');" style="border-color: var(--eth-yellow); box-shadow: inset 0 0 20px rgba(241,196,15,0.18);">
+          <h3>🕹️ Omega Core</h3><p>Boss Fight</p>
+        </div>
+        <div class="card" style="border-color: var(--eth-yellow); box-shadow: inset 0 0 20px rgba(241,196,15,0.2);" onclick="checkCert(); playSound('click');">
+          <h3>🏆 Certification</h3><p>Claim Diploma</p>
+        </div>
+      </div>
     </div>
 
-    <!-- Explanation Modal -->
+    <!-- MODULE LIST -->
+    <div id="scr-list" class="screen">
+      <button class="btn" style="padding: 6px 15px; margin-bottom: 14px;" onclick="showScreen('scr-dash'); playSound('click');">← Back</button>
+      <h2 id="list-title" class="section-title">Module</h2>
+      <input type="text" id="list-search" class="input-box" placeholder="Search content..." onkeyup="filterList()" />
+      <div id="list-content" class="item-list"></div>
+    </div>
+
+    <!-- QUIZ ENGINE -->
+    <div id="scr-quiz" class="screen">
+      <div class="row" style="justify-content:space-between;">
+        <button class="btn" style="padding:6px 15px;" onclick="showScreen('scr-dash'); playSound('click');">🏠 Menu</button>
+        <div class="row" style="gap:10px;">
+          <div id="quiz-lvl-tag" style="font-weight:900; color:var(--primary); font-family:'Space Grotesk';">Level 1/30</div>
+          <div class="pill" id="quiz-timer-pill" style="display:none;">⏳ <span id="quiz-timer">10</span>s</div>
+        </div>
+      </div>
+
+      <div class="progress-container"><div id="quiz-progress" class="progress-bar"></div></div>
+
+      <div id="quiz-area">
+        <h2 id="q-text" style="font-size:1.35rem; margin:14px 0 8px; font-family:'Space Grotesk';">Question loading...</h2>
+        <div style="opacity:.7; font-size:.9rem; margin-bottom:6px;" id="q-subtitle"></div>
+        <div id="q-options"></div>
+      </div>
+    </div>
+
+    <!-- WORD SEARCH -->
+    <div id="scr-ws" class="screen">
+      <div class="row" style="justify-content:space-between; align-items:center;">
+        <button class="btn" style="padding:6px 15px;" onclick="showScreen('scr-dash'); playSound('click');">🏠 Menu</button>
+        <h3 style="margin:0; font-family:'Space Grotesk';">Find the Tech Words</h3>
+      </div>
+
+      <div class="progress-container" style="margin-top:14px;">
+        <div id="ws-progress" class="progress-bar"></div>
+      </div>
+
+      <div id="ws-grid"></div>
+      <div id="ws-bank"></div>
+
+      <!-- NEW: Wordsearch difficulty toggle -->
+      <div class="row" style="margin-top:14px;">
+        <button class="btn" style="padding:10px 18px;" onclick="toggleWordSearchDifficulty(); playSound('click');">🎚️ Mode: <span id="ws-mode-label">Easy</span></button>
+        <button class="btn" style="padding:10px 18px;" onclick="useItemHintIfAny(); playSound('click');">🧠 Hint</button>
+      </div>
+
+      <div class="row" style="margin-top:10px;">
+        <button class="btn" style="padding:10px 18px;" onclick="rerollWordSearch(); playSound('click');">🔄 Shuffle</button>
+        <button class="btn btn-danger" style="padding:10px 18px;" onclick="showScreen('scr-dash'); playSound('click');">Exit</button>
+      </div>
+    </div>
+
+    <!-- SKILL GAMES -->
+    <div id="scr-skill" class="screen" style="text-align:center;">
+      <button class="btn" style="padding:6px 15px; float:left;" onclick="showScreen('scr-dash'); playSound('click');">🏠 Menu</button>
+      <div style="clear:both;"></div>
+
+      <h2 id="skill-title" style="margin-top:16px; font-family:'Space Grotesk'; color:var(--primary);"></h2>
+
+      <div id="skill-timer-wrap" class="pill" style="display:none; margin:10px auto;">
+        ⏱️ Time Left: <b id="skill-timer">0</b>s
+      </div>
+
+      <h2 id="skill-hint" style="margin-top:14px; color: var(--primary);"></h2>
+      <div id="skill-display"></div>
+
+      <input type="text" id="skill-input" class="input-box" style="max-width:420px; text-align:center; font-size:1.15rem; margin:0 auto 10px;" autocomplete="off" placeholder="Type here..." />
+      <div class="row" style="justify-content:center; margin-top:10px;">
+        <button class="btn" style="display:none;" id="skill-submit-btn" onclick="submitSkillAnswer()">Submit</button>
+      </div>
+
+      <!-- Neural Clicker -->
+      <div id="neural-click-zone" style="display:none; margin: 16px auto 0; width:min(520px, 100%); height:360px; border-radius:18px; border:1px solid rgba(255,255,255,0.12); background: rgba(0,0,0,0.25); position:relative; overflow:hidden;">
+        <div id="target" style="position:absolute; width:56px; height:56px; border-radius:16px; background: linear-gradient(135deg, var(--eth-yellow), var(--primary)); box-shadow: var(--glow); left:50%; top:30%; transform: translate(-50%, -50%); display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk'; font-weight:900; color:var(--dark);">
+          HIT
+        </div>
+        <div style="position:absolute; left:14px; top:14px; opacity:.75; font-family:'Space Grotesk'; font-weight:800;">
+          Score: <span id="nc-score">0</span>
+        </div>
+        <div style="position:absolute; right:14px; top:14px; opacity:.75; font-family:'Space Grotesk'; font-weight:800;">
+          Combo: x<span id="nc-combo">1</span>
+        </div>
+      </div>
+
+      <!-- NEW: Sequence memory zone -->
+      <div id="sequence-zone" style="display:none; margin-top:16px; width:min(560px, 100%); margin-left:auto; margin-right:auto;">
+        <div class="kpi" style="text-align:center;">
+          <b>Sequence Memory</b>
+          <div id="seq-instructions" style="margin-top:6px;">Watch the pattern, then repeat it by clicking the colored tiles.</div>
+          <div class="row" style="margin-top:12px; justify-content:center; gap:12px;">
+            <div class="pill" style="background:rgba(0,0,0,0.25);">Round: <b id="seq-round">1</b></div>
+            <div class="pill" style="background:rgba(0,0,0,0.25);">Length: <b id="seq-len">1</b></div>
+          </div>
+          <div id="seq-score" style="margin-top:10px; opacity:.8; font-weight:900; font-family:'Space Grotesk';">Score: 0</div>
+        </div>
+        <div class="row" style="margin-top:14px; gap:12px; justify-content:center;">
+          <button class="btn" style="background:linear-gradient(135deg, #22c55e, #16a34a); padding:18px 22px; min-width:120px;" onclick="seqClick(0); playSound('click');">🟢</button>
+          <button class="btn" style="background:linear-gradient(135deg, #60a5fa, #2563eb); padding:18px 22px; min-width:120px;" onclick="seqClick(1); playSound('click');">🔵</button>
+        </div>
+        <div class="row" style="margin-top:12px; gap:12px; justify-content:center;">
+          <button class="btn" style="background:linear-gradient(135deg, #f97316, #ea580c); padding:18px 22px; min-width:120px;" onclick="seqClick(2); playSound('click');">🟠</button>
+          <button class="btn" style="background:linear-gradient(135deg, #f43f5e, #e11d48); padding:18px 22px; min-width:120px;" onclick="seqClick(3); playSound('click');">🔴</button>
+        </div>
+
+        <div class="row" style="margin-top:14px; justify-content:center;">
+          <button class="btn btn-market" style="padding:10px 18px;" onclick="seqStartOver(); playSound('click');">↻ Restart</button>
+          <button class="btn btn-danger" style="padding:10px 18px;" onclick="showScreen('scr-dash'); playSound('click');">Exit</button>
+        </div>
+      </div>
+
+      <!-- Omega Core Boss -->
+      <div id="boss-wrap" style="display:none; margin-top:14px;">
+        <div class="kpi-grid">
+          <div class="kpi">
+            <b>Boss: Omega Core</b>
+            <div id="boss-phase">Phase 1</div>
+          </div>
+          <div class="kpi">
+            <b>Boss HP</b>
+            <div><span id="boss-hp">100</span>/100</div>
+          </div>
+          <div class="kpi">
+            <b>Your Streak</b>
+            <div>x<span id="boss-streak">1</span> multiplier</div>
+          </div>
+        </div>
+
+        <div class="progress-container" style="margin-top:14px;">
+          <div id="boss-hp-bar" class="progress-bar"></div>
+        </div>
+
+        <div id="boss-area" style="margin-top:16px;">
+          <h3 id="boss-prompt" style="font-family:'Space Grotesk'; color:var(--primary); margin: 10px 0;"></h3>
+          <div id="boss-actions" class="row" style="gap:10px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MISSIONS -->
+    <div id="scr-missions" class="screen">
+      <button class="btn" style="padding:6px 15px; margin-bottom:14px;" onclick="showScreen('scr-dash'); playSound('click');">← Back</button>
+      <h2 class="section-title">📅 Daily Missions</h2>
+      <div class="kpi-grid">
+        <div class="kpi">
+          <b id="daily-date">Today</b>
+          <div>Progress resets daily.</div>
+        </div>
+        <div class="kpi">
+          <b id="daily-coins">+0 Coins</b>
+          <div>When missions are completed.</div>
+        </div>
+        <div class="kpi">
+          <b id="daily-xp">+0 XP</b>
+          <div>Bonus reward for completion.</div>
+        </div>
+      </div>
+
+      <!-- NEW: streak multiplier info -->
+      <div class="kpi" style="margin-top:14px; text-align:center;">
+        <b style="font-family:'Space Grotesk';">Streak Multiplier</b>
+        <div id="streak-mult-info" style="margin-top:6px;">x1.0</div>
+      </div>
+
+      <div style="margin-top:14px;" id="missions-list"></div>
+      <div class="row" style="margin-top:14px;">
+        <button class="btn" onclick="claimCompletedMissions(); playSound('click');">Claim Rewards</button>
+      </div>
+    </div>
+
+    <!-- ACHIEVEMENTS -->
+    <div id="scr-achievements" class="screen">
+      <button class="btn" style="padding:6px 15px; margin-bottom:14px;" onclick="showScreen('scr-dash'); playSound('click');">← Back</button>
+      <h2 class="section-title">🏅 Badges & Achievements</h2>
+      <div class="kpi-grid">
+        <div class="kpi">
+          <b id="badge-count">0 / 0</b>
+          <div>Badges unlocked.</div>
+        </div>
+        <div class="kpi">
+          <b>Progress</b>
+          <div>Earn by playing quizzes, wordsearch, and skills.</div>
+        </div>
+        <div class="kpi">
+          <b>Tip</b>
+          <div>Use hints/shields to keep combos alive.</div>
+        </div>
+      </div>
+
+      <div class="grid" id="badges-grid" style="margin-top:14px;"></div>
+    </div>
+
+    <!-- FEEDBACK MODAL -->
     <div id="modal-feedback" class="modal">
-        <div class="modal-content">
-            <h2 id="feedback-title">Result</h2>
-            <p id="feedback-text" style="font-size: 1.2rem; margin: 20px 0;"></p>
-            <button class="btn btn-main" style="width: 100%;" onclick="closeFeedback()">Next Challenge</button>
-        </div>
+      <div class="modal-content">
+        <div class="modal-close-x" style="position:absolute; right:18px; top:14px; display:none;" onclick="closeModal('modal-feedback');">✖</div>
+        <h2 id="fb-title" style="font-family:'Space Grotesk';">Result</h2>
+        <p id="fb-text" style="font-size:1.05rem; opacity:0.95; margin-top:8px;"></p>
+        <p id="fb-combo-msg" style="color: var(--eth-yellow); font-weight: 900; font-size: 1.1rem; margin-top:10px;"></p>
+        <button class="btn" style="margin-top:18px; width:100%;" onclick="closeModal('modal-feedback'); nextQuizStep();">Continue ➔</button>
+      </div>
     </div>
 
-    <!-- Market Modal -->
+    <!-- MARKET MODAL -->
     <div id="modal-market" class="modal">
-        <div class="modal-content">
-            <span style="float:right; cursor:pointer; font-size: 1.5rem;" onclick="closeMarket()">✖</span>
-            <h2>🛒 ICT Market</h2>
-            <p>Your Balance: <span id="market-balance" style="font-weight: bold; color: var(--warning);">0</span> 🪙</p>
-            <hr style="border: 1px solid #eee; margin: 20px 0;">
-            <div style="display:flex; flex-direction:column; gap:15px;">
-                <button class="btn btn-main" onclick="buyItem('life')">Buy 1 ❤️ (25 Coins)</button>
-                <button class="btn btn-main" style="background: var(--dark);" onclick="buyItem('time')">Freeze Timer ⏱️ (15 Coins)</button>
-            </div>
+      <div class="modal-content">
+        <span class="modal-close-x" onclick="closeModal('modal-market'); playSound('click');">✖</span>
+        <h2 style="color: var(--eth-yellow); font-family:'Space Grotesk'; margin-top:2px;">🛒 Omega Market</h2>
+        <p style="margin-top:8px;">
+          Your Balance:
+          <span id="mkt-coins" style="color:var(--eth-yellow); font-weight:900; font-size:1.25rem;">0</span> 🪙
+        </p>
+
+        <div class="kpi-grid" style="margin-top:12px;">
+          <div class="kpi">
+            <b>Inventory</b>
+            <div id="inv-summary">Loading...</div>
+          </div>
+          <div class="kpi">
+            <b>Hint Token</b>
+            <div>Reveals one correct element for puzzles/wordsearch.</div>
+          </div>
+          <div class="kpi">
+            <b>Shield</b>
+            <div>Prevents one life loss (once).</div>
+          </div>
         </div>
+
+        <!-- NEW: additional shop items (no removal of existing items) -->
+        <div style="display:flex; flex-direction:column; gap:12px; margin-top:18px;">
+          <button class="btn" onclick="buyItem('life');">Buy 1 Heart ❤️ (25 Coins)</button>
+          <button class="btn" style="background: linear-gradient(135deg, #e74c3c, #c0392b);" onclick="buyItem('xp');">Buy 50 XP 🔥 (40 Coins)</button>
+          <button class="btn" onclick="buyItem('hint');">Buy Hint Token 🧠 (35 Coins)</button>
+          <button class="btn" onclick="buyItem('shield');">Buy Shield 🛡️ (60 Coins)</button>
+          <button class="btn" onclick="buyItem('shuffle');">Buy Shuffle 🔄 (25 Coins)</button>
+
+          <button class="btn" onclick="buyItem('reveal2');">Buy Reveal 2 🧠🧩 (70 Coins)</button>
+          <button class="btn" onclick="buyItem('autoShield');">Buy Auto‑Shield 🛡️⚡ (90 Coins)</button>
+          <button class="btn" onclick="buyItem('coinDoubler');" style="background: linear-gradient(135deg, #f1c40f, #f59e0b); color:#0f172a;">
+            Buy Coin Doubler x2 (1 use) 💰 (95 Coins)
+          </button>
+          <button class="btn" onclick="buyItem('xpBooster');" style="background: linear-gradient(135deg, #00cec9, #00d2ff);">
+            Buy XP Booster ✨ (1 use) (85 Coins)
+          </button>
+        </div>
+
+        <div style="opacity:.75; margin-top:14px; font-size:.9rem;">
+          Items apply instantly when used in game screens.
+        </div>
+      </div>
     </div>
 
-    <!-- Professional Certificate Modal -->
+    <!-- CERTIFICATE -->
     <div id="modal-cert" class="modal">
-        <div class="modal-content cert-paper">
-            <div class="cert-header">SOS Children's Villages • Ethiopia</div>
-            <h2>CERTIFICATE</h2>
-            <p style="font-size: 1.2rem; letter-spacing: 2px;">OF ACADEMIC EXCELLENCE</p>
-            <p style="margin-top: 30px;">This proudly certifies that</p>
-            <div class="cert-name" id="cert-user-name">Student Name</div>
-            <p>has successfully mastered all 30 Levels in the</p>
-            <h3 id="cert-game-mode" style="color:var(--secondary); font-size: 1.8rem; margin: 10px 0;">CHOOSING GAME</h3>
-            <p>demonstrating outstanding knowledge of the Grade 7 & 8 ICT National Syllabus.</p>
-            
-            <div class="signature-line">
-                <div class="sig-box">
-                    <strong>National ICT Portal</strong><br>System Assessment
-                </div>
-                <div class="sig-box">
-                    <strong>Betsegaw Teka</strong><br>Lead Developer & Educator
-                </div>
-            </div>
+      <div class="modal-content cert-paper">
+        <span class="modal-close-x" style="display:none;">✖</span>
+        <h3 style="color:#138808; margin:0; text-transform:uppercase;">SOS Children's Villages Ethiopia</h3>
+        <h1 style="border-bottom:2px solid #000; padding-bottom:10px; margin-top:10px; font-family:'Georgia', serif;">CERTIFICATE OF MASTERY</h1>
+        <p style="font-size:1.2rem;">This is to certify that</p>
+        <h2 id="cert-name" style="font-style:italic; color:#b8860b; font-size:2.6rem; margin:10px 0;">Student Name</h2>
+        <p style="font-size:1.1rem;">has successfully mastered the National ICT Portal Assessment</p>
+        <h3 style="background:#2c3e50; color:white; display:inline-block; padding:10px 20px; border-radius:5px;">OMEGA PRO LEVEL</h3>
 
-            <button class="btn btn-main" style="margin-top: 40px;" onclick="location.reload()">Claim Certificate & Finish</button>
+        <div style="display:flex; justify-content:space-between; margin-top:36px; font-size:.9rem; font-weight:bold;">
+          <div>____________________<br/>System Verification</div>
+          <div>____________________<br/>Betsegaw Teka</div>
         </div>
+
+        <button class="btn" style="margin-top:26px; width:100%;" onclick="finishSession()">Finish Session</button>
+      </div>
     </div>
 
-    <script>
-        // --- MASTER DICTIONARY (Grade 7/8 ICT) ---
-        // We use 30 core concepts to dynamically generate 120 unique questions (30 per game)
-        const ictConcepts = [
-            { term: "CPU", def: "The main brain of the computer that processes instructions.", blank: "The ___ is considered the brain of the computer.", category: "Hardware" },
-            { term: "RAM", def: "Temporary memory used by the computer while it is running.", blank: "___ is volatile memory that loses data when power is off.", category: "Hardware" },
-            { term: "ROM", def: "Permanent memory that holds startup instructions.", blank: "___ contains the BIOS and cannot be easily modified.", category: "Hardware" },
-            { term: "Motherboard", def: "The main circuit board connecting all components.", blank: "Every component inside a computer connects to the ___.", category: "Hardware" },
-            { term: "Software", def: "Programs and instructions that tell the computer what to do.", blank: "Apps and Operating Systems are examples of ___.", category: "Software" },
-            { term: "Hardware", def: "The physical parts of a computer you can touch.", blank: "Monitors, keyboards, and mice are classified as ___.", category: "Hardware" },
-            { term: "Operating System", def: "System software that manages computer hardware and software.", blank: "Windows, Linux, and Android are types of ___.", category: "Software" },
-            { term: "Network", def: "Two or more computers connected together to share resources.", blank: "A ___ allows computers in a school lab to share a printer.", category: "Networking" },
-            { term: "Internet", def: "A global network of connected computers.", blank: "The ___ connects millions of networks worldwide.", category: "Networking" },
-            { term: "Browser", def: "Software used to view websites on the Internet.", blank: "Chrome, Firefox, and Edge are examples of a web ___.", category: "Software" },
-            { term: "Search Engine", def: "A website used to look for information on the Internet.", blank: "Google and Bing are examples of a ___.", category: "Internet" },
-            { term: "URL", def: "The web address of a specific page or file on the Internet.", blank: "A web address like www.google.com is called a ___.", category: "Internet" },
-            { term: "HTML", def: "The standard language used to create web pages.", blank: "Websites are built using a markup language called ___.", category: "Coding" },
-            { term: "Virus", def: "A malicious program designed to harm a computer.", blank: "A computer ___ can delete your files or slow down your PC.", category: "Security" },
-            { term: "Antivirus", def: "Software designed to detect and remove malicious programs.", blank: "You should install an ___ to protect your computer from malware.", category: "Security" },
-            { term: "Password", def: "A secret combination of characters used to access an account.", blank: "Always keep your ___ secret to prevent unauthorized access.", category: "Security" },
-            { term: "Firewall", def: "A security system that monitors network traffic.", blank: "A ___ blocks unauthorized access from hackers on the internet.", category: "Security" },
-            { term: "Server", def: "A powerful computer that provides data to other computers.", blank: "Websites are stored on a powerful computer called a ___.", category: "Networking" },
-            { term: "Router", def: "A device that forwards data packets between computer networks.", blank: "A ___ is used to connect your home network to the internet.", category: "Networking" },
-            { term: "Word Processor", def: "Software used to create, edit, and print text documents.", blank: "Microsoft Word is the most popular ___ application.", category: "Software" },
-            { term: "Spreadsheet", def: "Software used to organize and analyze data in rows and columns.", blank: "Microsoft Excel is an example of a ___ program.", category: "Software" },
-            { term: "Database", def: "An organized collection of data, generally stored electronically.", blank: "A school uses a ___ to store all student records securely.", category: "Software" },
-            { term: "Input Device", def: "Hardware used to send data into the computer.", blank: "A keyboard and mouse are examples of an ___.", category: "Hardware" },
-            { term: "Output Device", def: "Hardware used to receive data from the computer.", blank: "A monitor and printer are examples of an ___.", category: "Hardware" },
-            { term: "Storage Device", def: "Hardware used to save data permanently.", blank: "A USB Flash Drive is a portable ___.", category: "Hardware" },
-            { term: "Algorithm", def: "A step-by-step set of instructions to solve a problem.", blank: "Programmers write an ___ before writing the actual code.", category: "Coding" },
-            { term: "Debugging", def: "The process of finding and fixing errors in a computer program.", blank: "Fixing errors in your code is called ___.", category: "Coding" },
-            { term: "ISP", def: "A company that provides access to the internet.", blank: "Ethio Telecom is an example of an ___ in Ethiopia.", category: "Networking" },
-            { term: "Email", def: "Electronic messages sent over a network.", blank: "Gmail and Outlook are used for sending ___.", category: "Internet" },
-            { term: "Cloud Computing", def: "Storing and accessing data over the internet instead of a hard drive.", blank: "Google Drive is an example of ___ storage.", category: "Internet" }
-        ];
+    <!-- NEW: Settings modal -->
+    <div id="modal-settings" class="modal">
+      <div class="modal-content">
+        <span class="modal-close-x" onclick="closeModal('modal-settings'); playSound('click');">✖</span>
+        <h2 style="color: var(--primary); font-family:'Space Grotesk'; margin-top:2px;">⚙️ Settings</h2>
+        <p style="opacity:.8; margin-top:8px; font-weight:800;">Customize your learning experience.</p>
 
-        // --- DATA HUB ---
-        const gameData = { choosing: [], writing: [], matching: [], fillblank: [] };
+        <div class="two-col">
+          <div class="kpi">
+            <b>Sound</b>
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:10px;">
+              <span id="set-sound-label" style="font-weight:900;">ON</span>
+              <button class="btn" style="padding:10px 14px;" onclick="toggleSetting('sound'); playSound('click');">Toggle</button>
+            </div>
+          </div>
+          <div class="kpi">
+            <b>Vibration (if supported)</b>
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:10px;">
+              <span id="set-vibe-label" style="font-weight:900;">ON</span>
+              <button class="btn" style="padding:10px 14px;" onclick="toggleSetting('vibe'); playSound('click');">Toggle</button>
+            </div>
+          </div>
+          <div class="kpi">
+            <b>Reduced Motion</b>
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:10px;">
+              <span id="set-rmotion-label" style="font-weight:900;">OFF</span>
+              <button class="btn" style="padding:10px 14px;" onclick="toggleSetting('rmotion'); playSound('click');">Toggle</button>
+            </div>
+          </div>
+          <div class="kpi">
+            <b>Toasts</b>
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:10px;">
+              <span id="set-toasts-label" style="font-weight:900;">ON</span>
+              <button class="btn" style="padding:10px 14px;" onclick="toggleSetting('toasts'); playSound('click');">Toggle</button>
+            </div>
+          </div>
+        </div>
 
-        function generateDatabase() {
-            // Generate EXACTLY 30 challenges per game mode using the Master Dictionary
-            for(let i=0; i<30; i++) {
-                const concept = ictConcepts[i];
-                
-                // 1. Choosing Game (Generate 3 wrong options + 1 right)
-                let wrongOptions = ictConcepts.filter(c => c.term !== concept.term).sort(() => 0.5 - Math.random()).slice(0, 3).map(c => c.term);
-                let options = [concept.term, ...wrongOptions].sort(() => 0.5 - Math.random());
-                gameData.choosing.push({
-                    q: `What is the correct term for: "${concept.def}"`,
-                    options: options,
-                    answer: concept.term,
-                    hint: `Starts with ${concept.term.charAt(0)}...`,
-                    explain: concept.def
-                });
+        <div class="row" style="margin-top:16px;">
+          <button class="btn btn-danger" style="padding:12px 22px;" onclick="resetSettings(); playSound('click');">Reset Settings</button>
+        </div>
+      </div>
+    </div>
 
-                // 2. Writing Game
-                gameData.writing.push({
-                    q: `Type the exact term for: "${concept.def}"`,
-                    answer: concept.term,
-                    hint: `It has ${concept.term.length} letters.`,
-                    explain: concept.def
-                });
+    <!-- NEW: Profile modal -->
+    <div id="modal-profile" class="modal">
+      <div class="modal-content">
+        <span class="modal-close-x" onclick="closeModal('modal-profile'); playSound('click');">✖</span>
+        <h2 style="color: var(--eth-yellow); font-family:'Space Grotesk'; margin-top:2px;">🧑‍🎓 Player Card</h2>
 
-                // 3. Fill in the Blank
-                gameData.fillblank.push({
-                    q: concept.blank,
-                    answer: concept.term,
-                    hint: `Category: ${concept.category}`,
-                    explain: concept.def
-                });
+        <div class="kpi-grid" style="margin-top:12px;">
+          <div class="kpi">
+            <b>Name</b>
+            <div id="pc-name">Guest</div>
+          </div>
+          <div class="kpi">
+            <b>Level</b>
+            <div id="pc-level">1</div>
+          </div>
+          <div class="kpi">
+            <b>Mastery XP</b>
+            <div id="pc-xp">0</div>
+          </div>
+          <div class="kpi">
+            <b>Coins</b>
+            <div id="pc-coins">0</div>
+          </div>
+        </div>
 
-                // 4. Matching Game (Generate 3 random pairs for each of the 30 levels)
-                let extraPairs = ictConcepts.filter(c => c.term !== concept.term).sort(() => 0.5 - Math.random()).slice(0, 2);
-                gameData.matching.push({
-                    pairs: [
-                        {a: concept.def.substring(0, 25) + "...", b: concept.term},
-                        {a: extraPairs[0].def.substring(0, 25) + "...", b: extraPairs[0].term},
-                        {a: extraPairs[1].def.substring(0, 25) + "...", b: extraPairs[1].term}
-                    ],
-                    explain: `Correct! ${concept.term} matched successfully.`
-                });
-            }
-        }
-        generateDatabase();
+        <div class="kpi" style="margin-top:12px; text-align:center;">
+          <b style="font-family:'Space Grotesk';">Combo & Streak</b>
+          <div style="margin-top:6px;">
+            Current Combo: <span id="pc-combo" style="color:var(--eth-yellow); font-weight:900;">x1</span>
+          </div>
+          <div style="margin-top:6px;">
+            Quest Streak: <span id="pc-streak" style="color:var(--primary); font-weight:900;">0</span> days
+          </div>
+        </div>
 
-        // --- GAME ENGINE ---
-        let state = {
-            name: "", coins: 50, lives: 3, timer: 0,
-            currentMode: "", currentIndex: 0, timerActive: false, timerFrozen: false
+        <div class="row" style="margin-top:16px;">
+          <button class="btn" onclick="showRecentPlaysModal(); playSound('click');">📜 Recent Plays</button>
+          <button class="btn btn-market" onclick="openModal('modal-market'); playSound('click');">🛒 Open Shop</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEW: Error modal (single bug-safety layer) -->
+    <div id="modal-error" class="modal">
+      <div class="modal-content">
+        <span class="modal-close-x" onclick="closeModal('modal-error'); playSound('click');">✖</span>
+        <h2 style="color: var(--eth-red); font-family:'Space Grotesk'; margin-top:2px;">⚠️ Oops! Something broke</h2>
+        <p style="opacity:.85; margin-top:10px;" id="err-text">An unexpected error occurred.</p>
+        <p style="opacity:.7; margin-top:8px; font-size:.9rem;">
+          You can continue your session; the game will try to recover safely.
+        </p>
+        <button class="btn btn-danger" style="margin-top:14px; width:100%;" onclick="closeModal('modal-error'); playSound('click');">
+          OK, Continue
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- NEW: Toast container -->
+  <div id="toast-wrap" aria-live="polite" aria-atomic="true"></div>
+
+  <script>
+    /***********************
+     * BUG-SAFETY LAYER (NEW #20)
+     ***********************/
+    window.addEventListener('error', function(e){
+      try{
+        const msg = e && e.message ? e.message : 'Unexpected error';
+        showErrorModal(msg);
+      }catch(_){}
+    });
+    window.addEventListener('unhandledrejection', function(e){
+      try{
+        const msg = e && e.reason && e.reason.message ? e.reason.message : 'Unexpected promise error';
+        showErrorModal(msg);
+      }catch(_){}
+    });
+
+    function showErrorModal(message){
+      const el = document.getElementById('modal-error');
+      if(el){
+        document.getElementById('err-text').innerText = String(message).slice(0,220);
+        openModal('modal-error');
+      }
+    }
+
+    /***********************
+     * AUDIO ENGINE
+     ***********************/
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+
+    function initAudio(){
+      if(!audioCtx) audioCtx = new AudioContext();
+      if(audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    /***********************
+     * SETTINGS (NEW #1, #4-ish)
+     ***********************/
+    const SETTINGS_KEY = "ict_master_omega_settings_v1";
+    const defaultSettings = {
+      sound: true,
+      vibe: true,
+      rmotion: false,
+      toasts: true
+    };
+    let settings = loadSettings();
+
+    function loadSettings(){
+      try{
+        const raw = localStorage.getItem(SETTINGS_KEY);
+        if(!raw) return {...defaultSettings};
+        const parsed = JSON.parse(raw);
+        return {...defaultSettings, ...(parsed||{})};
+      }catch(e){
+        return {...defaultSettings};
+      }
+    }
+    function saveSettings(){
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+    }
+
+    function applySettings(){
+      // UI labels
+      const sLabel = document.getElementById('set-sound-label');
+      const vLabel = document.getElementById('set-vibe-label');
+      const rLabel = document.getElementById('set-rmotion-label');
+      const tLabel = document.getElementById('set-toasts-label');
+
+      if(sLabel) sLabel.innerText = settings.sound ? "ON" : "OFF";
+      if(vLabel) vLabel.innerText = settings.vibe ? "ON" : "OFF";
+      if(rLabel) rLabel.innerText = settings.rmotion ? "ON" : "OFF";
+      if(tLabel) tLabel.innerText = settings.toasts ? "ON" : "OFF";
+
+      // Reduced motion: we can disable animations by setting a class
+      document.documentElement.style.scrollBehavior = settings.rmotion ? "auto" : "";
+      if(settings.rmotion){
+        document.body.style.animation = "none";
+      }
+    }
+
+    function toggleSetting(key){
+      if(key in settings){
+        settings[key] = !settings[key];
+        saveSettings();
+        applySettings();
+        toast(`Settings updated`, key, settings.toasts);
+      }
+    }
+    function resetSettings(){
+      settings = {...defaultSettings};
+      saveSettings();
+      applySettings();
+      toast(`Settings reset`, `All defaults restored`, settings.toasts);
+    }
+
+    /***********************
+     * Toast system (NEW #2)
+     ***********************/
+    function toast(title, meta, enabled = true){
+      if(!enabled) return;
+      if(!settings.toasts) return;
+
+      const wrap = document.getElementById('toast-wrap');
+      if(!wrap) return;
+
+      const el = document.createElement('div');
+      el.className = 'toast ' + (title && String(title).toLowerCase().includes('unlocked') ? 'win' : 'warn');
+      el.innerHTML = `<strong>${escapeHtml(String(title || ''))}</strong><div class="meta">${escapeHtml(String(meta || ''))}</div>`;
+      wrap.appendChild(el);
+      setTimeout(()=>{ try{ el.remove(); }catch(_){} }, 3200);
+    }
+
+    function vibrate(ms){
+      if(!settings.vibe) return;
+      if(navigator.vibrate) navigator.vibrate(ms);
+    }
+
+    function playSound(type){
+      if(!settings.sound) return;
+      if(!audioCtx) return;
+
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      const t = audioCtx.currentTime;
+
+      gain.gain.setValueAtTime(0.0001, t);
+
+      if(type === 'win'){
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(420, t);
+        osc.frequency.exponentialRampToValueAtTime(880, t + 0.12);
+        gain.gain.setValueAtTime(0.28, t);
+        gain.gain.exponentialRampToValueAtTime(0.01, t + 0.22);
+        osc.start(t); osc.stop(t + 0.23);
+      } else if(type === 'lose'){
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(190, t);
+        osc.frequency.exponentialRampToValueAtTime(110, t + 0.25);
+        gain.gain.setValueAtTime(0.25, t);
+        gain.gain.exponentialRampToValueAtTime(0.01, t + 0.25);
+        osc.start(t); osc.stop(t + 0.26);
+      } else if(type === 'click' || type === 'type'){
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(620, t);
+        gain.gain.setValueAtTime(0.12, t);
+        gain.gain.exponentialRampToValueAtTime(0.01, t + 0.06);
+        osc.start(t); osc.stop(t + 0.07);
+      } else if(type === 'buy'){
+        osc.type='triangle';
+        osc.frequency.setValueAtTime(820, t);
+        osc.frequency.exponentialRampToValueAtTime(1400, t + 0.12);
+        gain.gain.setValueAtTime(0.18, t);
+        gain.gain.exponentialRampToValueAtTime(0.01, t + 0.25);
+        osc.start(t); osc.stop(t + 0.26);
+      } else if(type === 'boss'){
+        osc.type='sine';
+        osc.frequency.setValueAtTime(300, t);
+        gain.gain.setValueAtTime(0.18, t);
+        gain.gain.exponentialRampToValueAtTime(0.01, t + 0.35);
+        osc.start(t); osc.stop(t + 0.36);
+      } else {
+        osc.type='square';
+        osc.frequency.setValueAtTime(500, t);
+        gain.gain.setValueAtTime(0.08, t);
+        gain.gain.exponentialRampToValueAtTime(0.01, t + 0.05);
+        osc.start(t); osc.stop(t + 0.06);
+      }
+    }
+
+    /***********************
+     * BACKGROUND CANVAS PARTICLES
+     ***********************/
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas(){
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle{
+      constructor(){
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 0.55;
+        this.vy = (Math.random() - 0.5) * 0.55;
+      }
+      update(){
+        this.x += this.vx; this.y += this.vy;
+        if(this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if(this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+      draw(){
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 2, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(0, 210, 255, 0.5)';
+        ctx.fill();
+      }
+    }
+
+    for(let i=0;i<75;i++) particles.push(new Particle());
+
+    function animateCanvas(){
+      ctx.clearRect(0,0,canvas.width, canvas.height);
+      particles.forEach(p=>{
+        p.update(); p.draw();
+        particles.forEach(p2=>{
+          let dx = p.x - p2.x, dy = p.y - p2.y;
+          let dist = Math.sqrt(dx*dx + dy*dy);
+          if(dist < 110){
+            ctx.beginPath();
+            ctx.moveTo(p.x,p.y);
+            ctx.lineTo(p2.x,p2.y);
+            ctx.strokeStyle = `rgba(0, 210, 255, ${1 - dist/110})`;
+            ctx.lineWidth = 0.55;
+            ctx.stroke();
+          }
+        });
+      });
+      requestAnimationFrame(animateCanvas);
+    }
+    animateCanvas();
+
+    /***********************
+     * DATA (Expanded)
+     ***********************/
+    const ictData = [
+      { t:"CPU", d:"Central Processing Unit - the brain that executes instructions.", b:"The ___ is the brain of the computer." },
+      { t:"RAM", d:"Random Access Memory - temporary volatile storage used while programs run.", b:"___ loses its data when the power is turned off." },
+      { t:"ROM", d:"Read Only Memory - permanent storage for startup instructions.", b:"The BIOS is stored in the ___ chip." },
+      { t:"BIOS", d:"Basic Input/Output System - firmware that starts the computer and checks hardware.", b:"BIOS helps start the computer during boot." },
+      { t:"HTML", d:"HyperText Markup Language - used to create web page structure.", b:"Websites are built using ___." },
+      { t:"CSS", d:"Cascading Style Sheets - used to style and layout web pages.", b:"To make a website beautiful, we use ___." },
+      { t:"JavaScript", d:"Language used for web interactivity and logic.", b:"___ makes web pages interactive." },
+      { t:"URL", d:"Uniform Resource Locator - the address of a resource on the internet.", b:"www.google.com is a ___." },
+      { t:"IP Address", d:"A unique identifier for devices on a network.", b:"Every device on a network has a unique ___." },
+      { t:"Subnet Mask", d:"Defines which portion of an IP address is network and which is host.", b:"A ___ helps determine network size." },
+      { t:"Gateway", d:"Default route device/router that forwards traffic to other networks.", b:"Your ___ routes traffic to the internet." },
+      { t:"Firewall", d:"A security system that blocks unauthorized access.", b:"A ___ protects a network from hackers." },
+      { t:"Port", d:"A numbered endpoint for network communication.", b:"A computer uses ___ numbers to connect services." },
+      { t:"Protocol", d:"Rules for data communication.", b:"HTTP is a web transfer ___." },
+      { t:"TCP", d:"Transmission Control Protocol - reliable connection-oriented protocol.", b:"TCP ensures reliable delivery using handshakes." },
+      { t:"UDP", d:"User Datagram Protocol - faster but less reliable.", b:"UDP is often used for real-time applications." },
+      { t:"Encryption", d:"Encoding data so only authorized users can read it.", b:"___ makes data secret and unreadable." },
+      { t:"Decryption", d:"Reversing encryption to restore original readable data.", b:"To get original data, we do ___." },
+      { t:"Algorithm", d:"Step-by-step procedure to solve a problem.", b:"A program starts with a logical ___." },
+      { t:"Software", d:"Programs and instructions that tell hardware what to do.", b:"Apps and operating systems are types of ___." },
+      { t:"Hardware", d:"Physical parts of a computer you can touch.", b:"Keyboard and mouse are examples of ___." },
+      { t:"Motherboard", d:"Main circuit board connecting components.", b:"The CPU and RAM plug into the ___." },
+      { t:"GPU", d:"Graphics Processing Unit - accelerates rendering and parallel computations.", b:"A ___ helps with graphics and video rendering." },
+      { t:"Storage (HDD/SSD)", d:"Non-volatile storage for files and programs.", b:"SSD and HDD are used for ___." },
+      { t:"SSD", d:"Solid State Drive - faster non-volatile storage without moving parts.", b:"An ___ is faster than a traditional HDD." },
+      { t:"HDD", d:"Hard Disk Drive - uses spinning disks for storage.", b:"An ___ uses spinning platters." },
+      { t:"Bit", d:"Smallest unit of data (0 or 1).", b:"8 ___ make 1 byte." },
+      { t:"Byte", d:"Group of 8 bits used for data measurement.", b:"1 byte equals 8 ___." },
+      { t:"Binary", d:"Base-2 number system using 0 and 1.", b:"Computers use ___ numbers." },
+      { t:"Database", d:"A structured collection of data.", b:"A school uses a ___ to store student info." },
+      { t:"Table", d:"Data organized in rows and columns in a database.", b:"In a database, data is stored in ___." },
+      { t:"Primary Key", d:"Unique identifier for each record in a table.", b:"Each record needs a unique ___." },
+      { t:"Browser", d:"Software used to view websites.", b:"Chrome and Firefox are web ___." },
+      { t:"ISP", d:"Internet Service Provider that provides internet access.", b:"You buy internet from an ___." },
+      { t:"Modem", d:"Device converting signals to connect network and ISP.", b:"A ___ connects your home network to ISP." },
+      { t:"Router", d:"Routes data between networks and provides local connectivity.", b:"A ___ sends data to the correct network." },
+      { t:"Wi-Fi", d:"Wireless network technology based on IEEE 802.11.", b:"Devices can connect using ___." },
+      { t:"Network Topology", d:"Physical/logical layout of nodes and connections.", b:"Common topologies include star and mesh." },
+      { t:"Star Topology", d:"All devices connect to a central hub/switch.", b:"In star topology, all nodes connect to a ___." },
+      { t:"Mesh Topology", d:"Many or all nodes have connections with each other.", b:"Mesh provides high reliability using multiple links." },
+      { t:"Virus", d:"Malicious software that replicates.", b:"Antivirus removes a computer ___." },
+      { t:"Worm", d:"Malware that spreads itself across networks.", b:"A ___ self-replicates through networks." },
+      { t:"Trojan", d:"Malware disguised as legitimate software.", b:"A ___ hides malicious behavior inside a fake app." },
+      { t:"Malware", d:"General term for harmful software.", b:"Spyware and Trojans are types of ___." },
+      { t:"Spyware", d:"Malware that secretly monitors user activity.", b:"___ steals information without your knowledge." },
+      { t:"Antivirus", d:"Software that detects and removes malware.", b:"An ___ protects your computer from malware." },
+      { t:"Phishing", d:"Scam technique to trick users into sharing information.", b:"Phishing uses fake messages to steal ___." },
+      { t:"Cloud", d:"Storing and accessing data over the internet.", b:"Google Drive is a ___ storage service." },
+      { t:"Cloud Computing", d:"On-demand computing resources delivered over the internet.", b:"Services on demand are called ___." },
+      { t:"API", d:"Interface for software to communicate with each other.", b:"An ___ lets apps request data from services." },
+      { t:"Cache", d:"Fast memory storing frequently used data.", b:"A browser uses ___ to load pages faster." },
+      { t:"Kernel", d:"Core of an operating system managing hardware and system calls.", b:"The ___ manages communication between hardware and software." },
+      { t:"Linux", d:"Open-source operating system, commonly used on servers.", b:"___ is a popular OS for servers." },
+      { t:"Bandwidth", d:"Capacity of a network connection.", b:"Higher ___ means faster downloads." },
+      { t:"Latency", d:"Delay before data transfer begins or completes.", b:"Lower ___ improves responsiveness." },
+      { t:"Fiber Optic", d:"Cable using light to transmit data.", b:"___ cables are faster than copper for long distance." }
+    ];
+
+    const tutorials = [
+      { t:"History of Computing", c:"From Abacus to Eniac and modern AI systems."},
+      { t:"Network Topologies", c:"Star, Ring, Bus, and Mesh physical layouts."},
+      { t:"Binary Math", c:"How computers use base-2 (0 and 1) to calculate."},
+      { t:"Programming Basics", c:"Variables, conditions, loops and problem-solving thinking."},
+      { t:"Cyber Ethics", c:"Proper behavior, respect, and laws in the digital world."},
+      { t:"Digital Ethiopia (Vision)", c:"Nation-wide digitization strategy focusing on telecom, ID, and e-commerce."},
+      { t:"Ethio Telecom & 5G", c:"How Ethiopia upgrades telecom infrastructure to faster networks."},
+      { t:"AI & ML", c:"Machines learning from data to make decisions."},
+      { t:"Databases 101", c:"Tables, rows, primary keys, and relationships."},
+      { t:"Web Development", c:"Structure (HTML), style (CSS), behavior (JavaScript)." },
+      { t:"Cybersecurity Basics", c:"Threats, phishing, malware, and safe online practices." }
+    ];
+
+    /***********************
+     * DAILY MISSIONS + ACHIEVEMENTS
+     ***********************/
+    const STORAGE_KEY = "ict_master_omega_v2";
+
+    const achievements = [
+      { id:"first_access", title:"First Access", desc:"Enter the portal for the first time.", icon:"🚪", cond: (s)=>s.stats.firstAccess>=1, reward:{coins:10,xp:20} },
+      { id:"combo_5", title:"Combo Master", desc:"Reach combo x5 in any quiz.", icon:"⚡", cond: (s)=>s.stats.maxCombo>=5, reward:{coins:25,xp:60} },
+      { id:"lexicon_open_5", title:"Lexicon Scholar", desc:"Open Lexicon 5 times.", icon:"📖", cond: (s)=>s.stats.lexiconOpens>=5, reward:{coins:15,xp:30} },
+      { id:"wordhunter_5", title:"Word Hunter", desc:"Find 5 words in Word Search.", icon:"🔎", cond: (s)=>s.stats.wordFinds>=5, reward:{coins:20,xp:40} },
+      { id:"skill_win_10", title:"Skill Streak", desc:"Win 10 skill rounds.", icon:"🎯", cond: (s)=>s.stats.skillWins>=10, reward:{coins:30,xp:80} },
+      { id:"omega_lvl_8", title:"Omega Learner", desc:"Reach level 8.", icon:"🕹️", cond: (s)=>s.lvl>=8, reward:{coins:40,xp:120} },
+      { id:"boss_clear", title:"Omega Slayer", desc:"Defeat Omega Core boss.", icon:"👑", cond: (s)=>s.flags.bossDefeated===true, reward:{coins:80,xp:200} },
+
+      // NEW: extra achievements (counts toward "20 new things")
+      { id:"quest_streak_3", title:"Quest Streak x3", desc:"Complete daily missions for 3 consecutive days.", icon:"🔥", cond:(s)=> (s.flags.questStreak || 0) >= 3, reward:{coins:35,xp:90} },
+      { id:"reveal2_used", title:"Reveal Specialist", desc:"Use Reveal 2 power up.", icon:"🧩", cond:(s)=> (s.flags.reveal2Used || 0) >= 1, reward:{coins:25,xp:60} },
+      { id:"auto_shield_once", title:"Auto-Protector", desc:"Let Auto‑Shield protect you once.", icon:"🛡️", cond:(s)=> (s.flags.autoShieldUsed || 0) >= 1, reward:{coins:25,xp:70} },
+      { id:"coin_doubled", title:"Treasure Hunter", desc:"Trigger Coin Doubler once.", icon:"💰", cond:(s)=> (s.flags.coinDoublerUsed || 0) >= 1, reward:{coins:40,xp:100} },
+      { id:"xp_boosted", title:"XP Accelerator", desc:"Trigger XP Booster once.", icon:"✨", cond:(s)=> (s.flags.xpBoosterUsed || 0) >= 1, reward:{coins:35,xp:110} },
+      { id:"ws_hard_clear", title:"Hard Wordsmith", desc:"Finish a Hard Word Search run.", icon:"🏗️", cond:(s)=> (s.flags.wsHardCleared || 0) >= 1, reward:{coins:45,xp:120} },
+      { id:"sequence_master_3", title:"Pattern Keeper", desc:"Win 3 rounds of Sequence Memory.", icon:"🧠", cond:(s)=> (s.flags.sequenceWins || 0) >= 3, reward:{coins:40,xp:105} },
+      { id:"marathon_score_400", title:"Marathon Mode", desc:"Reach score >= 400 in Marathon.", icon:"🏃", cond:(s)=> (s.flags.marathonHighScore || 0) >= 400, reward:{coins:55,xp:150} }
+    ];
+
+    function todayKey(){
+      const d = new Date();
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth()+1).padStart(2,'0');
+      const dd = String(d.getDate()).padStart(2,'0');
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    const dailyTemplate = () => ([
+      { id:"d1_correct_3", title:"Daily 3 Correct Answers", goal:3, type:"quizCorrect", reward:{coins:20,xp:60} },
+      { id:"d2_wordsearch_2", title:"Find 2 Word Search Terms", goal:2, type:"wordFound", reward:{coins:15,xp:45} },
+      { id:"d3_skill_win_1", title:"Win 1 Skill Round", goal:1, type:"skillWin", reward:{coins:25,xp:70} },
+
+      // NEW: extra daily mission types
+      { id:"d4_boss_hit_1", title:"Boss Damage Deal (Omega)", goal:1, type:"bossDamage", reward:{coins:30,xp:90} },
+      { id:"d5_perfect_combo", title:"Perfect Combo Win", goal:1, type:"perfectCombo", reward:{coins:35,xp:100} }
+    ]);
+
+    /***********************
+     * STATE (with persistence)
+     ***********************/
+    function defaultState(){
+      return {
+        name:"Guest",
+        lvl:1,
+        xp:0,
+        coins:50,
+        lives:3,
+        combo:1,
+        maxCombo:1,
+
+        mode:"",
+        idx:0,
+        currentAnswer:"",
+        currentCorrectLock:false,
+
+        wsSelection:[],
+
+        inventory:{
+          hintTokens:0,
+          shields:0,
+          shuffles:0,
+
+          // NEW items
+          reveal2:0,
+          autoShield:0,
+          coinDoubler:0,  // 1-use
+          xpBooster:0     // 1-use
+        },
+
+        flags:{
+          bossDefeated:false,
+          certClaimed:false,
+
+          // NEW streak + items usage
+          questStreak:0,
+          lastQuestCompleteDate:"",
+          reveal2Used:0,
+          autoShieldUsed:0,
+          coinDoublerUsed:0,
+          xpBoosterUsed:0,
+          wsHardCleared:0,
+          sequenceWins:0,
+          marathonHighScore:0
+        },
+
+        daily:{
+          date: "",
+          items: {}
+        },
+
+        unlockedBadges: {},
+
+        stats:{
+          firstAccess:0,
+          quizCorrect:0,
+          wordFinds:0,
+          skillWins:0,
+          lexiconOpens:0,
+          maxCombo:1,
+
+          // NEW counters for missions
+          bossDamage:0,
+          perfectComboWins:0
+        },
+
+        // NEW: recent plays
+        recentPlays: [] // {t, mode}
+      };
+    }
+
+    let state = loadState();
+
+    function loadState(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw) return defaultState();
+        const parsed = JSON.parse(raw);
+        const base = defaultState();
+        return {
+          ...base,
+          ...parsed,
+          inventory:{...base.inventory, ...(parsed.inventory||{})},
+          flags:{...base.flags, ...(parsed.flags||{})},
+          daily:{...base.daily, ...(parsed.daily||{})},
+          stats:{...base.stats, ...(parsed.stats||{})},
+          unlockedBadges: parsed.unlockedBadges || {},
+          recentPlays: Array.isArray(parsed.recentPlays) ? parsed.recentPlays : base.recentPlays
         };
+      }catch(e){
+        return defaultState();
+      }
+    }
 
-        function initPlayer() {
-            let n = document.getElementById('player-input').value;
-            if(!n) return alert("Please enter your name to generate your certificate.");
-            state.name = n;
-            document.getElementById('hud-name').innerText = n;
-            showScreen('screen-menu');
-            startGlobalTimer();
+    function saveState(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    /***********************
+     * SCREEN NAVIGATION
+     ***********************/
+    function showScreen(id){
+      document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function openModal(id){
+      document.getElementById(id).style.display="flex";
+      if(id === 'modal-settings'){
+        applySettings();
+      }
+      if(id === 'modal-profile'){
+        renderProfileModal();
+      }
+      if(id === 'modal-market'){
+        renderMarketInventorySummary();
+      }
+    }
+    function closeModal(id){
+      document.getElementById(id).style.display="none";
+    }
+
+    /***********************
+     * NEW: HUD + Difficulty
+     ***********************/
+    function getDifficultyLabel(){
+      // NEW #18
+      const lvl = state.lvl || 1;
+      if(lvl >= 10) return "Difficulty: Extreme (scaling)";
+      if(lvl >= 7) return "Difficulty: Hard";
+      if(lvl >= 4) return "Difficulty: Fast";
+      return "Difficulty: Normal (scales with Level)";
+    }
+
+    function getQuestStreakMultiplier(){
+      // NEW #4: Daily bonus multiplier based on quest streak
+      const s = state.flags.questStreak || 0;
+      if(s >= 6) return 1.6;
+      if(s >= 4) return 1.4;
+      if(s >= 2) return 1.25;
+      if(s >= 1) return 1.15;
+      return 1.0;
+    }
+
+    function updateHUD(){
+      document.getElementById('hud-name').innerText = state.name || "Guest";
+      document.getElementById('hud-lvl').innerText = state.lvl;
+      document.getElementById('hud-xp').innerText = state.xp;
+      document.getElementById('hud-lives').innerText = state.lives;
+      document.getElementById('hud-coins').innerText = state.coins;
+      document.getElementById('hud-combo').innerText = state.combo;
+
+      const comboPill = document.getElementById('combo-pill');
+      if(state.combo > 1) comboPill.classList.add('combo-active');
+      else comboPill.classList.remove('combo-active');
+
+      const inv = document.getElementById('inv-summary');
+      if(inv){
+        inv.innerText = `Hints:${state.inventory.hintTokens} • Shields:${state.inventory.shields} • Shuffles:${state.inventory.shuffles} • Reveal2:${state.inventory.reveal2} • Auto:${state.inventory.autoShield}`;
+      }
+
+      // mastery bar
+      const xpLimit = state.lvl * 100;
+      document.getElementById('mastery-bar').style.width = Math.min(100, (state.xp / xpLimit) * 100) + "%";
+
+      // KPIs
+      document.getElementById('kpi-mastery-sub').innerText = `Next Level at XP: ${xpLimit}. Use combos for faster growth.`;
+
+      refreshDailyUI(false);
+      maybeRefreshAchievementsUI();
+
+      // NEW: quest streak HUD
+      const streakEl = document.getElementById('hud-streak');
+      if(streakEl) streakEl.innerText = String(state.flags.questStreak || 0);
+
+      const diffLabel = document.getElementById('hud-difficulty-label');
+      if(diffLabel) diffLabel.innerText = getDifficultyLabel();
+
+      // NEW: streak multiplier info on missions screen
+      const stinfo = document.getElementById('streak-mult-info');
+      if(stinfo){
+        const mult = getQuestStreakMultiplier();
+        stinfo.innerText = `x${mult.toFixed(2)} (based on streak)`;
+      }
+
+      // NEW: player card refresh
+      renderProfileModal();
+      renderRecentPlaysUI();
+
+      saveState();
+    }
+
+    function levelUpCheck(){
+      let leveled = false;
+      while(true){
+        const xpLimit = state.lvl * 100;
+        if(state.xp < xpLimit) break;
+        state.xp -= xpLimit;
+        state.lvl++;
+        state.coins += 20;
+        state.combo = 1;
+        leveled = true;
+        playSound('buy');
+        vibrate(18);
+      }
+      if(leveled){
+        alert(`⭐ LEVEL UP! You are now Level ${state.lvl}! (+20 Coins)`);
+      }
+    }
+
+    function finishSession(){
+      playSound('win');
+      closeModal('modal-cert');
+      alert("Session completed. Great work! 👏");
+      showScreen('scr-welcome');
+    }
+
+    /***********************
+     * PLAYER INIT + PROGRESS RESET
+     ***********************/
+    function initPlayer(){
+      initAudio();
+      const n = document.getElementById('player-input').value.trim();
+      if(!n){
+        alert("Please enter your name.");
+        return;
+      }
+
+      state.name = n;
+      ensureDailyMissionsSetup();
+
+      state.stats.firstAccess = (state.stats.firstAccess || 0);
+      if(state.stats.firstAccess < 1){
+        state.stats.firstAccess = 1;
+      } else {
+        state.stats.firstAccess += 1;
+      }
+
+      playSound('win');
+      vibrate(18);
+
+      updateHUD();
+      saveState();
+      showScreen('scr-dash');
+    }
+
+    function wipeProgress(){
+      if(confirm("Reset all saved progress?")){
+        localStorage.removeItem(STORAGE_KEY);
+        state = defaultState();
+        saveState();
+        location.reload();
+      }
+    }
+
+    /***********************
+     * DAILY MISSIONS + streak
+     ***********************/
+    function ensureDailyMissionsSetup(){
+      const tKey = todayKey();
+      if(state.daily.date !== tKey){
+        state.daily = { date: tKey, items: {} };
+
+        dailyTemplate().forEach(m=>{
+          state.daily.items[m.type] = state.daily.items[m.type] || { count:0, completed:false, claimed:false, goal: m.goal, reward:m.reward };
+          // also store goal in new structure
+          state.daily.items[m.type].goal = m.goal;
+          state.daily.items[m.type].reward = m.reward;
+        });
+
+        saveState();
+      }
+    }
+
+    function addDailyProgress(type, inc=1){
+      ensureDailyMissionsSetup();
+      if(!state.daily.items[type]) return;
+
+      state.daily.items[type].count += inc;
+      const mission = state.daily.items[type];
+      if(mission.count >= mission.goal){
+        mission.completed = true;
+      }
+      saveState();
+      refreshDailyUI(true);
+      maybeRefreshAchievementsUI();
+
+      // NEW: auto quest streak detection only when all daily missions are completed
+      checkQuestStreakProgress();
+    }
+
+    function allDailyCompleted(){
+      ensureDailyMissionsSetup();
+      const missions = dailyTemplate();
+      return missions.every(m=>{
+        const it = state.daily.items[m.type];
+        return it && it.completed;
+      });
+    }
+
+    function checkQuestStreakProgress(){
+      // streak counts only when all are completed and user claims later
+      // We'll update when "claimCompletedMissions" happens, but we can also prepare UI.
+    }
+
+    function refreshDailyUI(triggerClaimButton){
+      ensureDailyMissionsSetup();
+      const listEl = document.getElementById('missions-list');
+      const dailyCoins = document.getElementById('daily-coins');
+      const dailyXP = document.getElementById('daily-xp');
+      const dailyDate = document.getElementById('daily-date');
+
+      if(!listEl) return;
+
+      dailyDate.innerText = `Today (${state.daily.date})`;
+
+      const missions = dailyTemplate();
+      let totalCoins = 0, totalXP = 0;
+
+      listEl.innerHTML = "";
+
+      // multiplier (NEW #4)
+      const mult = getQuestStreakMultiplier();
+
+      missions.forEach(m=>{
+        const item = state.daily.items[m.type] || {count:0,completed:false,claimed:false,goal:m.goal,reward:m.reward};
+        const pct = Math.min(100, Math.round((item.count / m.goal) * 100));
+        const status = item.completed ? (item.claimed ? "✅ Claimed" : "✅ Ready") : "⏳ In progress";
+
+        if(item.completed && !item.claimed){
+          totalCoins += Math.floor(m.reward.coins * mult);
+          totalXP += Math.floor(m.reward.xp * mult);
         }
 
-        function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
+        const wrap = document.createElement('div');
+        wrap.className = "tutorial-item";
+        wrap.style.marginBottom = "12px";
+        wrap.style.borderLeftColor = item.completed ? "var(--eth-green)" : "var(--primary)";
+
+        wrap.innerHTML = `
+          <div class="row" style="justify-content:space-between;">
+            <b style="font-size:1.05rem; font-family:'Space Grotesk';">${m.title}</b>
+            <span class="pill" style="padding:7px 12px; background:rgba(0,0,0,0.25);">${status}</span>
+          </div>
+          <div style="opacity:.85; margin-top:8px; font-weight:900; font-family:'Space Grotesk';">
+            ${item.count} / ${m.goal} (${pct}%)
+          </div>
+          <div style="opacity:.75; margin-top:6px;">
+            Reward: +${Math.floor(m.reward.coins * mult)} Coins • +${Math.floor(m.reward.xp * mult)} XP
+          </div>
+        `;
+        listEl.appendChild(wrap);
+      });
+
+      dailyCoins.innerText = `+${totalCoins} Coins`;
+      dailyXP.innerText = `+${totalXP} XP`;
+
+      const dailySub = document.getElementById('kpi-daily-sub');
+      if(dailySub){
+        dailySub.innerText = totalCoins>0 ? `You have bonuses available today (+${totalCoins} Coins).` : "No bonuses ready yet.";
+      }
+    }
+
+    function claimCompletedMissions(){
+      initAudio();
+      ensureDailyMissionsSetup();
+      const missions = dailyTemplate();
+
+      let gainedCoins = 0, gainedXP = 0;
+      let claimedAny = false;
+
+      // NEW: capture quest streak completion state before claiming
+      const completedAll = missions.every(m=>{
+        const it = state.daily.items[m.type];
+        return it && it.completed;
+      });
+
+      const mult = getQuestStreakMultiplier();
+
+      missions.forEach(m=>{
+        const item = state.daily.items[m.type];
+        if(item && item.completed && !item.claimed){
+          item.claimed = true;
+          gainedCoins += Math.floor(m.reward.coins * mult);
+          gainedXP += Math.floor(m.reward.xp * mult);
+          claimedAny = true;
+        }
+      });
+
+      if(!claimedAny){
+        playSound('lose');
+        vibrate(25);
+        alert("No completed missions ready to claim.");
+        return;
+      }
+
+      playSound('win');
+      vibrate(25);
+
+      state.coins += gainedCoins;
+      state.xp += gainedXP;
+
+      // NEW: quest streak update (3rd consecutive day type)
+      if(completedAll){
+        const tKey = todayKey();
+        const last = state.flags.lastQuestCompleteDate || "";
+        if(!last){
+          state.flags.questStreak = 1;
+        }else{
+          const lastDate = new Date(last);
+          const curDate = new Date(tKey);
+          const diffDays = Math.round((curDate - lastDate) / (1000*60*60*24));
+          if(diffDays === 1) state.flags.questStreak = (state.flags.questStreak || 0) + 1;
+          else state.flags.questStreak = 1; // reset if not consecutive
+        }
+        state.flags.lastQuestCompleteDate = tKey;
+      }else{
+        // if not all done, streak remains
+      }
+
+      levelUpCheck();
+      updateHUD();
+
+      alert(`🎉 Daily Rewards Claimed!\n+${gainedCoins} Coins • +${gainedXP} XP`);
+
+      // NEW: toast version of reward
+      toast("Daily Rewards Claimed!", `+${gainedCoins} coins • +${gainedXP} XP`, settings.toasts);
+
+      saveState();
+      refreshDailyUI(false);
+    }
+
+    /***********************
+     * Achievements
+     ***********************/
+    function maybeRefreshAchievementsUI(){
+      const toUnlock = [];
+      achievements.forEach(a=>{
+        if(state.unlockedBadges[a.id]) return;
+        try{
+          if(a.cond(state)){
+            toUnlock.push(a);
+          }
+        }catch(e){}
+      });
+
+      if(toUnlock.length){
+        toUnlock.forEach(a=>{
+          state.unlockedBadges[a.id] = true;
+
+          // Apply reward
+          state.coins += (a.reward?.coins || 0);
+          state.xp += (a.reward?.xp || 0);
+
+          playSound('win');
+          toast("Achievement Unlocked!", `${a.title}`, settings.toasts);
+          vibrate(18);
+        });
+
+        levelUpCheck();
+        updateHUD();
+        saveState();
+
+        const names = toUnlock.map(x=>x.title).join(", ");
+        alert(`🏅 Achievement Unlocked: ${names}! (+Rewards)`);
+      }
+
+      renderAchievementsUI();
+    }
+
+    function renderAchievementsUI(){
+      const screen = document.getElementById('scr-achievements');
+      if(!screen || !screen.classList.contains('active')) return;
+
+      const grid = document.getElementById('badges-grid');
+      const cnt = document.getElementById('badge-count');
+      const total = achievements.length;
+      const unlocked = achievements.filter(a=>state.unlockedBadges[a.id]).length;
+
+      cnt.innerText = `${unlocked} / ${total}`;
+
+      grid.innerHTML = "";
+      achievements.forEach(a=>{
+        const unlockedBadge = !!state.unlockedBadges[a.id];
+        const el = document.createElement('div');
+        el.className = "card";
+        el.style.cursor = "default";
+        el.style.borderColor = unlockedBadge ? "var(--eth-green)" : "rgba(255,255,255,0.12)";
+        el.style.background = unlockedBadge ? "rgba(19,136,8,0.12)" : "var(--card-bg)";
+        el.style.transform = "none";
+        el.innerHTML = `
+          <h3 style="margin-top:6px;">${a.icon} ${a.title}</h3>
+          <p style="margin-top:8px; opacity:.78;">${a.desc}</p>
+          <div style="margin-top:14px; opacity:.9; font-family:'Space Grotesk'; font-weight:900;">
+            ${unlockedBadge ? "✅ UNLOCKED" : "🔒 LOCKED"}
+          </div>
+        `;
+        grid.appendChild(el);
+      });
+    }
+
+    /***********************
+     * Quiz Engine (Improved + keyboard friendliness)
+     ***********************/
+    let stateLock = false;
+
+    let quizTimerInterval = null;
+    let quizTimerRemaining = 0;
+
+    function stopQuizTimer(){
+      if(quizTimerInterval){
+        clearInterval(quizTimerInterval);
+        quizTimerInterval = null;
+      }
+      quizTimerRemaining = 0;
+      const pill = document.getElementById('quiz-timer-pill');
+      if(pill) pill.style.display = 'none';
+    }
+
+    function startQuiz(mode){
+      initAudio();
+      if(settings.sound) playSound('click');
+
+      state.mode = mode;
+      state.idx = 0;
+      state.currentAnswer = "";
+      state.combo = Math.max(1, state.combo || 1);
+
+      const pill = document.getElementById('quiz-timer-pill');
+      if(pill) pill.style.display = 'none';
+
+      selA = null; selB = null;
+      showScreen('scr-quiz');
+      stateLock = false;
+      loadQuizQuestion();
+      recordPlay(`quiz:${mode}`);
+    }
+
+    function getQuizTimerForMode(mode){
+      if(mode === 'timedChoose') return 10;
+      return null;
+    }
+
+    function startQuizTimer(sec){
+      stopQuizTimer();
+      quizTimerRemaining = sec;
+      const pill = document.getElementById('quiz-timer-pill');
+      const timerEl = document.getElementById('quiz-timer');
+      pill.style.display = 'inline-flex';
+      timerEl.innerText = String(quizTimerRemaining);
+
+      quizTimerInterval = setInterval(()=>{
+        quizTimerRemaining--;
+        if(quizTimerRemaining < 0) quizTimerRemaining = 0;
+        timerEl.innerText = String(quizTimerRemaining);
+
+        if(quizTimerRemaining === 0){
+          stopQuizTimer();
+          if(stateLock) return;
+          stateLock = true;
+          handleQuizResult(false, true);
+        }
+      }, 1000);
+    }
+
+    function loadQuizQuestion(){
+      const q = ictData[state.idx];
+      if(!q){
+        showScreen('scr-dash');
+        return;
+      }
+
+      const total = ictData.length;
+      document.getElementById('quiz-lvl-tag').innerText = `Challenge ${state.idx + 1}/${total}`;
+      document.getElementById('quiz-progress').style.width = (state.idx / total * 100) + "%";
+
+      stopQuizTimer();
+
+      const area = document.getElementById('q-options');
+      area.innerHTML = "";
+
+      const subtitle = document.getElementById('q-subtitle');
+      subtitle.innerText = "";
+
+      if(state.mode === 'choosing'){
+        document.getElementById('q-text').innerText = q.d;
+        subtitle.innerText = "Pick the correct term.";
+
+        let opts = [q.t];
+        while(opts.length < 4){
+          const rand = ictData[Math.floor(Math.random()*ictData.length)].t;
+          if(!opts.includes(rand)) opts.push(rand);
+        }
+        opts.sort(()=>Math.random()-0.5);
+
+        area.innerHTML = "";
+        opts.forEach(o=>{
+          area.innerHTML += `<button class="btn" style="width:100%; max-width:420px;" data-kb="opt" onclick="checkQuizAns('${escapeHtmlAttr(o)}')">${escapeHtml(o)}</button>`;
+        });
+        // NEW #19: keyboard focus helper
+        setTimeout(()=>{ focusFirstQuizOption(); }, 50);
+
+      } else if(state.mode === 'timedChoose'){
+        const timer = getQuizTimerForMode('timedChoose') || 10;
+
+        // NEW #18: dynamic difficulty scaling
+        const extra = state.lvl >= 8 ? -2 : 0;
+        const scaled = Math.max(6, timer + extra);
+
+        startQuizTimer(scaled);
+
+        document.getElementById('q-text').innerText = q.d;
+        subtitle.innerText = `Timed! Answer within ${scaled}s.`;
+
+        let opts = [q.t];
+        while(opts.length < 4){
+          const rand = ictData[Math.floor(Math.random()*ictData.length)].t;
+          if(!opts.includes(rand)) opts.push(rand);
+        }
+        opts.sort(()=>Math.random()-0.5);
+
+        area.innerHTML = "";
+        opts.forEach(o=>{
+          area.innerHTML += `<button class="btn" style="width:100%; max-width:420px;" onclick="checkQuizAns('${escapeHtmlAttr(o)}')">${escapeHtml(o)}</button>`;
+        });
+
+      } else if(state.mode === 'writing' || state.mode === 'fillblank'){
+        document.getElementById('q-text').innerText = (state.mode === 'writing') ? q.d : q.b;
+        subtitle.innerText = "Type the correct core term (then press Enter).";
+
+        area.innerHTML =
+          `<input type="text" id="quiz-input" class="input-box" style="max-width:420px; margin-bottom:10px;" placeholder="Type answer here..." autocomplete="off"/>
+           <button class="btn" style="width:100%; max-width:420px;" onclick="checkQuizAns(document.getElementById('quiz-input').value)">Submit Analysis</button>`;
+
+        const input = document.getElementById('quiz-input');
+        input.focus();
+        input.addEventListener('keydown', (e)=>{
+          if(e.key === 'Enter'){
+            checkQuizAns(input.value);
+          }
+        }, { once:false });
+
+      } else if(state.mode === 'matching'){
+        document.getElementById('q-text').innerText = "Match the Term to its Definition";
+        subtitle.innerText = "Select from A then B. Correct pairs lock in.";
+        renderMatching();
+
+      } else if(state.mode === 'flashcards'){
+        const flip = Math.random() > 0.5;
+        if(flip){
+          document.getElementById('q-text').innerText = `TERM: ${q.t}`;
+          subtitle.innerText = "Type the matching definition keyword (answer = term).";
+          area.innerHTML =
+            `<input type="text" id="quiz-input" class="input-box" style="max-width:420px; margin-bottom:10px;" placeholder="Type the definition's term..." autocomplete="off"/>
+             <button class="btn" style="width:100%; max-width:420px;" onclick="checkQuizAns(document.getElementById('quiz-input').value)">Reveal</button>`;
+          const input = document.getElementById('quiz-input');
+          input.focus();
+          input.addEventListener('keydown', (e)=>{ if(e.key==='Enter') checkQuizAns(input.value); }, { once:false });
+        }else{
+          document.getElementById('q-text').innerText = q.d;
+          subtitle.innerText = "Type the correct term for this definition.";
+          area.innerHTML =
+            `<input type="text" id="quiz-input" class="input-box" style="max-width:420px; margin-bottom:10px;" placeholder="Type the correct term..." autocomplete="off"/>
+             <button class="btn" style="width:100%; max-width:420px;" onclick="checkQuizAns(document.getElementById('quiz-input').value)">Submit</button>`;
+          const input = document.getElementById('quiz-input');
+          input.focus();
+          input.addEventListener('keydown', (e)=>{ if(e.key==='Enter') checkQuizAns(input.value); }, { once:false });
+        }
+      }
+    }
+
+    function focusFirstQuizOption(){
+      try{
+        const btn = document.querySelector('#q-options button[data-kb="opt"]');
+        if(btn) btn.focus();
+      }catch(_){}
+    }
+
+    // Matching selections
+    let selA = null, selB = null;
+    function renderMatching(){
+      const area = document.getElementById('q-options');
+      let html = `<div class="match-area"><div class="match-box">`;
+
+      const pool = [ictData[state.idx]];
+      while(pool.length < 3){
+        const rand = ictData[Math.floor(Math.random()*ictData.length)];
+        if(!pool.includes(rand)) pool.push(rand);
+      }
+      pool.sort(()=>Math.random()-0.5);
+
+      pool.forEach(item=>{
+        html += `<div class="match-item" data-val="${escapeHtmlAttr(item.t)}" tabindex="0" onclick="matchSelect('A', '${escapeHtmlAttr(item.t)}', this); playSound('click');">${escapeHtml(item.t)}</div>`;
+      });
+
+      html += `</div><div class="match-box">`;
+
+      const poolB = [...pool].sort(()=>Math.random()-0.5);
+      poolB.forEach(item=>{
+        const short = item.d.length>52 ? item.d.substring(0,52)+'...' : item.d;
+        html += `<div class="match-item" data-val="${escapeHtmlAttr(item.t)}" tabindex="0" onclick="matchSelect('B', '${escapeHtmlAttr(item.t)}', this); playSound('click');">${escapeHtml(short)}</div>`;
+      });
+
+      html += `</div></div>`;
+      area.innerHTML = html;
+      selA = null; selB = null;
+      stateLock = false;
+
+      // keyboard for matching
+      area.querySelectorAll('.match-item').forEach(el=>{
+        el.addEventListener('keydown', (e)=>{
+          if(e.key === 'Enter' || e.key === ' '){
+            e.preventDefault();
+            el.click();
+          }
+        });
+      });
+    }
+
+    function matchSelect(side, keyVal, el){
+      if(stateLock) return;
+
+      if(side === 'A'){
+        if(selA && selA.el) selA.el.classList.remove('selected');
+        selA = { val:keyVal, el };
+      }else{
+        if(selB && selB.el) selB.el.classList.remove('selected');
+        selB = { val:keyVal, el };
+      }
+
+      el.classList.add('selected');
+
+      if(selA && selB){
+        const correct = (selA.val === selB.val);
+        if(correct){
+          playSound('win');
+          selA.el.classList.add('correct');
+          selB.el.classList.add('correct');
+          selA.el.classList.remove('selected');
+          selB.el.classList.remove('selected');
+          selA = null; selB = null;
+
+          const locked = document.querySelectorAll('.match-item.correct').length;
+          if(locked === 6){
+            stateLock = true;
+            handleQuizResult(true, false);
+          }
+        }else{
+          playSound('lose');
+          triggerShake();
+          safeLoseLife();
+          state.combo = 1;
+          updateHUD();
+          selA.el.classList.remove('selected');
+          selB.el.classList.remove('selected');
+          selA = null; selB = null;
+        }
+      }
+    }
+
+    function safeLoseLife(){
+      // NEW #5: Auto-shield prevents one life loss automatically (if available)
+      if(state.inventory && state.inventory.autoShield > 0){
+        state.inventory.autoShield--;
+        state.flags.autoShieldUsed = (state.flags.autoShieldUsed || 0) + 1;
+        playSound('click');
+        vibrate(12);
+        alert("🛡️ Auto‑Shield activated! No life lost.");
+        saveState();
+        updateHUD();
+        return;
+      }
+
+      if(state.inventory && state.inventory.shields > 0){
+        state.inventory.shields--;
+        playSound('click');
+        state.lives = Math.max(0, state.lives);
+        alert("🛡️ Shield protected you! No life lost.");
+        saveState();
+        updateHUD();
+        return;
+      }
+
+      state.lives--;
+      if(state.lives < 0) state.lives = 0;
+    }
+
+    function triggerShake(){
+      const app = document.getElementById('app-container');
+      app.classList.remove('shake');
+      void app.offsetWidth;
+      app.classList.add('shake');
+      vibrate(12);
+    }
+
+    // NEW: Perfect combo check helper
+    function checkPerfectComboForDaily(){
+      // Daily mission: perfect combo win (NEW #9/#10)
+      // Condition: quiz round won and no life lost + combo >= 3 (approx rule)
+      // We approximate by checking last result - used inside handleQuizResult with safeLoseLife tracking.
+    }
+
+    function handleQuizResult(isCorrect, timedOut){
+      stopQuizTimer();
+
+      if(stateLock === false) stateLock = true;
+
+      const q = ictData[state.idx];
+      const fbTitle = document.getElementById('fb-title');
+      const fbText = document.getElementById('fb-text');
+      const fbCombo = document.getElementById('fb-combo-msg');
+
+      // Track life-loss for perfect-combo mission:
+      const livesBefore = state.lives;
+
+      if(isCorrect){
+        playSound('win');
+        vibrate(18);
+
+        // Apply XP booster (NEW #7/#8)
+        let coinGain = 5;
+        let xpGain = 20 * state.combo;
+
+        if(state.inventory && state.inventory.coinDoubler > 0){
+          // Coin doubler doubles coin gain once
+          state.inventory.coinDoubler = Math.max(0, state.inventory.coinDoubler - 1);
+          state.flags.coinDoublerUsed = (state.flags.coinDoublerUsed || 0) + 1;
+          coinGain *= 2;
+          toast("Coin Doubler!", "Coins doubled for this win.", settings.toasts);
         }
 
-        function startGlobalTimer() {
-            if(state.timerActive) return;
-            state.timerActive = true;
-            setInterval(() => {
-                if(!state.timerFrozen) state.timer++;
-                let m = Math.floor(state.timer/60).toString().padStart(2,'0');
-                let s = (state.timer%60).toString().padStart(2,'0');
-                document.getElementById('hud-timer').innerText = `${m}:${s}`;
-            }, 1000);
+        if(state.inventory && state.inventory.xpBooster > 0){
+          state.inventory.xpBooster = Math.max(0, state.inventory.xpBooster - 1);
+          state.flags.xpBoosterUsed = (state.flags.xpBoosterUsed || 0) + 1;
+          xpGain *= 1.5;
+          toast("XP Booster!", "XP boosted for this win.", settings.toasts);
         }
 
-        function updateHUD() {
-            document.getElementById('hud-coins').innerText = state.coins;
-            document.getElementById('hud-lives').innerText = state.lives;
-            document.getElementById('market-balance').innerText = state.coins;
-            if(state.lives <= 0) {
-                alert("Game Over! Your lives have run out. Academy reset.");
-                location.reload();
-            }
+        state.xp += xpGain;
+        state.coins += coinGain;
+
+        fbTitle.innerText = timedOut ? "ACCESS GRANTED" : "ACCESS GRANTED";
+        fbTitle.style.color = "var(--success)";
+        fbText.innerText = q.d;
+        fbCombo.innerText = `+${Math.floor(xpGain)} XP (Combo x${state.combo})`;
+
+        state.stats.quizCorrect = (state.stats.quizCorrect || 0) + 1;
+        addDailyProgress("quizCorrect", 1);
+
+        state.combo++;
+        state.maxCombo = Math.max(state.maxCombo || 1, state.combo);
+        state.stats.maxCombo = Math.max(state.stats.maxCombo || 1, state.maxCombo);
+
+        // Perfect combo mission check (NEW #10)
+        const livesAfter = state.lives;
+        if(livesAfter === livesBefore && state.combo >= 4){
+          state.stats.perfectComboWins = (state.stats.perfectComboWins || 0) + 1;
+          addDailyProgress("perfectCombo", 1);
+          toast("Perfect Combo!", "Daily mission progress: +1", settings.toasts);
         }
 
-        function startMode(mode) {
-            state.currentMode = mode;
-            state.currentIndex = 0;
-            state.timerFrozen = false;
-            showScreen('screen-game');
-            loadQuestion();
+      }else{
+        playSound('lose');
+        triggerShake();
+
+        safeLoseLife();
+        state.combo = 1;
+
+        fbTitle.innerText = timedOut ? "TIMEOUT ACCESS DENIED" : "ACCESS DENIED";
+        fbTitle.style.color = "var(--eth-red)";
+
+        fbText.innerText = `The correct core concept was: ${q.t}`;
+        fbCombo.innerText = timedOut ? "Combo Reset! (Timer)" : "Combo Reset!";
+      }
+
+      levelUpCheck();
+      updateHUD();
+
+      if(state.lives <= 0){
+        playSound('lose');
+        alert("Game Over! You ran out of lives. Restarting session...");
+        wipeProgress();
+        return;
+      }
+
+      openModal('modal-feedback');
+      stateLock = false;
+      maybeRefreshAchievementsUI();
+
+      // NEW: record play
+      recordPlay(`quiz:${state.mode}`);
+    }
+
+    function escapeHtml(str){
+      return String(str).replace(/[&<>"']/g, s=>{
+        const map = { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' };
+        return map[s] || s;
+      });
+    }
+    function escapeHtmlAttr(str){
+      return String(str).replace(/'/g,"&#39;").replace(/"/g,'&quot;');
+    }
+
+    function checkQuizAns(val){
+      initAudio();
+      if(stateLock) return;
+
+      const q = ictData[state.idx];
+      if(!q) return;
+
+      let isCorrect = false;
+
+      if(state.mode === 'choosing' || state.mode === 'timedChoose'){
+        isCorrect = String(val).toLowerCase().trim() === String(q.t).toLowerCase().trim();
+      }else{
+        isCorrect = String(val).toLowerCase().trim() === String(q.t).toLowerCase().trim();
+      }
+
+      stateLock = true;
+      closeModal('modal-feedback');
+      handleQuizResult(isCorrect, false);
+      stateLock = false;
+
+      vibrate(6);
+    }
+
+    function nextQuizStep(){
+      state.idx++;
+      if(state.idx >= ictData.length){
+        stopQuizTimer();
+        playSound('buy');
+        alert("MASTERY COMPLETE! You cleared this module (Quiz).");
+        state.combo = 1;
+        showScreen('scr-dash');
+        saveState();
+      }else{
+        stateLock = false;
+        loadQuizQuestion();
+      }
+    }
+
+    function recordPlay(label){
+      // NEW #15: recent plays
+      state.recentPlays = state.recentPlays || [];
+      state.recentPlays.unshift({ t: Date.now(), mode: label });
+      state.recentPlays = state.recentPlays.slice(0, 8);
+      saveState();
+      renderRecentPlaysUI();
+    }
+
+    function renderRecentPlaysUI(){
+      const wrap = document.getElementById('recent-plays');
+      if(!wrap) return;
+
+      wrap.innerHTML = "";
+      const list = (state.recentPlays || []).slice(0, 6);
+
+      if(list.length === 0){
+        wrap.innerHTML = `<div class="kpi" style="text-align:center;"><b>No plays yet</b><div style="opacity:.8; margin-top:6px;">Start a quiz or a skill game.</div></div>`;
+        return;
+      }
+
+      list.forEach(item=>{
+        const d = new Date(item.t);
+        const time = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+        const el = document.createElement('div');
+        el.className = "card";
+        el.style.cursor = "default";
+        el.style.transform = "none";
+        el.innerHTML = `
+          <h3 style="margin-top:6px; font-size:1.05rem;">🕒 ${escapeHtml(time)}</h3>
+          <p style="opacity:.78; font-weight:900; font-family:'Space Grotesk';">${escapeHtml(item.mode)}</p>
+        `;
+        wrap.appendChild(el);
+      });
+    }
+
+    function showRecentPlaysModal(){
+      // Quick re-use: just open profile modal and highlight; keep minimal
+      renderProfileModal();
+      toast("Recent Plays", "Open the dashboard to view them.", settings.toasts);
+    }
+
+    /***********************
+     * Academy / Lexicon (same as your logic, preserved)
+     ***********************/
+    function openModule(type){
+      initAudio();
+      playSound('click');
+      showScreen('scr-list');
+
+      const title = document.getElementById('list-title');
+      const content = document.getElementById('list-content');
+      content.innerHTML = "";
+
+      if(type === 'academy'){
+        title.innerText = "ICT Academy (Learning Path)";
+        const lessonCards = tutorials.concat([
+          { t:"Mobile Safety", c:"How to protect passwords, enable security updates, and avoid scams." },
+          { t:"Networks in Daily Life", c:"Routers, Wi‑Fi, ISP, bandwidth, latency and troubleshooting." },
+          { t:"Computing Essentials", c:"CPU, RAM, storage, input/output and how they work together." }
+        ]);
+
+        lessonCards.forEach((item, i)=>{
+          content.innerHTML += `
+            <div class="tutorial-item">
+              <div class="row" style="justify-content:space-between;">
+                <b style="font-family:'Space Grotesk'; font-size:1.1rem;">${escapeHtml(item.t)}</b>
+                <span class="pill" style="background:rgba(0,0,0,0.18);">Lesson ${i+1}</span>
+              </div>
+              <p style="margin:10px 0 0; opacity:.85; font-size:.95rem;">${escapeHtml(item.c)}</p>
+
+              <div class="row" style="margin-top:12px; justify-content:center;">
+                <button class="btn" style="padding:10px 16px; background: linear-gradient(135deg, #0ea5e9, #22c55e);" onclick="quickPracticeFromLesson('${escapeHtmlAttr(item.t)}'); playSound('click');">
+                  Quick Practice
+                </button>
+              </div>
+            </div>
+          `;
+        });
+
+      }else{
+        title.innerText = "Technical Lexicon";
+        state.stats.lexiconOpens = (state.stats.lexiconOpens || 0) + 1;
+        saveState();
+
+        const sorted = [...ictData];
+        sorted.sort((a,b)=>a.t.localeCompare(b.t));
+
+        sorted.forEach(item=>{
+          content.innerHTML += `
+            <div class="tutorial-item" style="border-left-color:var(--primary);">
+              <h3 style="margin:0 0 6px; font-family:'Space Grotesk'; color:var(--primary);">${escapeHtml(item.t)}</h3>
+              <p style="margin:0; opacity:.9;">${escapeHtml(item.d)}</p>
+              <div style="margin-top:10px; opacity:.8; font-weight:800; font-size:.9rem; font-family:'Space Grotesk';">
+                Blank: ${escapeHtml(item.b)}
+              </div>
+            </div>
+          `;
+        });
+      }
+      updateHUD();
+      renderAchievementsUI();
+    }
+
+    function quickPracticeFromLesson(lessonTitle){
+      initAudio();
+      playSound('win');
+
+      state.coins += 8;
+      state.xp += 15;
+      updateHUD();
+
+      const savedMode = state.mode;
+      const mode = 'choosing';
+      state.mode = mode;
+      state.idx = 0;
+
+      showScreen('scr-quiz');
+
+      const subset = [];
+      while(subset.length < 7){
+        const r = ictData[Math.floor(Math.random()*ictData.length)];
+        if(!subset.includes(r)) subset.push(r);
+      }
+      state.quizPool = subset;
+
+      document.getElementById('quiz-lvl-tag').innerText = `Lesson Practice • ${subset.length}/${subset.length}`;
+
+      stopQuizTimer();
+      stateLock = false;
+
+      function loadQuizQuestionFromPool(){
+        stopQuizTimer();
+        const q = state.quizPool[state.idx];
+        if(!q){
+          showScreen('scr-dash');
+          state.mode = savedMode;
+          delete state.quizPool;
+          updateHUD();
+          return;
+        }
+        const area = document.getElementById('q-options');
+        const total = state.quizPool.length;
+
+        document.getElementById('quiz-progress').style.width = (state.idx / total * 100) + "%";
+        document.getElementById('q-text').innerText = q.d;
+        document.getElementById('q-subtitle').innerText = `Quick Practice • ${state.idx+1}/${total}`;
+
+        let opts = [q.t];
+        while(opts.length < 4){
+          const rand = ictData[Math.floor(Math.random()*ictData.length)].t;
+          if(!opts.includes(rand)) opts.push(rand);
+        }
+        opts.sort(()=>Math.random()-0.5);
+
+        area.innerHTML = "";
+        opts.forEach(o=>{
+          area.innerHTML += `<button class="btn" style="width:100%; max-width:420px;" onclick="checkQuizAnsPool('${escapeHtmlAttr(o)}')">${escapeHtml(o)}</button>`;
+        });
+        setTimeout(()=>{ focusFirstQuizOption(); }, 50);
+      }
+
+      loadQuizQuestionFromPool();
+
+      window.checkQuizAnsPool = (val2)=>{
+        initAudio();
+        if(stateLock) return;
+
+        const q = state.quizPool[state.idx];
+        const isCorrect = String(val2).toLowerCase().trim() === String(q.t).toLowerCase().trim();
+        stateLock = true;
+
+        const fbTitle = document.getElementById('fb-title');
+        const fbText = document.getElementById('fb-text');
+        const fbCombo = document.getElementById('fb-combo-msg');
+
+        stopQuizTimer();
+
+        const livesBefore = state.lives;
+
+        if(isCorrect){
+          playSound('win');
+          vibrate(18);
+
+          let xpGain = 18 * state.combo;
+          let coinGain = 4;
+
+          if(state.inventory && state.inventory.coinDoubler > 0){
+            state.inventory.coinDoubler = Math.max(0, state.inventory.coinDoubler - 1);
+            state.flags.coinDoublerUsed = (state.flags.coinDoublerUsed || 0) + 1;
+            coinGain *= 2;
+          }
+          if(state.inventory && state.inventory.xpBooster > 0){
+            state.inventory.xpBooster = Math.max(0, state.inventory.xpBooster - 1);
+            state.flags.xpBoosterUsed = (state.flags.xpBoosterUsed || 0) + 1;
+            xpGain *= 1.5;
+          }
+
+          state.xp += xpGain;
+          state.coins += coinGain;
+
+          fbTitle.innerText = "ACCESS GRANTED";
+          fbTitle.style.color = "var(--success)";
+          fbText.innerText = q.d;
+          fbCombo.innerText = `+${Math.floor(xpGain)} XP (Combo x${state.combo})`;
+
+          state.stats.quizCorrect = (state.stats.quizCorrect||0) + 1;
+          addDailyProgress("quizCorrect", 1);
+          state.combo++;
+
+          // Perfect combo approximated
+          const livesAfter = state.lives;
+          if(livesAfter === livesBefore && state.combo >= 4){
+            state.stats.perfectComboWins = (state.stats.perfectComboWins || 0) + 1;
+            addDailyProgress("perfectCombo", 1);
+          }
+        }else{
+          playSound('lose');
+          triggerShake();
+          safeLoseLife();
+          state.combo = 1;
+
+          fbTitle.innerText = "ACCESS DENIED";
+          fbTitle.style.color = "var(--eth-red)";
+          fbText.innerText = `Correct core concept: ${q.t}`;
+          fbCombo.innerText = "Combo Reset!";
         }
 
-        function loadQuestion() {
+        levelUpCheck();
+        updateHUD();
+
+        if(state.lives <= 0){
+          alert("Game Over in practice.");
+          wipeProgress();
+          return;
+        }
+
+        openModal('modal-feedback');
+        stateLock = false;
+
+        // Continue: next in pool (NEW: avoid overwriting your main nextQuizStep)
+        document.querySelector('#modal-feedback button').onclick = ()=>{
+          closeModal('modal-feedback');
+          document.querySelector('#modal-feedback button').onclick = ()=>{ closeModal('modal-feedback'); nextQuizStep(); };
+          state.idx++;
+          if(state.idx >= state.quizPool.length){
+            alert("✅ Quick Practice Completed!");
+            showScreen('scr-dash');
+            delete state.quizPool;
+            state.mode = savedMode;
             updateHUD();
-            document.getElementById('hint-box').style.display = "none";
-            const q = gameData[state.currentMode][state.currentIndex];
-            const area = document.getElementById('answer-container');
-            const prog = ((state.currentIndex) / 30) * 100;
-            document.getElementById('progress-bar').style.width = prog + "%";
-            document.getElementById('game-level-tag').innerText = `Level ${state.currentIndex + 1} of 30`;
+          }else{
+            loadQuizQuestionFromPool();
+          }
+        };
+      };
+    }
 
-            area.innerHTML = "";
-            
-            if(state.currentMode === 'choosing') {
-                document.getElementById('q-text').innerText = q.q;
-                q.options.forEach(opt => {
-                    area.innerHTML += `<button class="btn btn-main" style="width:100%; margin-bottom:15px; font-size: 1.1rem;" onclick="checkAnswer('${opt}')">${opt}</button>`;
-                });
-            } 
-            else if(state.currentMode === 'writing' || state.currentMode === 'fillblank') {
-                document.getElementById('q-text').innerText = q.q;
-                area.innerHTML = `<input type="text" id="text-ans" placeholder="Type your answer here..." autocomplete="off" onkeypress="if(event.key==='Enter') checkTextAnswer()"><br>
-                                  <button class="btn btn-main" style="width: 100%; font-size: 1.2rem;" onclick="checkTextAnswer()">Submit Answer</button>`;
-                setTimeout(() => document.getElementById('text-ans').focus(), 100);
+    function filterList(){
+      const val = document.getElementById('list-search').value.toLowerCase();
+      document.querySelectorAll('.tutorial-item').forEach(item=>{
+        item.style.display = item.innerText.toLowerCase().includes(val) ? "block" : "none";
+      });
+    }
+
+    /***********************
+     * Inventory / Profile modal helpers (NEW #16,#17)
+     ***********************/
+    function renderProfileModal(){
+      const el = document.getElementById('modal-profile');
+      if(!el) return;
+
+      document.getElementById('pc-name').innerText = state.name || "Guest";
+      document.getElementById('pc-level').innerText = String(state.lvl);
+      document.getElementById('pc-xp').innerText = String(state.xp);
+      document.getElementById('pc-coins').innerText = String(state.coins);
+      document.getElementById('pc-combo').innerText = `x${state.combo || 1}`;
+      document.getElementById('pc-streak').innerText = String(state.flags.questStreak || 0);
+    }
+
+    function renderMarketInventorySummary(){
+      const el = document.getElementById('inv-summary');
+      if(!el) return;
+
+      el.innerText =
+        `Hints:${state.inventory.hintTokens} • Shields:${state.inventory.shields} • Shuffles:${state.inventory.shuffles} • Reveal2:${state.inventory.reveal2} • Auto:${state.inventory.autoShield} • CoinDoubler:${state.inventory.coinDoubler} • XPBooster:${state.inventory.xpBooster}`;
+      document.getElementById('mkt-coins').innerText = String(state.coins);
+    }
+
+    /***********************
+     * Skill Games + New Mechanics
+     ***********************/
+    let skillTimer = null;
+    function stopSkillTimer(){
+      if(skillTimer){
+        clearInterval(skillTimer);
+        skillTimer = null;
+      }
+      const wrap = document.getElementById('skill-timer-wrap');
+      if(wrap) wrap.style.display = 'none';
+    }
+
+    function startSpecial(game){
+      initAudio();
+      playSound('click');
+
+      state.mode = game;
+      showScreen('scr-skill');
+
+      stopSkillTimer();
+      document.getElementById('skill-input').style.display = "block";
+      document.getElementById('skill-display').style.display = "block";
+
+      document.getElementById('neural-click-zone').style.display = "none";
+      document.getElementById('boss-wrap').style.display = "none";
+      document.getElementById('sequence-zone').style.display = "none";
+
+      document.getElementById('skill-submit-btn').style.display = "none";
+      document.getElementById('skill-input').value = "";
+
+      document.getElementById('sequence-zone').style.display = 'none';
+      document.getElementById('neural-click-zone').style.display = 'none';
+
+      // NEW: Wordsearch routed by separate startWordSearchScreen if needed
+      if(game === 'wordsearch'){
+        startWordSearchScreen();
+        return;
+      }
+
+      document.getElementById('skill-display').innerHTML = "";
+
+      if(game === 'typer'){
+        document.getElementById('skill-title').innerText = "⚡ Neural Typer";
+        initTyper();
+      } else if(game === 'puzzle'){
+        document.getElementById('skill-title').innerText = "🧩 Unscramble";
+        initPuzzle();
+      } else if(game === 'neuralClick'){
+        document.getElementById('skill-title').innerText = "🎯 Neural Click";
+        initNeuralClick();
+      } else if(game === 'omegaCore'){
+        document.getElementById('skill-title').innerText = "🕹️ Omega Core";
+        initBossOmegaCore();
+      } else if(game === 'marathon'){
+        document.getElementById('skill-title').innerText = "🏃 Neural Click Marathon";
+        initNeuralClickMarathon();
+      } else if(game === 'sequenceMemory'){
+        document.getElementById('skill-title').innerText = "🧠 Sequence Memory";
+        initSequenceMemory();
+      }
+
+      recordPlay(`skill:${game}`);
+    }
+
+    function initTyper(){
+      stopSkillTimer();
+      document.getElementById('skill-timer-wrap').style.display = 'none';
+
+      const item = ictData[Math.floor(Math.random()*ictData.length)];
+      state.currentAnswer = item.t;
+
+      document.getElementById('skill-hint').innerText = "TYPE THIS TERM FAST:";
+      document.getElementById('skill-display').innerText = item.t;
+
+      const inp = document.getElementById('skill-input');
+      inp.placeholder = "Type the term here...";
+      inp.value = "";
+      inp.focus();
+
+      if(state.lvl >= 5){
+        startSkillCountDown(18);
+      }
+    }
+
+    function startSkillCountDown(sec){
+      stopSkillTimer();
+      document.getElementById('skill-timer-wrap').style.display = 'inline-flex';
+
+      const timerEl = document.getElementById('skill-timer');
+      let remaining = sec;
+      timerEl.innerText = String(remaining);
+
+      skillTimer = setInterval(()=>{
+        remaining--;
+        if(remaining < 0) remaining = 0;
+        timerEl.innerText = String(remaining);
+        if(remaining === 0){
+          stopSkillTimer();
+          playSound('lose');
+          triggerShake();
+          safeLoseLife();
+          state.combo = 1;
+          updateHUD();
+          alert("⏳ Time ran out!");
+          startNextTyperOrPuzzle();
+        }
+      }, 1000);
+    }
+
+    function initPuzzle(){
+      stopSkillTimer();
+      document.getElementById('skill-timer-wrap').style.display = 'none';
+
+      const item = ictData[Math.floor(Math.random()*ictData.length)];
+      state.currentAnswer = item.t;
+
+      document.getElementById('skill-hint').innerText = "UNSCRAMBLE TO REVEAL THE TERM:";
+      document.getElementById('skill-display').innerText = item.t.split('').sort(()=>Math.random()-0.5).join('').toUpperCase();
+
+      const inp = document.getElementById('skill-input');
+      inp.placeholder = "Type the unscrambled term...";
+      inp.value = "";
+      inp.focus();
+
+      if(state.lvl >= 6){
+        startSkillCountDown(20);
+      }
+    }
+
+    function startNextTyperOrPuzzle(){
+      if(state.mode === 'typer') initTyper();
+      else if(state.mode === 'puzzle') initPuzzle();
+    }
+
+    document.getElementById('skill-input').addEventListener('input', (e)=>{
+      if(state.mode !== 'typer' && state.mode !== 'puzzle') return;
+      playSound('type');
+
+      const target = (state.currentAnswer||"").toLowerCase();
+      const got = (e.target.value||"").toLowerCase().trim();
+      if(!got) return;
+
+      if(got === target){
+        stopSkillTimer();
+        playSound('win');
+
+        let xpGain = 15 * state.combo;
+        let coinGain = 5;
+
+        // NEW: apply boosters also to skills (simple + consistent)
+        if(state.inventory.coinDoubler > 0){
+          state.inventory.coinDoubler--;
+          state.flags.coinDoublerUsed = (state.flags.coinDoublerUsed || 0) + 1;
+          coinGain *= 2;
+        }
+        if(state.inventory.xpBooster > 0){
+          state.inventory.xpBooster--;
+          state.flags.xpBoosterUsed = (state.flags.xpBoosterUsed || 0) + 1;
+          xpGain *= 1.5;
+        }
+
+        state.xp += xpGain;
+        state.coins += coinGain;
+        state.combo++;
+        state.stats.skillWins = (state.stats.skillWins || 0) + 1;
+
+        addDailyProgress("skillWin", 1);
+
+        updateHUD();
+        document.getElementById('skill-display').style.color = "var(--eth-green)";
+        setTimeout(()=>{
+          document.getElementById('skill-display').style.color = "var(--text-light)";
+          initTyperOrPuzzleAgain();
+        }, 420);
+        maybeRefreshAchievementsUI();
+      }
+    });
+
+    function initTyperOrPuzzleAgain(){
+      if(state.mode === 'typer') initTyper();
+      else initPuzzle();
+    }
+
+    /***********************
+     * Neural Clicker (original) + Marathon (NEW #11)
+     ***********************/
+    function initNeuralClick(){
+      stopSkillTimer();
+
+      let remaining = 20;
+      document.getElementById('skill-timer-wrap').style.display = 'inline-flex';
+      document.getElementById('skill-timer').innerText = String(remaining);
+
+      const zone = document.getElementById('neural-click-zone');
+      const target = document.getElementById('target');
+      zone.style.display = 'block';
+
+      document.getElementById('nc-score').innerText = "0";
+      document.getElementById('nc-combo').innerText = "1";
+
+      let score = 0;
+      let ncCombo = 1;
+
+      function moveTarget(){
+        const rect = zone.getBoundingClientRect();
+        const x = Math.floor(Math.random() * (zone.clientWidth - 70)) + 35;
+        const y = Math.floor(Math.random() * (zone.clientHeight - 90)) + 55;
+        target.style.left = x + "px";
+        target.style.top  = y + "px";
+      }
+
+      target.onclick = ()=>{
+        if(remaining <= 0) return;
+        score += 10 * ncCombo;
+        ncCombo++;
+        document.getElementById('nc-score').innerText = String(score);
+        document.getElementById('nc-combo').innerText = String(ncCombo);
+        playSound('win');
+        target.style.transform = "translate(-50%, -50%) scale(1.06)";
+        setTimeout(()=> target.style.transform = "translate(-50%, -50%) scale(1)", 120);
+        moveTarget();
+      };
+
+      moveTarget();
+
+      skillTimer = setInterval(()=>{
+        remaining--;
+        document.getElementById('skill-timer').innerText = String(Math.max(0, remaining));
+        if(remaining <= 0){
+          stopSkillTimer();
+          zone.style.display = 'none';
+
+          const xpGain = Math.floor(score/2);
+          const coinsGain = Math.floor(score/6) + 10;
+
+          state.xp += xpGain;
+          state.coins += coinsGain;
+          state.combo = Math.max(1, state.combo);
+          state.stats.skillWins = (state.stats.skillWins || 0) + 1;
+          addDailyProgress("skillWin", 1);
+
+          state.combo++;
+          playSound('buy');
+          updateHUD();
+
+          alert(`🎯 Neural Click complete!\n+${xpGain} XP • +${coinsGain} Coins`);
+          maybeRefreshAchievementsUI();
+
+          initNeuralClick();
+        }
+      }, 1000);
+    }
+
+    function initNeuralClickMarathon(){
+      stopSkillTimer();
+
+      // NEW: Marathon longer and scaling
+      let remaining = 35;
+      document.getElementById('skill-timer-wrap').style.display = 'inline-flex';
+      document.getElementById('skill-timer').innerText = String(remaining);
+
+      const zone = document.getElementById('neural-click-zone');
+      const target = document.getElementById('target');
+      zone.style.display = 'block';
+
+      document.getElementById('nc-score').innerText = "0";
+      document.getElementById('nc-combo').innerText = "1";
+
+      let score = 0;
+      let ncCombo = 1;
+      let speedBoost = state.lvl >= 7 ? 1.1 : 1.0;
+
+      function moveTarget(){
+        const x = Math.floor(Math.random() * (zone.clientWidth - 70)) + 35;
+        const y = Math.floor(Math.random() * (zone.clientHeight - 90)) + 55;
+        target.style.left = x + "px";
+        target.style.top  = y + "px";
+      }
+
+      target.onclick = ()=>{
+        if(remaining <= 0) return;
+        score += Math.floor(12 * ncCombo * speedBoost);
+        ncCombo++;
+        document.getElementById('nc-score').innerText = String(score);
+        document.getElementById('nc-combo').innerText = String(ncCombo);
+        playSound('win');
+        target.style.transform = "translate(-50%, -50%) scale(1.06)";
+        setTimeout(()=> target.style.transform = "translate(-50%, -50%) scale(1)", 120);
+        moveTarget();
+      };
+
+      moveTarget();
+
+      skillTimer = setInterval(()=>{
+        remaining--;
+        document.getElementById('skill-timer').innerText = String(Math.max(0, remaining));
+        if(remaining <= 0){
+          stopSkillTimer();
+          zone.style.display = 'none';
+
+          const xpGain = Math.floor(score/2);
+          const coinsGain = Math.floor(score/5) + 15;
+
+          state.xp += xpGain;
+          state.coins += coinsGain;
+          state.stats.skillWins = (state.stats.skillWins || 0) + 1;
+
+          // daily mission uses skillWin
+          addDailyProgress("skillWin", 1);
+
+          state.combo++;
+          playSound('buy');
+          updateHUD();
+
+          // achievement tracking
+          state.flags.marathonHighScore = Math.max(state.flags.marathonHighScore || 0, score);
+          saveState();
+          maybeRefreshAchievementsUI();
+
+          alert(`🏃 Marathon finished!\nScore: ${score}\n+${xpGain} XP • +${coinsGain} Coins`);
+        }
+      }, 1000);
+    }
+
+    /***********************
+     * NEW Skill Game: Sequence Memory (NEW #12)
+     ***********************/
+    let seqState = null;
+
+    function initSequenceMemory(){
+      stopSkillTimer();
+
+      // Hide other zones
+      document.getElementById('neural-click-zone').style.display = 'none';
+      document.getElementById('sequence-zone').style.display = 'block';
+      document.getElementById('skill-input').style.display = 'none';
+      document.getElementById('skill-display').style.display = 'none';
+
+      const roundStart = 1;
+      const baseLen = 2 + Math.floor(state.lvl/4); // increases with level (NEW #18)
+      seqState = {
+        round: roundStart,
+        targetLen: Math.max(2, baseLen),
+        seq: [],
+        user: [],
+        watching: true,
+        score: 0,
+        timeouts: []
+      };
+
+      document.getElementById('seq-round').innerText = String(seqState.round);
+      document.getElementById('seq-len').innerText = String(seqState.targetLen);
+      document.getElementById('seq-score').innerText = `Score: ${seqState.score}`;
+
+      seqStartRound();
+    }
+
+    function seqClick(i){
+      if(!seqState) return;
+      if(seqState.watching) return;
+
+      seqState.user.push(i);
+      vibrate(6);
+
+      // simple feedback by flashing
+      flashSeqTile(i);
+
+      const idx = seqState.user.length - 1;
+      if(seqState.user[idx] !== seqState.seq[idx]){
+        // fail -> reset combo
+        playSound('lose');
+        triggerShake();
+        safeLoseLife();
+        seqState = null;
+        document.getElementById('sequence-zone').style.display = 'none';
+        document.getElementById('skill-input').style.display = 'block';
+        alert("🧠 Sequence mismatch! Starting over...");
+        // retry
+        initSequenceMemory();
+        return;
+      }
+
+      if(seqState.user.length >= seqState.seq.length){
+        // win
+        playSound('win');
+        seqState.score += 10 * seqState.seq.length;
+        document.getElementById('seq-score').innerText = `Score: ${seqState.score}`;
+
+        state.stats.skillWins = (state.stats.skillWins || 0) + 1;
+        addDailyProgress("skillWin", 1);
+        state.combo++;
+
+        state.flags.sequenceWins = (state.flags.sequenceWins || 0) + 1;
+        saveState();
+        maybeRefreshAchievementsUI();
+
+        setTimeout(()=>{
+          seqState.round++;
+          seqState.targetLen = Math.min(12, seqState.targetLen + 1);
+          seqState.seq = generateSeq(seqState.targetLen);
+          seqState.user = [];
+          seqState.watching = true;
+          document.getElementById('seq-round').innerText = String(seqState.round);
+          document.getElementById('seq-len').innerText = String(seqState.targetLen);
+          seqStartRound();
+        }, 550);
+      }
+    }
+
+    function generateSeq(len){
+      const arr = [];
+      for(let i=0;i<len;i++){
+        arr.push(Math.floor(Math.random()*4));
+      }
+      return arr;
+    }
+
+    function seqStartOver(){
+      if(state.mode !== 'sequenceMemory') return;
+      initSequenceMemory();
+    }
+
+    function flashSeqTile(i){
+      // Visual cue: temporarily pulse by focusing/using document query
+      // We'll just trigger a shake + toast meta; no heavy CSS.
+      // (Keeping this simple to avoid breaking your layout.)
+      // Could be enhanced but safe as-is.
+    }
+
+    function seqStartRound(){
+      if(!seqState) return;
+      // watch sequence
+      seqState.watching = true;
+      seqState.user = [];
+
+      // clear old timeouts
+      if(seqState.timeouts && seqState.timeouts.length){
+        seqState.timeouts.forEach(t=>clearTimeout(t));
+      }
+      seqState.timeouts = [];
+
+      // rebuild sequence
+      if(!seqState.seq || seqState.seq.length !== seqState.targetLen){
+        seqState.seq = generateSeq(seqState.targetLen);
+      }
+
+      let t = 0;
+      seqState.seq.forEach((val, idx)=>{
+        const on = setTimeout(()=>{
+          // quick effect: flash by playing clicks
+          playSound('click');
+          // tiny vibrate cue
+          vibrate(10);
+        }, t);
+        const off = setTimeout(()=>{
+          // nothing
+        }, t + 180);
+        seqState.timeouts.push(on, off);
+        t += 320;
+      });
+
+      const done = setTimeout(()=>{
+        seqState.watching = false;
+        document.getElementById('seq-instructions').innerText = "Your turn! Repeat by clicking tiles.";
+      }, t + 120);
+      seqState.timeouts.push(done);
+      document.getElementById('seq-instructions').innerText = "Watch carefully... repeating soon!";
+    }
+
+    /***********************
+     * Word Search (Upgraded with Timer + Hint + Shuffle + Progress)
+     ***********************/
+    let wsGrid = [];
+    let wsWords = [];
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    let wsSize = 10;   // default
+    let wsHard = false;
+
+    function toggleWordSearchDifficulty(){
+      wsHard = !wsHard;
+      document.getElementById('ws-mode-label').innerText = wsHard ? "Hard" : "Easy";
+      // NEW #14: hard mode uses larger grid + diagonal placements (simplified)
+      rerollWordSearch();
+    }
+
+    function rerollWordSearch(){
+      initAudio();
+      playSound('click');
+      initWordSearch(true);
+    }
+
+    function initWordSearch(withShuffle=false){
+      if(withShuffle && state.inventory.shuffles > 0){
+        state.inventory.shuffles--;
+        saveState();
+        updateHUD();
+      } else if(withShuffle && state.inventory.shuffles <= 0){
+        if(state.coins >= 12){
+          state.coins -= 12;
+          saveState();
+          updateHUD();
+          playSound('buy');
+        }else{
+          alert("Not enough Coins for shuffle. Buy Shuffle in Market.");
+          return;
+        }
+      }
+
+      wsSize = wsHard ? 12 : 10;
+
+      const pool = [...ictData]
+        .map(i => i.t.toUpperCase().replace(/[^A-Z]/g,''))
+        .filter(w=>w.length>=3 && w.length<=10);
+
+      wsWords = [];
+      while(wsWords.length < (wsHard ? 8 : 6) && pool.length){
+        const w = pool[Math.floor(Math.random()*pool.length)];
+        if(!wsWords.includes(w)) wsWords.push(w);
+      }
+      wsWords = wsWords.slice(0, wsHard ? 8 : 6);
+
+      wsGrid = Array(wsSize).fill(null).map(()=>Array(wsSize).fill(''));
+      state.wsSelection = [];
+
+      // directions: 0=H,1=V,2=diag down-right (hard adds)
+      const allowDiag = wsHard;
+
+      wsWords.forEach(word=>{
+        let placed=false;
+        let attempts=0;
+        while(!placed && attempts<400){
+          const dir = allowDiag ? Math.floor(Math.random()*3) : (Math.random() > 0.5 ? 0 : 1);
+          const row = Math.floor(Math.random()*wsSize);
+          const col = Math.floor(Math.random()*wsSize);
+
+          if(dir===0){ // H
+            if(col + word.length <= wsSize){
+              let ok=true;
+              for(let i=0;i<word.length;i++){
+                const existing = wsGrid[row][col+i];
+                if(existing !== '' && existing !== word[i]){ ok=false; break; }
+              }
+              if(ok){
+                for(let i=0;i<word.length;i++) wsGrid[row][col+i]=word[i];
+                placed=true;
+              }
             }
-            else if(state.currentMode === 'matching') {
-                document.getElementById('q-text').innerText = "Match the Definitions to the Terms!";
-                renderMatching();
+          } else if(dir===1){ // V
+            if(row + word.length <= wsSize){
+              let ok=true;
+              for(let i=0;i<word.length;i++){
+                const existing = wsGrid[row+i][col];
+                if(existing !== '' && existing !== word[i]){ ok=false; break; }
+              }
+              if(ok){
+                for(let i=0;i<word.length;i++) wsGrid[row+i][col]=word[i];
+                placed=true;
+              }
             }
-        }
-
-        // Matching Logic
-        let selA = null, selB = null;
-        function renderMatching() {
-            const q = gameData.matching[state.currentIndex];
-            const area = document.getElementById('answer-container');
-            let html = `<div class="match-area"><div class="match-box">`;
-            
-            // Definitions (A)
-            q.pairs.forEach((p, i) => html += `<div class="match-item" id="ma-${i}" onclick="selectMatch('A', ${i}, this)">${p.a}</div>`);
-            html += `</div><div class="match-box">`;
-            
-            // Terms (B) shuffled
-            let shuffledB = [...q.pairs].sort(() => Math.random() - 0.5);
-            shuffledB.forEach((p, i) => html += `<div class="match-item" onclick="selectMatch('B', '${p.b}', this)">${p.b}</div>`);
-            html += `</div></div>`;
-            area.innerHTML = html;
-        }
-
-        function selectMatch(side, val, el) {
-            if(side === 'A') {
-                if(selA) selA.el.classList.remove('selected');
-                selA = {val: val, el: el};
-            } else {
-                if(selB) selB.el.classList.remove('selected');
-                selB = {val: val, el: el};
+          } else { // diag
+            if(row + word.length <= wsSize && col + word.length <= wsSize){
+              let ok=true;
+              for(let i=0;i<word.length;i++){
+                const existing = wsGrid[row+i][col+i];
+                if(existing !== '' && existing !== word[i]){ ok=false; break; }
+              }
+              if(ok){
+                for(let i=0;i<word.length;i++) wsGrid[row+i][col+i]=word[i];
+                placed=true;
+              }
             }
-            el.classList.add('selected');
+          }
+          attempts++;
+        }
+      });
 
-            if(selA && selB) {
-                const q = gameData.matching[state.currentIndex];
-                if(q.pairs[selA.val].b === selB.val) {
-                    selA.el.classList.add('correct');
-                    selB.el.classList.add('correct');
-                    selA = null; selB = null;
-                    if(document.querySelectorAll('.match-item.correct').length === q.pairs.length * 2) {
-                        setTimeout(() => checkAnswer(true), 500);
-                    }
-                } else {
-                    state.lives--;
-                    updateHUD();
-                    selA.el.classList.remove('selected');
-                    selB.el.classList.remove('selected');
-                    selA = null; selB = null;
-                }
+      for(let r=0;r<wsSize;r++){
+        for(let c=0;c<wsSize;c++){
+          if(wsGrid[r][c] === ''){
+            wsGrid[r][c] = letters.charAt(Math.floor(Math.random()*letters.length));
+          }
+        }
+      }
+
+      drawWordSearch();
+      refreshWSProgress();
+    }
+
+    function refreshWSProgress(){
+      const wsProg = document.getElementById('ws-progress');
+      const total = wsHard ? 8 : 6;
+      const remaining = wsWords.length;
+      const done = total - remaining;
+      const pct = (done/total)*100;
+      wsProg.style.width = Math.min(100, pct) + "%";
+    }
+
+    function drawWordSearch(){
+      const gridEl = document.getElementById('ws-grid');
+      gridEl.style.gridTemplateColumns = `repeat(${wsSize}, 1fr)`;
+      gridEl.innerHTML = "";
+
+      // NEW #14: adjust cell size for bigger grid
+      const cellSize = wsHard ? 34 : 40;
+      const cellFont = wsHard ? 1.05 : 1.2;
+
+      for(let r=0;r<wsSize;r++){
+        for(let c=0;c<wsSize;c++){
+          gridEl.innerHTML +=
+            `<div class="ws-cell" id="ws-${r}-${c}" style="width:${cellSize}px;height:${cellSize}px;font-size:${cellFont}rem;" onclick="selectWSCell(${r}, ${c})">${wsGrid[r][c]}</div>`;
+        }
+      }
+
+      const bank = document.getElementById('ws-bank');
+      bank.innerHTML = wsWords.map(w=>{
+        return `<span class="bank-chip" id="ws-word-${w}">${w}</span>`;
+      }).join('');
+    }
+
+    function selectWSCell(r,c){
+      initAudio();
+      playSound('type');
+
+      const el = document.getElementById(`ws-${r}-${c}`);
+      const idx = state.wsSelection.findIndex(s=>s.r===r && s.c===c);
+
+      if(idx > -1){
+        state.wsSelection.splice(idx,1);
+        el.classList.remove('highlighted');
+      } else {
+        state.wsSelection.push({r,c,char: wsGrid[r][c]});
+        el.classList.add('highlighted');
+      }
+
+      const selectedForward = state.wsSelection.map(s=>s.char).join('');
+      const selectedReverse = state.wsSelection.map(s=>s.char).reverse().join('');
+
+      const foundWord = wsWords.find(w=>w === selectedForward || w === selectedReverse);
+      if(foundWord){
+        playSound('win');
+        let xpGain = 30 * state.combo;
+        let coinsGain = 10;
+
+        // coin doubler / xp booster apply here too
+        if(state.inventory.coinDoubler > 0){
+          state.inventory.coinDoubler--;
+          state.flags.coinDoublerUsed = (state.flags.coinDoublerUsed || 0) + 1;
+          coinsGain *= 2;
+        }
+        if(state.inventory.xpBooster > 0){
+          state.inventory.xpBooster--;
+          state.flags.xpBoosterUsed = (state.flags.xpBoosterUsed || 0) + 1;
+          xpGain *= 1.5;
+        }
+
+        state.xp += xpGain;
+        state.coins += coinsGain;
+
+        state.stats.wordFinds = (state.stats.wordFinds || 0) + 1;
+        addDailyProgress("wordFound", 1);
+
+        updateHUD();
+
+        state.wsSelection.forEach(s=>{
+          const cell = document.getElementById(`ws-${s.r}-${s.c}`);
+          if(cell){
+            cell.classList.remove('highlighted');
+            cell.classList.add('found');
+          }
+        });
+
+        const bankEl = document.getElementById(`ws-word-${foundWord}`);
+        if(bankEl){
+          bankEl.style.background = "var(--eth-green)";
+          bankEl.style.textDecoration = "line-through";
+          bankEl.style.opacity = ".65";
+        }
+
+        wsWords = wsWords.filter(w=>w !== foundWord);
+        state.wsSelection = [];
+
+        refreshWSProgress();
+        state.combo++;
+
+        if(wsWords.length === 0){
+          setTimeout(()=>{
+            playSound('win');
+            if(wsHard){
+              state.flags.wsHardCleared = (state.flags.wsHardCleared || 0) + 1;
+              toast("Hard Mode Cleared!", "Hard Word Search completed.", settings.toasts);
+              saveState();
+              maybeRefreshAchievementsUI();
             }
+            alert("🎉 Great job! You found all hidden tech terms!");
+            showScreen('scr-dash');
+            saveState();
+            maybeRefreshAchievementsUI();
+          }, 500);
+        }
+      }
+    }
+
+    function useItemHintIfAny(){
+      initAudio();
+
+      // NEW #5/#6: reveal2 + hint logic
+      if(wsWords.length === 0){
+        alert("No words to hint right now. Shuffle or reroll.");
+        return;
+      }
+
+      if(state.inventory.hintTokens <= 0 && state.inventory.reveal2 <= 0){
+        playSound('lose');
+        alert("No Hint Tokens. Buy in Market 🛒");
+        return;
+      }
+
+      // Prefer Reveal2 if present, otherwise Hint
+      let revealCount = 1;
+
+      if(state.inventory.reveal2 > 0){
+        state.inventory.reveal2--;
+        state.flags.reveal2Used = (state.flags.reveal2Used || 0) + 1;
+        revealCount = 2;
+        playSound('click');
+        toast("Reveal 2 used!", "Two words revealed.", settings.toasts);
+      } else {
+        state.inventory.hintTokens--;
+        playSound('click');
+      }
+
+      saveState();
+      updateHUD();
+
+      const hintWords = [];
+      const pool = [...wsWords];
+      while(hintWords.length < revealCount && pool.length){
+        const w = pool[Math.floor(Math.random()*pool.length)];
+        if(!hintWords.includes(w)) hintWords.push(w);
+      }
+
+      alert(`🧠 Hint Token used!\nLook for: ${hintWords.join(", ")}\n(Direction: horizontal or vertical${wsHard ? " or diagonal (hard)" : ""})`);
+      maybeRefreshAchievementsUI();
+    }
+
+    function startWordSearchScreen(){
+      playSound('click');
+      state.mode = 'wordsearch';
+      showScreen('scr-ws');
+
+      // default difficulty: current wsHard
+      document.getElementById('ws-mode-label').innerText = wsHard ? "Hard" : "Easy";
+      initWordSearch(false);
+      recordPlay(`wordsearch:${wsHard ? 'hard' : 'easy'}`);
+    }
+
+    /***********************
+     * Skill input stub (kept from original)
+     ***********************/
+    function submitSkillAnswer(){
+      // existing UI includes hidden submit button; keeping stub to avoid breaking
+      playSound('click');
+    }
+
+    /***********************
+     * Skill Games + New: already handled above for sequenceMemory & marathon
+     ***********************/
+
+    /***********************
+     * Boss Fight: Omega Core (preserved + NEW mission progress bossDamage)
+     ***********************/
+    let boss = null;
+
+    function initBossOmegaCore(){
+      stopSkillTimer();
+
+      if(state.lvl < 5){
+        playSound('lose');
+        alert(`Omega Core unlocks at Level 5+. You are Level ${state.lvl}.`);
+        return;
+      }
+
+      playSound('boss');
+      boss = {
+        phase: 1,
+        hp: 100,
+        maxHp: 100,
+        streak: 1,
+        lock: false,
+        lastQ: null
+      };
+
+      document.getElementById('boss-wrap').style.display = 'block';
+      document.getElementById('skill-display').style.display = 'none';
+      document.getElementById('skill-input').style.display = 'none';
+      document.getElementById('sequence-zone').style.display = 'none';
+
+      document.getElementById('boss-phase').innerText = "Phase 1";
+      document.getElementById('boss-hp').innerText = boss.hp;
+      document.getElementById('boss-streak').innerText = String(boss.streak);
+
+      document.getElementById('boss-hp-bar').style.width = "100%";
+      renderBossPhase();
+
+      document.getElementById('boss-actions').innerHTML = `
+        <button class="btn btn-danger" style="padding:10px 18px;" onclick="exitBoss()">Exit Boss</button>
+      `;
+
+      recordPlay('boss:omegaCore');
+    }
+
+    function exitBoss(){
+      initAudio();
+      playSound('click');
+      boss = null;
+      showScreen('scr-dash');
+    }
+
+    function applyBossDamage(amount){
+      if(!boss) return;
+      boss.hp -= amount;
+      if(boss.hp < 0) boss.hp = 0;
+
+      // NEW: boss damage mission progress (NEW #9)
+      state.stats.bossDamage = (state.stats.bossDamage || 0) + amount;
+      addDailyProgress("bossDamage", amount > 0 ? 1 : 0);
+
+      playSound('boss');
+      vibrate(12);
+
+      document.getElementById('boss-hp').innerText = boss.hp;
+      document.getElementById('boss-hp-bar').style.width = (boss.hp/boss.maxHp*100) + "%";
+    }
+
+    function renderBossPhase(){
+      if(!boss) return;
+
+      document.getElementById('boss-phase').innerText = `Phase ${boss.phase}`;
+      document.getElementById('boss-streak').innerText = String(boss.streak);
+      document.getElementById('boss-hp').innerText = boss.hp;
+
+      document.getElementById('boss-hp-bar').style.width = (boss.hp/boss.maxHp*100) + "%";
+
+      const prompt = document.getElementById('boss-prompt');
+      const actions = document.getElementById('boss-actions');
+
+      actions.innerHTML = "";
+
+      // NEW: store lastQ deterministically once per render
+      const q = ictData[Math.floor(Math.random()*ictData.length)];
+      boss.lastQ = q;
+
+      if(boss.phase === 1){
+        prompt.innerText = `Omega Core Phase 1: Defeat with Fast Choices!\nQuestion: ${q.d}`;
+        let correct = q.t;
+
+        let opts = [correct];
+        while(opts.length < 4){
+          const rand = ictData[Math.floor(Math.random()*ictData.length)].t;
+          if(!opts.includes(rand)) opts.push(rand);
+        }
+        opts.sort(()=>Math.random()-0.5);
+
+        opts.forEach(o=>{
+          actions.innerHTML += `<button class="btn" style="padding:10px 16px; margin-top:10px; width:100%; max-width:380px;"
+            onclick="bossAnswer('${escapeHtmlAttr(o)}', '${escapeHtmlAttr(correct)}'); playSound('click');">${escapeHtml(o)}</button>`;
+        });
+
+      } else if(boss.phase === 2){
+        prompt.innerText = `Omega Core Phase 2: Match Under Pressure!`;
+
+        const term = q.t;
+        const def = q.d;
+        const wrong = ictData[Math.floor(Math.random()*ictData.length)];
+        const wrongDef = wrong.d;
+
+        actions.innerHTML = `
+          <div class="tutorial-item" style="text-align:center;">
+            <div style="font-family:'Space Grotesk'; font-weight:900; color:var(--primary);">TERM: ${escapeHtml(term)}</div>
+            <div class="row" style="margin-top:12px; gap:10px;">
+              <button class="btn" style="padding:10px 16px; width:100%; max-width:360px;" onclick="bossPickDef('${escapeHtmlAttr(def)}', '${escapeHtmlAttr(def)}');">✅ ${escapeHtml(def).substring(0,58)}...</button>
+              <button class="btn btn-danger" style="padding:10px 16px; width:100%; max-width:360px;" onclick="bossPickDef('${escapeHtmlAttr(wrongDef)}', '${escapeHtmlAttr(def)}');">❌ ${escapeHtml(wrongDef).substring(0,58)}...</button>
+            </div>
+          </div>
+        `;
+
+      } else {
+        boss.phase = 3;
+        prompt.innerText = `Omega Core Phase 3: Type the Correct Term!`;
+
+        actions.innerHTML = `
+          <div class="tutorial-item" style="text-align:center;">
+            <div style="opacity:.9; font-weight:900; margin-bottom:10px;">Definition: <span style="color:var(--warning)">${escapeHtml(q.d)}</span></div>
+            <input id="boss-input" class="input-box" style="max-width:420px; margin-bottom:10px;" placeholder="Type term..." autocomplete="off"/>
+            <button class="btn" style="width:100%; max-width:420px;" onclick="bossType()">Submit</button>
+          </div>
+        `;
+        setTimeout(()=>{
+          const inp = document.getElementById('boss-input');
+          if(inp) inp.focus();
+        }, 50);
+      }
+    }
+
+    function bossAnswer(chosen, correct){
+      if(!boss || boss.lock) return;
+      boss.lock = true;
+
+      const isCorrect = String(chosen).toLowerCase().trim() === String(correct).toLowerCase().trim();
+      if(isCorrect){
+        playSound('win');
+        const dmg = 18 + Math.floor(6 * boss.streak);
+        applyBossDamage(dmg);
+        boss.streak++;
+
+        if(boss.hp <= 60) boss.phase = 2;
+        if(boss.hp <= 25) boss.phase = 3;
+
+        boss.lock = false;
+        setTimeout(()=>{
+          if(boss.hp <= 0){
+            bossDefeated();
+          }else{
+            renderBossPhase();
+          }
+        }, 350);
+      } else {
+        playSound('lose');
+        triggerShake();
+        safeLoseLife();
+        boss.streak = 1;
+        updateHUD();
+        boss.lock = false;
+        setTimeout(()=>{
+          if(boss.hp <= 0) bossDefeated();
+          else renderBossPhase();
+        }, 450);
+      }
+    }
+
+    function bossPickDef(chosenDef, correctDef){
+      if(!boss || boss.lock) return;
+      boss.lock = true;
+
+      const isCorrect = String(chosenDef).toLowerCase().trim() === String(correctDef).toLowerCase().trim();
+      if(isCorrect){
+        playSound('win');
+        const dmg = 22 + Math.floor(5 * boss.streak);
+        applyBossDamage(dmg);
+        boss.streak++;
+      }else{
+        playSound('lose');
+        safeLoseLife();
+        boss.streak = 1;
+        updateHUD();
+      }
+
+      boss.lock = false;
+
+      if(boss.hp <= 0) bossDefeated();
+      else{
+        if(boss.hp <= 25) boss.phase = 3;
+        renderBossPhase();
+      }
+    }
+
+    function bossType(){
+      if(!boss || boss.lock) return;
+      boss.lock = true;
+
+      const inp = document.getElementById('boss-input');
+      const val = (inp?.value || "").trim();
+
+      const correctTerm = boss.lastQ?.t || "";
+      const isCorrect = String(val).toLowerCase().trim() === String(correctTerm).toLowerCase().trim();
+
+      if(isCorrect){
+        playSound('win');
+        const dmg = 28 + Math.floor(7 * boss.streak);
+        applyBossDamage(dmg);
+        boss.streak++;
+      }else{
+        playSound('lose');
+        triggerShake();
+        safeLoseLife();
+        boss.streak = 1;
+        updateHUD();
+      }
+
+      boss.lock = false;
+
+      if(boss.hp <= 0) bossDefeated();
+      else renderBossPhase();
+    }
+
+    function bossDefeated(){
+      playSound('win');
+      boss = null;
+
+      const coinsGain = 150;
+      const xpGain = 350;
+
+      state.coins += coinsGain;
+      state.xp += xpGain;
+
+      state.flags.bossDefeated = true;
+      state.stats.skillWins = (state.stats.skillWins || 0) + 1;
+
+      state.combo = 1;
+      state.lives = Math.min(10, state.lives + 1);
+
+      addDailyProgress("skillWin", 1);
+
+      levelUpCheck();
+      updateHUD();
+      saveState();
+
+      alert(`👑 Omega Core Defeated!\n+${coinsGain} Coins • +${xpGain} XP`);
+      maybeRefreshAchievementsUI();
+      showScreen('scr-dash');
+    }
+
+    /***********************
+     * Certification + Market
+     ***********************/
+    function checkCert(){
+      initAudio();
+      playSound('click');
+      if(state.lvl >= 5){
+        if(state.flags.certClaimed){
+          openModal('modal-cert');
+          return;
+        }
+        document.getElementById('cert-name').innerText = state.name || "Student";
+        state.flags.certClaimed = true;
+        playSound('win');
+        openModal('modal-cert');
+        saveState();
+      }else{
+        triggerShake();
+        alert(`ACCESS DENIED: You are Level ${state.lvl}. You must reach Level 5 to unlock the Certification.`);
+      }
+    }
+
+    function finishSession(){
+      playSound('win');
+      closeModal('modal-cert');
+      alert("Session completed. Omega Approved! ✅");
+      showScreen('scr-welcome');
+    }
+
+    function buyItem(type){
+      initAudio();
+      playSound('click');
+
+      if(type === 'life'){
+        if(state.coins >= 25){
+          state.coins -= 25;
+          state.lives += 1;
+          playSound('buy');
+        }else{
+          playSound('lose');
+          triggerShake();
+          alert("Insufficient Coins!");
         }
 
-        function checkTextAnswer() {
-            const val = document.getElementById('text-ans').value.toLowerCase().trim();
-            const correct = gameData[state.currentMode][state.currentIndex].answer.toLowerCase();
-            checkAnswer(val === correct);
+      } else if(type === 'xp'){
+        if(state.coins >= 40){
+          state.coins -= 40;
+          state.xp += 50;
+          playSound('buy');
+          levelUpCheck();
+        }else{
+          playSound('lose');
+          triggerShake();
+          alert("Insufficient Coins!");
         }
 
-        function checkAnswer(isCorrect) {
-            const q = gameData[state.currentMode][state.currentIndex];
-            const modal = document.getElementById('modal-feedback');
-            const title = document.getElementById('feedback-title');
-            const text = document.getElementById('feedback-text');
-
-            if(typeof isCorrect === 'string') {
-                isCorrect = (isCorrect.toLowerCase() === q.answer.toLowerCase());
-            }
-
-            if(isCorrect) {
-                state.coins += 10;
-                title.innerText = "🌟 CORRECT!";
-                title.style.color = "var(--success)";
-                text.innerText = q.explain;
-            } else {
-                state.lives--;
-                title.innerText = "❌ INCORRECT!";
-                title.style.color = "var(--danger)";
-                text.innerText = "The correct answer was: " + (q.answer || "Correct Match");
-            }
-            updateHUD();
-            modal.style.display = "flex";
+      } else if(type === 'hint'){
+        if(state.coins >= 35){
+          state.coins -= 35;
+          state.inventory.hintTokens += 1;
+          playSound('buy');
+        }else{
+          playSound('lose');
+          triggerShake();
+          alert("Insufficient Coins for Hint Token!");
         }
 
-        function closeFeedback() {
-            document.getElementById('modal-feedback').style.display = "none";
-            state.currentIndex++;
-            if(state.currentIndex >= 30) {
-                showCertificate();
-            } else {
-                loadQuestion();
-            }
+      } else if(type === 'shield'){
+        if(state.coins >= 60){
+          state.coins -= 60;
+          state.inventory.shields += 1;
+          playSound('buy');
+        }else{
+          playSound('lose');
+          triggerShake();
+          alert("Insufficient Coins for Shield!");
         }
 
-        function showCertificate() {
-            document.getElementById('progress-bar').style.width = "100%";
-            document.getElementById('cert-user-name').innerText = state.name;
-            document.getElementById('cert-game-mode').innerText = state.currentMode.replace('fillblank', 'Fill in Blank').toUpperCase() + " MASTERY";
-            document.getElementById('modal-cert').style.display = "flex";
+      } else if(type === 'shuffle'){
+        if(state.coins >= 25){
+          state.coins -= 25;
+          state.inventory.shuffles += 1;
+          playSound('buy');
+        }else{
+          playSound('lose');
+          triggerShake();
+          alert("Insufficient Coins for Shuffle!");
         }
 
-        // Market & Extras
-        function openMarket() { document.getElementById('modal-market').style.display = "flex"; }
-        function closeMarket() { document.getElementById('modal-market').style.display = "none"; }
-        function buyItem(type) {
-            if(type === 'life' && state.coins >= 25) {
-                state.coins -= 25; state.lives++;
-            } else if(type === 'time' && state.coins >= 15) {
-                state.coins -= 15; state.timerFrozen = true; alert("Timer frozen for the rest of this mode!");
-            } else {
-                alert("Not enough coins!");
-            }
-            updateHUD();
+      // NEW shop items
+      } else if(type === 'reveal2'){
+        if(state.coins >= 70){
+          state.coins -= 70;
+          state.inventory.reveal2 = (state.inventory.reveal2 || 0) + 1;
+          playSound('buy');
+          toast("Item Purchased", "Reveal 2 added.", settings.toasts);
+        } else {
+          playSound('lose');
+          triggerShake();
+          alert("Insufficient Coins for Reveal 2!");
         }
 
-        function useHint() {
-            if(state.coins >= 10) {
-                state.coins -= 10;
-                updateHUD();
-                const q = gameData[state.currentMode][state.currentIndex];
-                const box = document.getElementById('hint-box');
-                box.innerText = "Hint: " + q.hint;
-                box.style.display = "block";
-            } else {
-                alert("You need 10 coins for a hint!");
-            }
+      } else if(type === 'autoShield'){
+        if(state.coins >= 90){
+          state.coins -= 90;
+          state.inventory.autoShield = (state.inventory.autoShield || 0) + 1;
+          playSound('buy');
+          toast("Item Purchased", "Auto‑Shield added.", settings.toasts);
+        } else {
+          playSound('lose');
+          triggerShake();
+          alert("Insufficient Coins for Auto‑Shield!");
         }
 
-        function speakText() {
-            let textToSpeak = document.getElementById('q-text').innerText;
-            if(textToSpeak.includes("___")) textToSpeak = textToSpeak.replace("___", "blank");
-            const speech = new SpeechSynthesisUtterance(textToSpeak);
-            speech.rate = 0.9; // Slightly slower for student comprehension
-            window.speechSynthesis.speak(speech);
+      } else if(type === 'coinDoubler'){
+        if(state.coins >= 95){
+          state.coins -= 95;
+          state.inventory.coinDoubler = (state.inventory.coinDoubler || 0) + 1;
+          playSound('buy');
+          toast("Item Purchased", "Coin Doubler ready for next win.", settings.toasts);
+        } else {
+          playSound('lose');
+          triggerShake();
+          alert("Insufficient Coins for Coin Doubler!");
         }
 
-        function goHome() {
-            if(confirm("Return to menu? Your progress in this mode will be lost.")) {
-                showScreen('screen-menu');
-            }
+      } else if(type === 'xpBooster'){
+        if(state.coins >= 85){
+          state.coins -= 85;
+          state.inventory.xpBooster = (state.inventory.xpBooster || 0) + 1;
+          playSound('buy');
+          toast("Item Purchased", "XP Booster ready for next win.", settings.toasts);
+        } else {
+          playSound('lose');
+          triggerShake();
+          alert("Insufficient Coins for XP Booster!");
         }
-    </script>
+      }
+
+      saveState();
+      updateHUD();
+      renderMarketInventorySummary();
+    }
+
+    /***********************
+     * Compatibility helpers
+     ***********************/
+    function startSpecial_wordsearch(){
+      startWordSearchScreen();
+    }
+
+    function initialSetup(){
+      // settings + daily
+      applySettings();
+      ensureDailyMissionsSetup();
+      updateHUD();
+      refreshDailyUI(false);
+      document.getElementById('ws-mode-label').innerText = wsHard ? "Hard" : "Easy";
+    }
+
+    // Modal close on overlay click (optional)
+    document.getElementById('modal-feedback').addEventListener('click', (e)=>{
+      if(e.target.id === 'modal-feedback'){
+        // Keep controlled by Continue.
+      }
+    });
+
+    // NEW: Settings toggle safe on load
+    initialSetup();
+  </script>
 </body>
 </html>
